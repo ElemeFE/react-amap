@@ -1,6 +1,6 @@
 ### 使用
 
-```jsx
+```javascript
 import AMap from 'react-amap';
 
 const Markers = AMap.Markers;
