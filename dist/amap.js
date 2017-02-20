@@ -21992,11 +21992,7 @@ var Markers = function (_Component) {
        * }
        */
       if (this.map) {
-        if (nextProps.markers === this.props.markers) {
-          //
-        } else {
-          this.onPropsIn(nextProps);
-        }
+        this.onPropsIn(nextProps);
       }
     }
   }, {
@@ -23428,14 +23424,13 @@ var AMap = function (_Component) {
   }, {
     key: 'initMapInstance',
     value: function initMapInstance() {
-      var _this4 = this;
-
       if (!this.map) {
         this.map = new window.AMap.Map(this.mapWrapper, {
           showIndoorMap: false
         });
         this.map.on('zoomchange', function () {
-          _this4.map.clearInfoWindow();
+          // 信息窗口的隐藏和显示交给用户由 state 控制
+          // this.map.clearInfoWindow();
         });
         this.liftMapInstance();
         this.initMapTools();
@@ -23454,7 +23449,7 @@ var AMap = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this5 = this;
+      var _this4 = this;
 
       return _react2.default.createElement(
         'div',
@@ -23462,14 +23457,14 @@ var AMap = function (_Component) {
         _react2.default.createElement(
           'div',
           { ref: function ref(div) {
-              _this5.mapWrapper = div;
+              _this4.mapWrapper = div;
             }, style: { width: '100%', height: '100%' } },
           _react2.default.createElement('div', { style: { background: '#eee', width: '100%', height: '100%' } })
         ),
         _react2.default.createElement(
           'div',
           { ref: function ref(div) {
-              _this5.innerBridge = div;
+              _this4.innerBridge = div;
             }, style: { width: '100%', height: '100%' } },
           this.state.mapLoaded ? this.renderChildren() : null
         )
