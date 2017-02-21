@@ -6777,7 +6777,8 @@ var errorMap = {
   'NO_MAP_INSTANCE': '没有地图实例',
   'INFO_WINDOW_CHILD_INVALID': 'InfoWindow 组件的子组件必必需包裹在一个元素里',
   'CIRCLE_CENTER_REQUIRED': 'TODO',
-  'CIRCLE_RADIUS_REQUIRED': 'TODO'
+  'CIRCLE_RADIUS_REQUIRED': 'TODO',
+  'WINDOW_POSITION_REQUIRED': 'TODO'
 };
 
 var error = function error(desc) {
@@ -22066,6 +22067,33 @@ var InfoWindow = function (_Component) {
     key: 'drawWindow',
     value: function drawWindow(props) {
       // 刷新开启关闭状态
+      if (this.setOpen(props)) {
+        this.setClassName(props);
+        this.setChild(props);
+      }
+    }
+  }, {
+    key: 'setChild',
+    value: function setChild(props) {
+      if (this.validateChild(props.children)) {
+        (0, _reactDom.render)(props.children, this.infoDOM);
+      } else {
+        (0, _error2.default)('INFO_WINDOW_CHILD_INVALID');
+      }
+    }
+  }, {
+    key: 'setClassName',
+    value: function setClassName(props) {
+      // 刷新 className
+      var cls = 'amap_markers_pop_window';
+      if ('className' in props) {
+        cls = 'amap_markers_pop_window ' + props.className;
+      }
+      this.infoDOM.className = cls;
+    }
+  }, {
+    key: 'setOpen',
+    value: function setOpen(props) {
       var open = true;
       if ('open' in props && props.open === false) {
         open = false;
@@ -22075,27 +22103,32 @@ var InfoWindow = function (_Component) {
       } else {
         this.infoWindow.close();
       }
-
-      // 刷新 className
-      var cls = 'amap_markers_pop_window';
-      if ('className' in props) {
-        cls = 'amap_markers_pop_window ' + props.className;
-      }
-      this.infoDOM.className = cls;
-
-      if (this.validateChild(props.children)) {
-        (0, _reactDom.render)(props.children, this.infoDOM);
-      } else {
-        (0, _error2.default)('INFO_WINDOW_CHILD_INVALID');
-      }
+      return open;
     }
   }, {
     key: 'showInfoWindow',
     value: function showInfoWindow(props) {
-      var position = props.position;
+      if ('position' in props) {
+        var position = props.position;
 
-      this.showPos = new window.AMap.LngLat(position.longitude, position.latitude);
-      this.infoWindow.open(this.map, this.showPos);
+        this.showPos = new window.AMap.LngLat(position.longitude, position.latitude);
+
+        var prevOpen = this.infoWindow.getIsOpen();
+        var needRefresh = true;
+        // 如果之前窗口已经是开启状态
+        // 检测一下新属性的位置是否改变，如果没有改变，不需要调用 open 方法
+        if (prevOpen) {
+          var prevPosition = this.infoWindow.getPosition();
+          if (prevPosition.equals(this.showPos)) {
+            needRefresh = false;
+          }
+        }
+        if (needRefresh) {
+          this.infoWindow.open(this.map, this.showPos);
+        }
+      } else {
+        (0, _error2.default)('WINDOW_POSITION_REQUIRED');
+      }
     }
   }, {
     key: 'validateChild',
@@ -23656,6 +23689,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  *  zoom
  * }
  */
+var defaultOpts = {
+  zoom: 10
+};
 
 var AMap = function (_Component) {
   _inherits(AMap, _Component);
@@ -23665,17 +23701,23 @@ var AMap = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (AMap.__proto__ || Object.getPrototypeOf(AMap)).call(this));
 
-    _this.loader = new _APILoader2.default().load();
     _this.state = {
       mapLoaded: false
     };
+    _this.loader = new _APILoader2.default().load();
     return _this;
   }
 
   _createClass(AMap, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      //
+      var _this2 = this;
+
+      this.loader.then(function () {
+        if (_this2.map) {
+          _this2.setZoomAndCenter(nextProps);
+        }
+      });
     }
   }, {
     key: 'componentDidMount',
@@ -23690,12 +23732,12 @@ var AMap = function (_Component) {
   }, {
     key: 'loadMap',
     value: function loadMap() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.loader.then(function () {
-        _this2.initMapInstance();
-        if (!_this2.state.mapLoaded) {
-          _this2.setState({
+        _this3.initMapInstance();
+        if (!_this3.state.mapLoaded) {
+          _this3.setState({
             mapLoaded: true
           });
         }
@@ -23718,12 +23760,12 @@ var AMap = function (_Component) {
   }, {
     key: 'renderChildren',
     value: function renderChildren() {
-      var _this3 = this;
+      var _this4 = this;
 
       return _react.Children.map(this.props.children, function (child) {
         return _react2.default.cloneElement(child, {
-          __map__: _this3.map,
-          __ele__: _this3.mapWrapper
+          __map__: _this4.map,
+          __ele__: _this4.mapWrapper
         });
       });
     }
@@ -23749,6 +23791,46 @@ var AMap = function (_Component) {
         this.initMapTools();
       }
     }
+  }, {
+    key: 'setZoomAndCenter',
+    value: function setZoomAndCenter(props) {
+      var zoomChange = false,
+          centerChange = false,
+          newCenter = void 0;
+      if ('zoom' in props) {
+        if (props.zoom !== this.map.getZoom()) {
+          zoomChange = true;
+        }
+      }
+
+      if ('center' in props) {
+        newCenter = new window.AMap.LngLat(props.center.longitude, props.center.latitude);
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~');
+        console.log(newCenter);
+        if (!newCenter.equals(this.map.getCenter())) {
+          centerChange = true;
+        }
+      }
+      console.log('zoomChange: ' + zoomChange);
+      console.log('centerChange: ' + centerChange);
+      if (zoomChange) {
+        if (centerChange) {
+          this.map.setZoomAndCenter(props.zoom, newCenter);
+        } else {
+          this.map.setZoom(props.zoom);
+        }
+      } else {
+        if (centerChange) {
+          this.map.setCenter(newCenter);
+        }
+      }
+    }
+  }, {
+    key: 'setZoom',
+    value: function setZoom(props) {}
+  }, {
+    key: 'setCenter',
+    value: function setCenter(props) {}
 
     // 用户可以通过 onInit 事件获取 map 实例
 
@@ -23762,7 +23844,7 @@ var AMap = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       return _react2.default.createElement(
         'div',
@@ -23770,14 +23852,14 @@ var AMap = function (_Component) {
         _react2.default.createElement(
           'div',
           { ref: function ref(div) {
-              _this4.mapWrapper = div;
+              _this5.mapWrapper = div;
             }, style: { width: '100%', height: '100%' } },
           _react2.default.createElement('div', { style: { background: '#eee', width: '100%', height: '100%' } })
         ),
         _react2.default.createElement(
           'div',
           { ref: function ref(div) {
-              _this4.innerBridge = div;
+              _this5.innerBridge = div;
             }, style: { width: '100%', height: '100%' } },
           this.state.mapLoaded ? this.renderChildren() : null
         )
