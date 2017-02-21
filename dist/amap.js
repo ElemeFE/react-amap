@@ -23138,7 +23138,7 @@ var DEFAULT_CONFIG = {
   protocol: window.location.protocol || 'https:',
   hostAndPath: 'webapi.amap.com/maps',
   key: 'f97efc35164149d0c0f299e7a8adb3d2',
-  plugin: ['AMap.Scale', 'AMap.ToolBar', 'AMap.MarkerClusterer'],
+  plugin: ['AMap.MarkerClusterer'],
   callback: '__amap_init_callback'
 };
 
@@ -23679,6 +23679,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /*
  * TODO(slh) 逐个比较 props 中的属性值，来判断需要刷新的地图元素
  * 其他的子组件也要如此处理，减少不必要的刷新
+ *
+ * TODO(slh)
+ * plugins 的动态加载和卸载
  */
 
 /*
@@ -23689,8 +23692,19 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  *  zoom
  * }
  */
+
 var defaultOpts = {
-  zoom: 10
+  maptype: {
+    //
+  },
+  toolbar: {
+    position: 'RB',
+    noIpLocate: true,
+    locate: true,
+    liteStyle: true,
+    autoPosition: false
+  },
+  overview: {}
 };
 
 var AMap = function (_Component) {
@@ -23704,6 +23718,7 @@ var AMap = function (_Component) {
     _this.state = {
       mapLoaded: false
     };
+    _this.pluginMap = {};
     _this.loader = new _APILoader2.default().load();
     return _this;
   }
@@ -23716,6 +23731,7 @@ var AMap = function (_Component) {
       this.loader.then(function () {
         if (_this2.map) {
           _this2.setZoomAndCenter(nextProps);
+          _this2.setPlugins(nextProps);
         }
       });
     }
@@ -23742,20 +23758,6 @@ var AMap = function (_Component) {
           });
         }
       });
-    }
-  }, {
-    key: 'initMapTools',
-    value: function initMapTools() {
-      this.mapTool = new window.AMap.ToolBar({
-        position: 'RB',
-        noIpLocate: true,
-        locate: true,
-        liteStyle: true,
-        autoPosition: false
-      });
-      this.map.addControl(this.mapTool);
-      this.mapScale = new window.AMap.Scale();
-      this.map.addControl(this.mapScale);
     }
   }, {
     key: 'renderChildren',
@@ -23788,7 +23790,7 @@ var AMap = function (_Component) {
           // this.map.clearInfoWindow();
         });
         this.liftMapInstance();
-        this.initMapTools();
+        this.setPlugins(this.props);
       }
     }
   }, {
@@ -23805,14 +23807,10 @@ var AMap = function (_Component) {
 
       if ('center' in props) {
         newCenter = new window.AMap.LngLat(props.center.longitude, props.center.latitude);
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~');
-        console.log(newCenter);
         if (!newCenter.equals(this.map.getCenter())) {
           centerChange = true;
         }
       }
-      console.log('zoomChange: ' + zoomChange);
-      console.log('centerChange: ' + centerChange);
       if (zoomChange) {
         if (centerChange) {
           this.map.setZoomAndCenter(props.zoom, newCenter);
@@ -23826,11 +23824,136 @@ var AMap = function (_Component) {
       }
     }
   }, {
-    key: 'setZoom',
-    value: function setZoom(props) {}
+    key: 'setPlugins',
+    value: function setPlugins(props) {
+      var _this5 = this;
+
+      var pluginList = ['scale', 'toolbar', 'maptype', 'overview'];
+      if ('plugins' in props) {
+        var plugins = props.plugins;
+        if (plugins && plugins.length) {
+          plugins.forEach(function (p) {
+            var name = void 0,
+                config = void 0,
+                visible = void 0;
+            if (typeof p === 'string') {
+              name = p;
+              config = null;
+              visible = true;
+            } else {
+              name = p.name;
+              config = p.options;
+              visible = !!p.visible;
+            }
+            var idx = pluginList.indexOf(name);
+            if (idx === -1) {
+              // error('INVALID_AMAP_PLUGIN');
+            } else {
+              if (visible) {
+                pluginList.splice(idx, 1);
+                _this5.installPlugin(name, config);
+              }
+            }
+          });
+        }
+      }
+      this.removeOrDisablePlugins(pluginList);
+    }
   }, {
-    key: 'setCenter',
-    value: function setCenter(props) {}
+    key: 'removeOrDisablePlugins',
+    value: function removeOrDisablePlugins(plugins) {
+      var _this6 = this;
+
+      if (plugins && plugins.length) {
+        plugins.forEach(function (p) {
+          if (p in _this6.pluginMap) {
+            _this6.pluginMap[p].hide();
+          }
+        });
+      }
+    }
+
+    //
+
+  }, {
+    key: 'installPlugin',
+    value: function installPlugin(name, opts) {
+      switch (name) {
+        case 'scale':
+          this.setScalePlugin(opts);
+          break;
+        case 'toolbar':
+          this.setToolbarPlugin(opts);
+          break;
+        case 'overview':
+          this.setOverviewPlugin(opts);
+          break;
+        case 'maptype':
+          this.setMapTypePlugin(opts);
+          break;
+        default:
+        // do nothing
+      }
+    }
+  }, {
+    key: 'setMapTypePlugin',
+    value: function setMapTypePlugin(opts) {
+      var _this7 = this;
+
+      if (this.pluginMap['maptype']) {
+        this.pluginMap.maptype.show();
+      } else {
+        var initOpts = opts || defaultOpts.maptype;
+        this.map.plugin(['AMap.MapType'], function () {
+          _this7.pluginMap.maptype = new window.AMap.MapType(initOpts);
+          _this7.map.addControl(_this7.pluginMap.maptype);
+        });
+      }
+    }
+  }, {
+    key: 'setOverviewPlugin',
+    value: function setOverviewPlugin(opts) {
+      var _this8 = this;
+
+      if (this.pluginMap['overview']) {
+        this.pluginMap.overview.show();
+      } else {
+        var initOpts = opts || defaultOpts.overview;
+        this.map.plugin(['AMap.OverView'], function () {
+          _this8.pluginMap.overview = new window.AMap.OverView(initOpts);
+          _this8.map.addControl(_this8.pluginMap.overview);
+        });
+      }
+    }
+  }, {
+    key: 'setScalePlugin',
+    value: function setScalePlugin() {
+      var _this9 = this;
+
+      if (this.pluginMap['scale']) {
+        this.pluginMap.scale.show();
+      } else {
+        this.map.plugin(['AMap.Scale'], function () {
+          _this9.pluginMap.scale = new window.AMap.Scale();
+          _this9.map.addControl(_this9.pluginMap.scale);
+        });
+      }
+    }
+  }, {
+    key: 'setToolbarPlugin',
+    value: function setToolbarPlugin(opts) {
+      var _this10 = this;
+
+      if (this.pluginMap['toolbar']) {
+        this.pluginMap.toolbar.show();
+      } else {
+        var initOpts = opts || defaultOpts.toolbar;
+        this.map.plugin(['AMap.ToolBar'], function () {
+          _this10.pluginMap.toolbar = new window.AMap.ToolBar(initOpts);
+          _this10.map.addControl(_this10.pluginMap.toolbar);
+        });
+      }
+    }
 
     // 用户可以通过 onInit 事件获取 map 实例
 
@@ -23844,7 +23967,7 @@ var AMap = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this5 = this;
+      var _this11 = this;
 
       return _react2.default.createElement(
         'div',
@@ -23852,14 +23975,14 @@ var AMap = function (_Component) {
         _react2.default.createElement(
           'div',
           { ref: function ref(div) {
-              _this5.mapWrapper = div;
+              _this11.mapWrapper = div;
             }, style: { width: '100%', height: '100%' } },
           _react2.default.createElement('div', { style: { background: '#eee', width: '100%', height: '100%' } })
         ),
         _react2.default.createElement(
           'div',
           { ref: function ref(div) {
-              _this5.innerBridge = div;
+              _this11.innerBridge = div;
             }, style: { width: '100%', height: '100%' } },
           this.state.mapLoaded ? this.renderChildren() : null
         )
