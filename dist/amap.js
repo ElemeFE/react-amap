@@ -21875,6 +21875,7 @@ var Circle = function (_Component) {
       } else {
         style = defaultOpts.style;
       }
+      this.mapCircle.setOptions(style);
     }
   }, {
     key: 'setShow',
@@ -23677,11 +23678,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /*
- * TODO(slh) 逐个比较 props 中的属性值，来判断需要刷新的地图元素
- * 其他的子组件也要如此处理，减少不必要的刷新
  *
- * TODO(slh)
- * plugins 的动态加载和卸载
+ *
  */
 
 /*
@@ -23719,6 +23717,7 @@ var AMap = function (_Component) {
       mapLoaded: false
     };
     _this.pluginMap = {};
+    _this.prevPlugin = null;
     _this.loader = new _APILoader2.default().load();
     return _this;
   }
