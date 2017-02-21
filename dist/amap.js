@@ -21794,11 +21794,6 @@ var InfoWindow = function (_Component) {
     key: 'initInfoWindow',
     value: function initInfoWindow(props) {
       this.infoDOM = document.createElement('div');
-      var cls = 'amap_markers_pop_window';
-      if ('className' in props) {
-        cls = 'amap_markers_pop_window ' + props.className;
-      }
-      this.infoDOM.className = cls;
       var offset = 'offset' in props ? props.offset : defaultOpts.offset;
 
       this.infoWindow = new window.AMap.InfoWindow({
@@ -21808,6 +21803,27 @@ var InfoWindow = function (_Component) {
         closeWhenClickMap: false,
         offset: this.getOffset(offset)
       });
+
+      // this.infoWindow.on('close',() => {
+      //   this.onWindowClose();
+      // });
+      // this.infoWindow.on('open',() => {
+      //   this.onWindowOpen();
+      // });
+    }
+  }, {
+    key: 'onWindowClose',
+    value: function onWindowClose() {
+      if ((0, _isFun2.default)(this.props.onClose)) {
+        this.props.onClose();
+      }
+    }
+  }, {
+    key: 'onWindowOpen',
+    value: function onWindowOpen() {
+      if ((0, _isFun2.default)(this.props.onOpen)) {
+        this.props.onOpen();
+      }
     }
   }, {
     key: 'getOffset',
@@ -21821,11 +21837,6 @@ var InfoWindow = function (_Component) {
        * {
        *  __map__,
        *  __ele__,
-       *  path,<pos>
-       *  onChange
-       *  onClick
-       *  onMouseOver
-       *  onMouseOut
        * }
        */
       this.drawWindow(nextProps);
@@ -21833,15 +21844,28 @@ var InfoWindow = function (_Component) {
   }, {
     key: 'drawWindow',
     value: function drawWindow(props) {
+      // 刷新开启关闭状态
       var open = true;
       if ('open' in props && props.open === false) {
         open = false;
       }
-
       if (open) {
         this.showInfoWindow(props);
       } else {
         this.infoWindow.close();
+      }
+
+      // 刷新 className
+      var cls = 'amap_markers_pop_window';
+      if ('className' in props) {
+        cls = 'amap_markers_pop_window ' + props.className;
+      }
+      this.infoDOM.className = cls;
+
+      if (this.validateChild(props.children)) {
+        (0, _reactDom.render)(props.children, this.infoDOM);
+      } else {
+        (0, _error2.default)('INFO_WINDOW_CHILD_INVALID');
       }
     }
   }, {
@@ -21851,11 +21875,6 @@ var InfoWindow = function (_Component) {
 
       this.showPos = new window.AMap.LngLat(position.longitude, position.latitude);
       this.infoWindow.open(this.map, this.showPos);
-      if (this.validateChild(props.children)) {
-        (0, _reactDom.render)(props.children, this.infoDOM);
-      } else {
-        (0, _error2.default)('INFO_WINDOW_CHILD_INVALID');
-      }
     }
   }, {
     key: 'validateChild',
@@ -21970,11 +21989,14 @@ var Markers = function (_Component) {
       _this.map = props.__map__;
       _this.element = props.__ele__;
       _this.markersCache = defaultOpts.markersCache;
-      _this.useCluster = defaultOpts.useCluster;
+      _this.useCluster = null;
       _this.markerIDCache = defaultOpts.markerIDCache;
       _this.resetOffset = new window.AMap.Pixel(-SIZE_WIDTH / 2, -SIZE_HEIGHT);
       _this.hoverOffset = new window.AMap.Pixel(-SIZE_HOVER_WIDTH / 2, -SIZE_HOVER_HEIGHT);
-      _this.onPropsIn(props);
+
+      _this.handleCluster(props);
+      _this.buildMapMarkers(props.markers);
+      _this.renderMarkers();
     }
     return _this;
   }
@@ -21992,21 +22014,33 @@ var Markers = function (_Component) {
        * }
        */
       if (this.map) {
-        this.onPropsIn(nextProps);
+        var markerChanged = false;
+        var clusterSettingChanged = this.handleCluster(nextProps);
+        if (nextProps.markers !== this.props.markers) {
+          this.buildMapMarkers(nextProps.markers);
+          markerChanged = true;
+        }
+        if (clusterSettingChanged || markerChanged) {
+          this.renderMarkers();
+        }
       }
     }
   }, {
-    key: 'onPropsIn',
-    value: function onPropsIn(props) {
-      if ('useCluster' in props && props.useCluster === false) {
-        this.useCluster = false;
+    key: 'handleCluster',
+    value: function handleCluster(props) {
+      var clusterSettingChanged = false;
+      var useCluster = void 0;
+      if ('useCluster' in props && typeof props.useCluster === 'boolean') {
+        useCluster = props.useCluster;
       } else {
-        this.useCluster = true;
+        useCluster = defaultOpts.useCluster;
       }
-      this.initMapCluster();
-      if (props.markers) {
-        this.buildMarkers(props.markers);
+      if (useCluster !== this.useCluster) {
+        this.useCluster = useCluster;
+        this.initMapCluster();
+        clusterSettingChanged = true;
       }
+      return clusterSettingChanged;
     }
   }, {
     key: 'onMarkerClick',
@@ -22130,21 +22164,28 @@ var Markers = function (_Component) {
   }, {
     key: 'initMapCluster',
     value: function initMapCluster() {
-      if (this.useCluster && !this.mapCluster) {
-        var style = {
-          url: _map_cluster2.default,
-          size: new window.AMap.Size(56, 56),
-          offset: new window.AMap.Pixel(-28, -28)
-        };
-        var clusterStyles = [style, style, style];
-        this.mapCluster = new window.AMap.MarkerClusterer(this.map, [], {
-          minClusterSize: 2,
-          zoomOnClick: false,
-          gridSize: 60,
-          styles: clusterStyles
-        });
-        this.initClusterMarkerWindow();
-        this.bindClusterEvent();
+      if (this.useCluster) {
+        if (!this.mapCluster) {
+          var style = {
+            url: _map_cluster2.default,
+            size: new window.AMap.Size(56, 56),
+            offset: new window.AMap.Pixel(-28, -28)
+          };
+          var clusterStyles = [style, style, style];
+          this.mapCluster = new window.AMap.MarkerClusterer(this.map, [], {
+            minClusterSize: 2,
+            zoomOnClick: false,
+            gridSize: 60,
+            styles: clusterStyles,
+            averageCenter: true
+          });
+          this.initClusterMarkerWindow();
+          this.bindClusterEvent();
+        }
+      } else {
+        if (this.mapCluster) {
+          this.mapCluster.setMarkers([]);
+        }
       }
     }
   }, {
@@ -22211,8 +22252,8 @@ var Markers = function (_Component) {
       this.markersWindow.open(this.map, pos);
     }
   }, {
-    key: 'buildMarkers',
-    value: function buildMarkers(rawMarkerData) {
+    key: 'buildMapMarkers',
+    value: function buildMapMarkers(rawMarkerData) {
       var _this4 = this;
 
       this.clearPrevMarkers();
@@ -22258,7 +22299,6 @@ var Markers = function (_Component) {
           _this4.markersCache.push(marker);
         });
       }
-      this.renderMarkers();
     }
   }, {
     key: 'clearPrevMarkers',
@@ -22387,6 +22427,7 @@ var Polygon = function (_Component) {
     } else {
       _this.map = props.__map__;
       _this.element = props.__ele__;
+      _this.prevPath = [];
       _this.initMapPolygon();
       _this.drawPolygon(props);
     }
@@ -22414,7 +22455,10 @@ var Polygon = function (_Component) {
     value: function drawPolygon(props) {
       if (this.map) {
         if ('path' in props) {
-          this.buildPath(props.path);
+          if (this.prevPath !== props.path) {
+            this.buildPath(props.path);
+            this.prevPath = props.path;
+          }
         } else {
           this.clearPath();
         }
@@ -22430,7 +22474,7 @@ var Polygon = function (_Component) {
 
       this.polygon = new window.AMap.Polygon({
         map: this.map,
-        path: []
+        path: this.prevPath
       });
       this.polygon.on('click', function (e) {
         _this2.onPolygonClick(e);
@@ -22630,6 +22674,7 @@ var Polyline = function (_Component) {
     } else {
       _this.map = props.__map__;
       _this.element = props.__ele__;
+      _this.prevPath = [];
       _this.initMapPolyline();
       _this.drawPolyline(props);
     }
@@ -22657,7 +22702,10 @@ var Polyline = function (_Component) {
     value: function drawPolyline(props) {
       if (this.map) {
         if ('path' in props) {
-          this.buildPath(props.path);
+          if (this.prevPath !== props.path) {
+            this.buildPath(props.path);
+            this.prevPath = props.path;
+          }
         } else {
           this.clearPath();
         }
@@ -22673,7 +22721,7 @@ var Polyline = function (_Component) {
 
       this.polyline = new window.AMap.Polyline({
         map: this.map,
-        path: []
+        path: this.prevPath
       });
       this.polyline.on('click', function (e) {
         _this2.onPolylineClick(e);
