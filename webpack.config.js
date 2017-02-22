@@ -1,13 +1,11 @@
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
-  entry: {
-    amap:'./lib/AMap.js',
-    vendor: ['react', 'react-dom'],
-  },
+  entry: './lib/AMap.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
+    filename: 'amap.js',
     library: 'AMap',
     libraryTarget: 'umd',
   },
@@ -35,5 +33,9 @@ module.exports = {
         loader: ['style-loader', 'css-loader']
       }
     ]
+  },
+  externals: {
+    'react': 'react',
+    'react-dom': 'react-dom',
   }
 };
