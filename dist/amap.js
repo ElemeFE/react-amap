@@ -7,7 +7,7 @@
 		exports["AMap"] = factory(require("react"), require("react-dom"));
 	else
 		root["AMap"] = factory(root["react"], root["react-dom"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_4__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_4__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -86,20 +86,32 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var isFun = function isFun(arg) {
-  return !!arg && typeof arg === 'function';
+var errorMap = {
+  'MARKER_ID_CONFLICT': 'Marker 的 id 属性重复',
+  'MARKER_ID_REQUIRED': '每一个 Marker 必需有一个 id 属性',
+  'NO_MAP_INSTANCE': '没有地图实例；组件必需作为 AMap 的子组件使用',
+  'INFO_WINDOW_CHILD_INVALID': 'InfoWindow 组件的子组件必必需包裹在一个元素里',
+  'CIRCLE_CENTER_REQUIRED': 'Circle 组件必需设置 center 属性',
+  'CIRCLE_RADIUS_REQUIRED': 'Circle 组件必需设置 radius 属性',
+  'SRC_REQUIRED': 'GroundImage 组件必需设置 src 属性',
+  'BOUNDS_REQUIRED': 'GroundImage 组件必需设置 bounds 属性',
+  'WINDOW_POSITION_REQUIRED': 'InfoWindow 组件必需设置 position 属性',
+  'INVALID_AMAP_PLUGIN': 'plugins 属性不正确；目前支持的插件有\'scale\', \'toolbar\', \'maptype\', \'overview\''
 };
 
-exports.default = isFun;
+var error = function error(desc, shouldThrowError) {
+  var text = desc in errorMap ? errorMap.desc : '未知错误';
+  if (shouldThrowError) {
+    throw new Error(text);
+  } else {
+    console.log('%c' + text, 'color:#f66;border-left: 2px solid red;');
+  }
+};
+
+exports.default = error;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -108,21 +120,17 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var errorMap = {
-  'MARKER_ID_CONFLICT': '标记的 ID 属性重复',
-  'NO_MAP_INSTANCE': '没有地图实例',
-  'INFO_WINDOW_CHILD_INVALID': 'InfoWindow 组件的子组件必必需包裹在一个元素里',
-  'CIRCLE_CENTER_REQUIRED': 'TODO',
-  'CIRCLE_RADIUS_REQUIRED': 'TODO',
-  'WINDOW_POSITION_REQUIRED': 'TODO'
+var isFun = function isFun(arg) {
+  return !!arg && typeof arg === 'function';
 };
 
-var error = function error(desc) {
-  var text = desc in errorMap ? errorMap.desc : '未知错误';
-  throw new Error(text);
-};
+exports.default = isFun;
 
-exports.default = error;
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
 /***/ }),
 /* 3 */
@@ -135,7 +143,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _isFun = __webpack_require__(0);
+var _isFun = __webpack_require__(1);
 
 var _isFun2 = _interopRequireDefault(_isFun);
 
@@ -177,15 +185,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(1);
+var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _isFun = __webpack_require__(0);
+var _isFun = __webpack_require__(1);
 
 var _isFun2 = _interopRequireDefault(_isFun);
 
-var _error = __webpack_require__(2);
+var _error = __webpack_require__(0);
 
 var _error2 = _interopRequireDefault(_error);
 
@@ -229,8 +237,7 @@ var Circle = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Circle.__proto__ || Object.getPrototypeOf(Circle)).call(this, props));
 
     if (!props.__map__) {
-      /* eslint-disable no-console */
-      (0, _error2.default)('NO_MAP_INSTANCE');
+      (0, _error2.default)('NO_MAP_INSTANCE', true);
     } else {
       _this.map = props.__map__;
       _this.element = props.__ele__;
@@ -243,7 +250,6 @@ var Circle = function (_Component) {
   _createClass(Circle, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      //
       if (this.setVisible(nextProps)) {
         this.setCenter(nextProps);
         this.setRadius(nextProps);
@@ -343,7 +349,7 @@ var Circle = function (_Component) {
       if ('center' in props) {
         center = new window.AMap.LngLat(props.center.longitude, props.center.latitude);
       } else {
-        (0, _error2.default)('CIRCLE_CENTER_REQUIRED');
+        (0, _error2.default)('CIRCLE_CENTER_REQUIRED', true);
       }
       var curCenter = this.mapCircle.getCenter();
       if (curCenter) {
@@ -361,7 +367,7 @@ var Circle = function (_Component) {
       if ('radius' in props) {
         radius = props.radius;
       } else {
-        (0, _error2.default)('CIRCLE_RADIUS_REQUIRED');
+        (0, _error2.default)('CIRCLE_RADIUS_REQUIRED', true);
       }
       if (this.mapCircle.getRadius() !== radius) {
         this.mapCircle.setRadius(radius);
@@ -442,11 +448,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(1);
+var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _error = __webpack_require__(2);
+var _error = __webpack_require__(0);
 
 var _error2 = _interopRequireDefault(_error);
 
@@ -484,8 +490,7 @@ var GroundImage = function (_Component) {
     var _this = _possibleConstructorReturn(this, (GroundImage.__proto__ || Object.getPrototypeOf(GroundImage)).call(this, props));
 
     if (!props.__map__) {
-      /* eslint-disable no-console */
-      (0, _error2.default)('NO_MAP_INSTANCE');
+      (0, _error2.default)('NO_MAP_INSTANCE', true);
     } else {
       _this.map = props.__map__;
       _this.element = props.__ele__;
@@ -499,7 +504,10 @@ var GroundImage = function (_Component) {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       if (this.setVisible(nextProps)) {
-        if (this.checkBoundsChange(nextProps) || nextProps.src !== this.image.getImageUrl()) {
+        if (
+        // 高德提供的 GroundImage 不支持动态刷新 bounds 和 src；
+        // 检测到这两个属性变化后，需要删除当前实例，并重新创建实例
+        this.checkBoundsChange(nextProps) || nextProps.src !== this.image.getImageUrl()) {
           this.image.setMap(null);
           this.initGroundImage(nextProps);
         } else {
@@ -517,12 +525,12 @@ var GroundImage = function (_Component) {
       if ('src' in props) {
         src = props.src;
       } else {
-        (0, _error2.default)('SRC_REQUIRED');
+        (0, _error2.default)('SRC_REQUIRED', true);
       }
       if ('bounds' in props) {
         bounds = this.buildBounds(props);
       } else {
-        (0, _error2.default)('BOUNDS_REQUIRED');
+        (0, _error2.default)('BOUNDS_REQUIRED', true);
       }
 
       if ('clickable' in props) {
@@ -618,17 +626,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(1);
+var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = __webpack_require__(4);
 
-var _isFun = __webpack_require__(0);
+var _isFun = __webpack_require__(1);
 
 var _isFun2 = _interopRequireDefault(_isFun);
 
-var _error = __webpack_require__(2);
+var _error = __webpack_require__(0);
 
 var _error2 = _interopRequireDefault(_error);
 
@@ -664,8 +672,7 @@ var InfoWindow = function (_Component) {
     var _this = _possibleConstructorReturn(this, (InfoWindow.__proto__ || Object.getPrototypeOf(InfoWindow)).call(this, props));
 
     if (!props.__map__) {
-      /* eslint-disable no-console */
-      (0, _error2.default)('NO_MAP_INSTANCE');
+      (0, _error2.default)('NO_MAP_INSTANCE', true);
     } else {
       _this.map = props.__map__;
       _this.element = props.__ele__;
@@ -742,15 +749,16 @@ var InfoWindow = function (_Component) {
   }, {
     key: 'setChild',
     value: function setChild(props) {
-      (0, _reactDom.render)(_react2.default.createElement(
-        'div',
-        null,
-        props.children
-      ), this.infoDOM);
-      // if (this.validateChild(props.children)) {
-      // } else {
-      //   error('INFO_WINDOW_CHILD_INVALID');
-      // }
+      var child = props.children;
+      if (Children.count(child) === 1) {
+        (0, _reactDom.render)(child, this.infoDOM);
+      } else {
+        (0, _reactDom.render)(_react2.default.createElement(
+          'div',
+          null,
+          props.children
+        ), this.infoDOM);
+      }
     }
   }, {
     key: 'setClassName',
@@ -798,13 +806,8 @@ var InfoWindow = function (_Component) {
           this.infoWindow.open(this.map, this.showPos);
         }
       } else {
-        (0, _error2.default)('WINDOW_POSITION_REQUIRED');
+        (0, _error2.default)('WINDOW_POSITION_REQUIRED', true);
       }
-    }
-  }, {
-    key: 'validateChild',
-    value: function validateChild(child) {
-      return Children.count(child) === 1;
     }
   }, {
     key: 'render',
@@ -831,15 +834,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(1);
+var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _isFun = __webpack_require__(0);
+var _isFun = __webpack_require__(1);
 
 var _isFun2 = _interopRequireDefault(_isFun);
 
-var _error = __webpack_require__(2);
+var _error = __webpack_require__(0);
 
 var _error2 = _interopRequireDefault(_error);
 
@@ -916,8 +919,7 @@ var Markers = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Markers.__proto__ || Object.getPrototypeOf(Markers)).call(this, props));
 
     if (!props.__map__) {
-      /* eslint-disable no-console */
-      console.warn('没有地图实例 ');
+      (0, _error2.default)('NO_MAP_INSTANCE', true);
     } else {
       _this.map = props.__map__;
       _this.element = props.__ele__;
@@ -1195,7 +1197,7 @@ var Markers = function (_Component) {
               _this4.markerIDCache.push(id);
             }
           } else {
-            (0, _error2.default)('MARKER_ID_CONFLICT');
+            (0, _error2.default)('MARKER_ID_REQUIRED');
           }
           var marker = new window.AMap.Marker({
             position: [m.longitude, m.latitude],
@@ -1310,15 +1312,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(1);
+var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _isFun = __webpack_require__(0);
+var _isFun = __webpack_require__(1);
 
 var _isFun2 = _interopRequireDefault(_isFun);
 
-var _error = __webpack_require__(2);
+var _error = __webpack_require__(0);
 
 var _error2 = _interopRequireDefault(_error);
 
@@ -1360,9 +1362,7 @@ var Polygon = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Polygon.__proto__ || Object.getPrototypeOf(Polygon)).call(this, props));
 
     if (!props.__map__) {
-      /* eslint-disable no-console */
-      console.warn('没有地图实例 ');
-      (0, _error2.default)('NO_MAP_INSTANCE');
+      (0, _error2.default)('NO_MAP_INSTANCE', true);
     } else {
       _this.map = props.__map__;
       _this.element = props.__ele__;
@@ -1631,15 +1631,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(1);
+var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _isFun = __webpack_require__(0);
+var _isFun = __webpack_require__(1);
 
 var _isFun2 = _interopRequireDefault(_isFun);
 
-var _error = __webpack_require__(2);
+var _error = __webpack_require__(0);
 
 var _error2 = _interopRequireDefault(_error);
 
@@ -1681,8 +1681,7 @@ var Polyline = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Polyline.__proto__ || Object.getPrototypeOf(Polyline)).call(this, props));
 
     if (!props.__map__) {
-      /* eslint-disable no-console */
-      (0, _error2.default)('NO_MAP_INSTANCE');
+      (0, _error2.default)('NO_MAP_INSTANCE', true);
     } else {
       _this.map = props.__map__;
       _this.element = props.__ele__;
@@ -2426,7 +2425,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(1);
+var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -2436,7 +2435,7 @@ var _APILoader = __webpack_require__(11);
 
 var _APILoader2 = _interopRequireDefault(_APILoader);
 
-var _isFun = __webpack_require__(0);
+var _isFun = __webpack_require__(1);
 
 var _isFun2 = _interopRequireDefault(_isFun);
 
@@ -2467,6 +2466,10 @@ var _Circle2 = _interopRequireDefault(_Circle);
 var _GroundImage = __webpack_require__(6);
 
 var _GroundImage2 = _interopRequireDefault(_GroundImage);
+
+var _error = __webpack_require__(0);
+
+var _error2 = _interopRequireDefault(_error);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2653,7 +2656,7 @@ var AMap = function (_Component) {
             }
             var idx = pluginList.indexOf(name);
             if (idx === -1) {
-              // error('INVALID_AMAP_PLUGIN');
+              (0, _error2.default)('INVALID_AMAP_PLUGIN');
             } else {
               if (visible) {
                 pluginList.splice(idx, 1);
@@ -2678,9 +2681,6 @@ var AMap = function (_Component) {
         });
       }
     }
-
-    //
-
   }, {
     key: 'installPlugin',
     value: function installPlugin(name, opts) {
