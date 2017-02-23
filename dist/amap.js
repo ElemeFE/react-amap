@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 21);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -446,6 +446,182 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _error = __webpack_require__(2);
+
+var _error2 = _interopRequireDefault(_error);
+
+var _bindEvent = __webpack_require__(3);
+
+var _bindEvent2 = _interopRequireDefault(_bindEvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/*
+ * props
+ * {
+ *  __map__ 父级组件传过来的地图实例
+ * }
+ */
+var Component = _react2.default.Component;
+var defaultOpts = {
+  clickable: false,
+  opacity: 1,
+  visible: true
+};
+
+var GroundImage = function (_Component) {
+  _inherits(GroundImage, _Component);
+
+  function GroundImage(props) {
+    _classCallCheck(this, GroundImage);
+
+    var _this = _possibleConstructorReturn(this, (GroundImage.__proto__ || Object.getPrototypeOf(GroundImage)).call(this, props));
+
+    if (!props.__map__) {
+      /* eslint-disable no-console */
+      (0, _error2.default)('NO_MAP_INSTANCE');
+    } else {
+      _this.map = props.__map__;
+      _this.element = props.__ele__;
+      _this.circleEditable = false;
+      _this.initGroundImage(props);
+    }
+    return _this;
+  }
+
+  _createClass(GroundImage, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (this.setVisible(nextProps)) {
+        if (this.checkBoundsChange(nextProps) || nextProps.src !== this.image.getImageUrl()) {
+          this.image.setMap(null);
+          this.initGroundImage(nextProps);
+        } else {
+          this.setOpacity(nextProps);
+        }
+      }
+    }
+  }, {
+    key: 'initGroundImage',
+    value: function initGroundImage(props) {
+      var src = void 0,
+          bounds = void 0,
+          opacity = void 0,
+          clickable = void 0;
+      if ('src' in props) {
+        src = props.src;
+      } else {
+        (0, _error2.default)('SRC_REQUIRED');
+      }
+      if ('bounds' in props) {
+        bounds = this.buildBounds(props);
+      } else {
+        (0, _error2.default)('BOUNDS_REQUIRED');
+      }
+
+      if ('clickable' in props) {
+        clickable = props.clickable;
+      } else {
+        clickable = defaultOpts.clickable;
+      }
+
+      if ('opacity' in props) {
+        opacity = props.opacity;
+      } else {
+        opacity = defaultOpts.opacity;
+      }
+      this.image = new window.AMap.GroundImage(src, bounds, {
+        map: this.map,
+        clickable: clickable,
+        opacity: opacity
+      });
+
+      (0, _bindEvent2.default)(this.image, ['Click', 'DblClick'], this);
+    }
+  }, {
+    key: 'checkBoundsChange',
+    value: function checkBoundsChange(nextProps) {
+      var changed = true;
+      var nextBounds = this.buildBounds(nextProps);
+      var curBounds = this.image.getBounds();
+      if (curBounds.getNorthEast().equals(nextBounds.getNorthEast()) && curBounds.getSouthWest().equals(nextBounds.getSouthWest())) {
+        changed = false;
+      }
+      return changed;
+    }
+  }, {
+    key: 'buildBounds',
+    value: function buildBounds(props) {
+      var rawBounds = props.bounds;
+      var bounds = new window.AMap.Bounds(new window.AMap.LngLat(rawBounds.sw.longitude, rawBounds.sw.latitude), new window.AMap.LngLat(rawBounds.ne.longitude, rawBounds.ne.latitude));
+      return bounds;
+    }
+  }, {
+    key: 'setOpacity',
+    value: function setOpacity(props) {
+      var opacity = defaultOpts.opacity;
+      if ('opacity' in props) {
+        opacity = props.opacity;
+      }
+      if (opacity !== this.image.getOpacity()) {
+        this.image.setOpacity(opacity);
+      }
+    }
+  }, {
+    key: 'setVisible',
+    value: function setVisible(props) {
+      var visible = defaultOpts.visible;
+      if ('visible' in props) {
+        visible = props.visible;
+      }
+      if (visible) {
+        if (!this.prevVisible) {
+          this.image.setMap(this.map);
+          this.prevVisible = true;
+        }
+      } else {
+        if (this.prevVisible) {
+          this.image.setMap(null);
+          this.prevVisible = false;
+        }
+      }
+      return visible;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return null;
+    }
+  }]);
+
+  return GroundImage;
+}(Component);
+
+exports.default = GroundImage;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
 var _reactDom = __webpack_require__(4);
 
 var _isFun = __webpack_require__(0);
@@ -635,7 +811,7 @@ var InfoWindow = function (_Component) {
 exports.default = InfoWindow;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -659,23 +835,23 @@ var _error = __webpack_require__(2);
 
 var _error2 = _interopRequireDefault(_error);
 
-var _map_cluster = __webpack_require__(15);
+var _map_cluster = __webpack_require__(16);
 
 var _map_cluster2 = _interopRequireDefault(_map_cluster);
 
-var _map_wait = __webpack_require__(18);
+var _map_wait = __webpack_require__(19);
 
 var _map_wait2 = _interopRequireDefault(_map_wait);
 
-var _map_wait_emphsis = __webpack_require__(19);
+var _map_wait_emphsis = __webpack_require__(20);
 
 var _map_wait_emphsis2 = _interopRequireDefault(_map_wait_emphsis);
 
-var _map_selected = __webpack_require__(16);
+var _map_selected = __webpack_require__(17);
 
 var _map_selected2 = _interopRequireDefault(_map_selected);
 
-var _map_selected_emphsis = __webpack_require__(17);
+var _map_selected_emphsis = __webpack_require__(18);
 
 var _map_selected_emphsis2 = _interopRequireDefault(_map_selected_emphsis);
 
@@ -689,7 +865,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 // import css from './assets/marker.css';
 
-__webpack_require__(14);
+__webpack_require__(15);
 
 var Component = _react2.default.Component;
 
@@ -1114,7 +1290,7 @@ var Markers = function (_Component) {
 exports.default = Markers;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1435,7 +1611,7 @@ var Polygon = function (_Component) {
 exports.default = Polygon;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1751,7 +1927,7 @@ var Polyline = function (_Component) {
 exports.default = Polyline;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1852,10 +2028,10 @@ var APILoader = function () {
 exports.default = APILoader;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(12)();
+exports = module.exports = __webpack_require__(13)();
 // imports
 
 
@@ -1866,7 +2042,7 @@ exports.push([module.i, ".amap_markers_pop_window{\n    padding: 10px;\n    bord
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 /*
@@ -1922,7 +2098,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 /*
@@ -2174,16 +2350,16 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(11);
+var content = __webpack_require__(12);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(13)(content, {});
+var update = __webpack_require__(14)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2200,37 +2376,37 @@ if(false) {
 }
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,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"
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAuCAMAAAB+ruu2AAAAvVBMVEUAAACMkJuLkporZ8WLkpssaMYrZ8aOkpuOkpyPlJ2OlZ0sZ8YrZ8YraMYsZ8YsaMYsaMaMkpqKkZstaMkva8cuaseUlKE1bso6dNGLoqJJbdtNmv80a8ErZ8UsaMaKkZ0saMctacYuacgsZ8YvacRziKUsaMaMkposaMeKkZssacYsZ8aLkposaMcsaMctacYtZ8guackyasY4bcAraMZqg6oraMZ9jKE5bL80bME6b8F+i6OIkJ4sasgrZ8UWMVv0AAAAPnRSTlMARbT4pvXsPTUqId7Ux/uciltKLyAbExALCwcD89m7b2ZVN+jPwsCvp6Shl5ORe1pKPCTo4Mi9vLiXfHdHRu2KnrAAAAFDSURBVDjLjZPpcoIwFIUPRBCQKq6AuNd9r923vP9jNY4oTS/c6feHCecjORkSZHSPm3nfsvrzzbELSrtmyRtWrQ2dKBBSQwTR77w1lYRpK8sntszBnty+v+TUSOcIfVmAH+LMThayg+JULRaqJyUsJcMSiAQniAhjyTLGmhfWuOOFO1R4oQLBCwI2L9jwecHHgBcG2PPCHk1eaILfZx/AiBMOSkiYKfwEiu/CXKSnMigSRriQvOTnNVwJn3J/ZBc3mhbN77Xbd6Dn9QEaAS2okwxoQZ2wUlCQFk0LUsZ6QUr8fhU+YlA6jvGVXoE3w3A6f3PXMIzGZ++cPw4bauDquade1UvmTEhpvZqluhp6mlBWb0qmaT73ejP1KKlhOUe4kAl0iZR0CVpyuF0tFqttWpJuM+O8TUrsuY7qUnZcL8b/+QEqj9Qe9dgWJAAAAABJRU5ErkJggg=="
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAABCCAMAAAAfURQkAAAA21BMVEUAAACMkJuLkpqPj6AraMU2cs8rZ8UsZ8YraMaQk50wbcwsZ8g9ddAraMYsZ8WLkpuLkZxShN+ioqIrZ8YsaMUsaMYta8craMYsZ8YsZ8aEj58sZ8ctaMeMkpwsaciPk5uNkZ2OkpyNkp2QkJuQmKAraMYsZ8YrZ8csZ8csacYsaceIj58sasc4bcAsaMU/cL1qhKoraMWLk5uKkpsrZ8aKkpuLkZuMkJtmgq+MkpotacaRkZsrZ8mLkJuNlJovasiLlJ02a8lFc7pTebRHc7oraMZXerRTebUrZ8VuqpGWAAAASHRSTlMARbQL2A7y8KohGVAI5cqOcwUF+uJ/J9HBubieZWVcQDo2MBcQ9LOJhHhqSUfy6urIsa6kmYWCel5bWjMvLiYeHBPl2aaTjHjHjfEPAAAB60lEQVRIx5WU13bCMAxAFWcnkDBSSssqo1AK3Ys9Ov3/X1QfuxSCE8e+T7F8jyJZx4ZjiuOBUzUsy6g6g3ERhOSajoUPsJxmLlUu1vOYI19P+YVv4EQMPyl1DadS4yryAiwg8OL2Io+F5Bex3NQW+gf5cwHOJNjX72AJnJ3dxFI0/0qJ5PSIlTPEkgyBsLVldXtL9GsszTXRz+T1MwCzLK+XTZhhBWbwrKI/Q1VFr0Kkokdgq+g2lFX0Mtyq6LdwqqKf0qEqjLWmotegrqLXwVPRPVDpNQCAK3n9hOhr6UFdekD4ktWv2BN2KWfbJlAGsjeVUQyUXjFY29m2YcI/fqZtVWCHzOH7EKOfNaA4piGy+3BMxRK2yeEL2+Q5EbbJ8yDXprjdPqRRsUVt8ow5266AgCHfphCHa1OIGbvpD2K5tOlMDqYbjTqbUrrttjRN+9lf5QlZttwUWb/QKJ87/ZutL/REu0U3C0/ondkf6KlAQ60kv023QoTQ+Q0m3CFCSINt3u6x3ERh/t05/WT5e5zepfEXxPz7e8R4oeEuXzqNN9ARDRpOKL5DN97i9hsNdpJGxM5xGj7u3Mdwyk6yBEn+UqOMGoXXMHwtNEZsvUwbbG+uccx7kI7utg/dtqtDFnrXdVcr1+1yqjK/IID+J6BDfkIAAAAASUVORK5CYII="
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAuCAMAAAB+ruu2AAAAvVBMVEUAAACMkJuLkprzPj6LkpvzPT3zPT3yPT3zPj6OkpuPlJ3/R0fyPj7/SEjzPT3zPT3zPj6MkpqKkZuOkpz1QECPlp72QUGUlKGLoqLyPT2OkZrzPz/2Pz/rQ0ToRUXzPj6lfYSMkprzPT3zPj6LkprzPj7zPj7zPj70Pj71Pj7yPz+Ok534QED3Pj6MlJz3QkL5QUHlSUrqRUbyPj6vdXryPT2bhY3jSEnpRUXkSkych5DzPz+QjJf0Pj7yPT2cvNJeAAAAPnRSTlMARbT4ptPs3549Kgz0BsK7iltKNi8iGxML2W9VN/fy6MKvp5eTkXtkWko8NCQhHx8T6MvJyMi8uJd8d2lHRlhUvfoAAAE+SURBVDjLjZPZkoIwEEUbwr6rqCDquC/jNvs++f/PmlgQmRjS5Xmhknuq+nYBUBNu51EeBHk034Yg03MCeiFweiDiJ4QKkMT/n59MKmGe6nxo0QasIc8PZS4bh2q+SRWYZY8lVbIExp6oBbJnwowizFgDggnEh4KiFODgggMRLkRg44INBBcIWLhggYkLJsS4EMMKF1aQ4kIK+J45AKwxYcOE0MZ2OPOrzEn1VSYqYQ0VsepNch4aa7yGcCElcn4n/H0bueA9zxRFv+GKWFFQUfQ5BIk0EAvKFGJBmeyDC58ZyPQ72s9Tmb9rWqd/nXuaprW/xuf8cdBmB0/Mu+yqZegTQunoTTda7NgVBJfdGLquv4zGE/Yw2NFtEDhckEeU8BFyycHCmE6NBS8prVnD1xTJjt6OdXF33jGD2/kDOZnS0lToKQcAAAAASUVORK5CYII="
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAABCCAMAAAAfURQkAAAA3lBMVEUAAACMkJuLkpqPj6CtnZ3yPT3yPj7zPT32QkL/RkaOkpyOkZyPk53/Tk7zPT3zPT3yPj7zPT30Pz/zPT2OkZzzPj70QED/UFDzPT3zPT3zPj7zPT3zPT2Mk5yLkpvzPT3zPT2MkpyMkpzzPz+Pk5uQmKCSjZXzPj7yPj7mR0nzPT3YU1XzPj7zPT2Lk5uKkpuLkpuMkJuKkZzzPT2MkprzPT30Pj70QUGNlJr/Q0PeTlDtQEHIYGSwc3mteH2chY3UVlnzPj7HYmjKYGTzPz+2bXW2c3uhg433QEDyPT1sp1LSAAAASXRSTlMARbQLBPPw2BkOODAhCPrlypxbThiyJwXi0bmsqY2Eg39xZWVAELeJePLq58HArqSRenZoW1NGLyYT6+LZyca8ppOMeG5iW0wg/pd3vwAAAeZJREFUSMellOeWmzAQhS+iG2xjL+5ld92zvZf0nuj9XyisFLLYAnl08v2C4TvD3BEH7NJ7WI/Pfdf1z8frhx601Ntjlxdwx+16pezMm1yhOa94xb3PS/HvodJr8UpaykRBwjUkwbb92ORamo9bvYWt9Qv96wnfS/I6/4gTGOV2m5No/x2lT9P7cpwNJ7JBxrNH1b3nTL/lZG4zfUjXh0DYoOuNMN8idZctE72FMxP9DH0TvQ/PRPfQMNEbODHRTzAw0QcYmuhD073PTfQ5AhM9gEnWBMAhXT/K9IB8UG6AjC9U/RAwaO+FEKxp+ndIeonRXwy/CV+xH+IfB/u30kUOZfkHKOJ0CDssEPo6u4Ndui4lJiGuiKlypI2p0qn8DiWkuB1U0fV0MSlxvS40bNSYWkZKTC3hgBRT4qTRz0Lcd7+i1Km244VlWd9eT/NHdruIK2S7Zgk+5/pXeV+zS+2FeHh8yU6l/Z5dHovSosyXva8YY6s3L/Ypy7iS/VV7KXuzFz5l/tuVuJT9l4qeivqUCVYfPjLJVJRTdXRRn7EdZqJcMnwkHlxv29eiGEHFkVnvJhe5ezG5k0kdlPmRJZndTCeT6c3MkkRVB7uMLIVoiWrsuFZ0a7GNPTh2GsdPT3Gc2g7+kz9nhANFEL9hVAAAAABJRU5ErkJggg=="
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2248,7 +2424,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = __webpack_require__(4);
 
-var _APILoader = __webpack_require__(10);
+var _APILoader = __webpack_require__(11);
 
 var _APILoader2 = _interopRequireDefault(_APILoader);
 
@@ -2260,25 +2436,29 @@ var _bindEvent = __webpack_require__(3);
 
 var _bindEvent2 = _interopRequireDefault(_bindEvent);
 
-var _Markers = __webpack_require__(7);
+var _Markers = __webpack_require__(8);
 
 var _Markers2 = _interopRequireDefault(_Markers);
 
-var _Polygon = __webpack_require__(8);
+var _Polygon = __webpack_require__(9);
 
 var _Polygon2 = _interopRequireDefault(_Polygon);
 
-var _Polyline = __webpack_require__(9);
+var _Polyline = __webpack_require__(10);
 
 var _Polyline2 = _interopRequireDefault(_Polyline);
 
-var _InfoWindow = __webpack_require__(6);
+var _InfoWindow = __webpack_require__(7);
 
 var _InfoWindow2 = _interopRequireDefault(_InfoWindow);
 
 var _Circle = __webpack_require__(5);
 
 var _Circle2 = _interopRequireDefault(_Circle);
+
+var _GroundImage = __webpack_require__(6);
+
+var _GroundImage2 = _interopRequireDefault(_GroundImage);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2616,6 +2796,7 @@ AMap.Polygon = _Polygon2.default;
 AMap.Polyline = _Polyline2.default;
 AMap.InfoWindow = _InfoWindow2.default;
 AMap.Circle = _Circle2.default;
+AMap.GroundImage = _GroundImage2.default;
 
 exports.default = AMap;
 
