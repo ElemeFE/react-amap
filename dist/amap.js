@@ -742,11 +742,15 @@ var InfoWindow = function (_Component) {
   }, {
     key: 'setChild',
     value: function setChild(props) {
-      if (this.validateChild(props.children)) {
-        (0, _reactDom.render)(props.children, this.infoDOM);
-      } else {
-        (0, _error2.default)('INFO_WINDOW_CHILD_INVALID');
-      }
+      (0, _reactDom.render)(_react2.default.createElement(
+        'div',
+        null,
+        props.children
+      ), this.infoDOM);
+      // if (this.validateChild(props.children)) {
+      // } else {
+      //   error('INFO_WINDOW_CHILD_INVALID');
+      // }
     }
   }, {
     key: 'setClassName',
