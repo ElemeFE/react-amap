@@ -670,12 +670,16 @@ var InfoWindow = function (_Component) {
       _this.map = props.__map__;
       _this.element = props.__ele__;
       _this.initInfoWindow(props);
-      _this.drawWindow(props);
     }
     return _this;
   }
 
   _createClass(InfoWindow, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.drawWindow(this.props);
+    }
+  }, {
     key: 'initInfoWindow',
     value: function initInfoWindow(props) {
       this.infoDOM = document.createElement('div');
