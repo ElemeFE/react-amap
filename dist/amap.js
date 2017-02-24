@@ -2489,6 +2489,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var Component = _react2.default.Component;
 var Children = _react2.default.Children;
+var ComponentList = [_Circle2.default, _GroundImage2.default, _InfoWindow2.default, _Markers2.default, _Polyline2.default, _Polygon2.default];
 
 var defaultOpts = {
   maptype: {
@@ -2566,6 +2567,9 @@ var AMap = function (_Component) {
       var _this4 = this;
 
       return Children.map(this.props.children, function (child) {
+        if (ComponentList.indexOf(child.type) === -1) {
+          return child;
+        }
         return _react2.default.cloneElement(child, {
           __map__: _this4.map,
           __ele__: _this4.mapWrapper
@@ -2776,7 +2780,7 @@ var AMap = function (_Component) {
 
       return _react2.default.createElement(
         'div',
-        { style: { width: '100%', height: '100%' } },
+        { style: { width: '100%', height: '100%', position: 'relative' } },
         _react2.default.createElement(
           'div',
           { ref: function ref(div) {
@@ -2786,9 +2790,7 @@ var AMap = function (_Component) {
         ),
         _react2.default.createElement(
           'div',
-          { ref: function ref(div) {
-              _this11.innerBridge = div;
-            }, style: { width: '100%', height: '100%' } },
+          { style: { position: 'absolute', top: 0, left: 0 } },
           this.state.mapLoaded ? this.renderChildren() : null
         )
       );
