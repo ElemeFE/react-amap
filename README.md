@@ -4,6 +4,8 @@
 
 Documentation is on the way... Some use examples are below:
 
+Check [Github](https://github.com/ElemeFE/react-amap-example) for details.
+
 ```javascript
 import AMap from 'react-amap';
  
