@@ -790,7 +790,6 @@ var InfoWindow = function (_Component) {
         var position = props.position;
 
         this.showPos = new window.AMap.LngLat(position.longitude, position.latitude);
-
         var prevOpen = this.infoWindow.getIsOpen();
         var needRefresh = true;
         // 如果之前窗口已经是开启状态
@@ -2618,7 +2617,7 @@ var AMap = function (_Component) {
 
         if ('center' in props) {
           newCenter = new window.AMap.LngLat(props.center.longitude, props.center.latitude);
-          if (!newCenter.equals(this.map.getCenter())) {
+          if (props.center !== this.props.center) {
             centerChange = true;
           }
         }
