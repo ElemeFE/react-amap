@@ -1,12 +1,17 @@
-### 使用
+# react-amap
+
+> An [AMap](http://ditu.amap.com/) Component For React Project
+
+Documentation is on the way... Some use examples are below:
 
 ```javascript
 import AMap from 'react-amap';
-
+ 
 const Markers = AMap.Markers;
 const Polygon = AMap.Polygon;
-
-
+// Polyline, Circle, InfoWindow, GroundImage
+ 
+ 
 class App extends Comonent{
     render(){
         const exampleMarkers = Array(20).fill(true).map((e, idx) => ({
