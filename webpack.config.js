@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: './lib/AMap.js',
+  entry: './lib/',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'amap.js',
