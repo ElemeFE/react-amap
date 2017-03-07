@@ -4,6 +4,7 @@ import APILoader from '../../lib/utils/APILoader';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
 
+import Marker from '../Marker';
 import Markers from '../Markers';
 import Polygon from '../Polygon';
 import Polyline from '../Polyline';
@@ -29,6 +30,7 @@ const ComponentList = [
   GroundImage,
   InfoWindow,
   Markers,
+  Marker,
   Polyline,
   Polygon,
 ];
@@ -317,6 +319,7 @@ class AMap extends Component {
   }
 }
 
+AMap.Marker = Marker;
 AMap.Markers = Markers;
 AMap.Polygon = Polygon;
 AMap.Polyline = Polyline;
