@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import APILoader from '../../lib/utils/APILoader';
 import isFun from '../../lib/utils/isFun';
-import bindEvent from '../../lib/utils/bindEvent';
 import error from '../../lib/utils/error';
 
 import Markers from '../Markers';
@@ -11,6 +10,9 @@ import Polyline from '../Polyline';
 import InfoWindow from '../InfoWindow';
 import Circle from '../Circle';
 import GroundImage from '../GroundImage';
+import CircleEditor from '../CircleEditor';
+import PolyEditor from '../PolyEditor';
+
 /*
  * props
  * {
@@ -32,19 +34,19 @@ const ComponentList = [
 ];
 
 const defaultOpts = {
-  maptype: {
+  MapType: {
     showRoad: false,
     showTraffic: false,
     defaultType: 0,
   },
-  toolbar: {
+  ToolBar: {
     position: 'RB',
     noIpLocate: true,
     locate: true,
     liteStyle: true,
     autoPosition: false,
   },
-  overview: {},
+  OverView: {},
 };
 
 class AMap extends Component {
@@ -101,37 +103,34 @@ class AMap extends Component {
   
   initMapInstance() {
     if (!this.map) {
-      const opts = {
-        showIndoorMap: false
-      };
-      if ('zoom' in this.props) {
-        opts.zoom = this.props.zoom;
-        this.prevZoom = opts.zoom;
-      }
-      if ('center' in this.props) {
-        opts.center = new window.AMap.LngLat(
-          this.props.center.longitude,
-          this.props.center.latitude
-        );
-        this.prevCenter = opts.center;
+      let opts = {};
+      if ('createOptions' in this.props) {
+        opts = this.props.createOptions;
+      } else {
+        if ('zoom' in this.props) {
+          opts.zoom = this.props.zoom;
+          this.prevZoom = opts.zoom;
+        }
+        if ('center' in this.props) {
+          opts.center = new window.AMap.LngLat(
+            this.props.center.longitude,
+            this.props.center.latitude
+          );
+          this.prevCenter = opts.center;
+        }
       }
       this.map = new window.AMap.Map(this.mapWrapper, opts);
-      
-      const eventList = [
-        'Complete',
-        'Click',
-        'DblClick',
-        'MapMove',
-        'MoveStart',
-        'MoveEnd',
-        'ZoomChange',
-        'ZoomStart',
-        'ZoomEnd'
-      ];
-      bindEvent(this.map, eventList, this);
-      this.liftMapInstance();
+      const events = this.exposeMapInstance();
+      events && this.bindAMapEvents(events);
       this.setPlugins(this.props);
     }
+  }
+  
+  bindAMapEvents(events){
+    const list = Object.keys( events );
+    list.length && list.forEach((evName) => {
+      this.map.on(evName,events[evName]);
+    });
   }
   
   setZoomAndCenter(props) {
@@ -170,7 +169,7 @@ class AMap extends Component {
   }
   
   setPlugins(props) {
-    const pluginList = ['scale', 'toolbar', 'maptype', 'overview'];
+    const pluginList = ['Scale', 'ToolBar', 'MapType', 'OverView'];
     if ('plugins' in props) {
       const plugins = props.plugins;
       if (plugins && plugins.length) {
@@ -183,7 +182,8 @@ class AMap extends Component {
           } else {
             name = p.name;
             config = p.options;
-            visible = !!p.visible;
+            visible = (('visible' in config) && (typeof config.visible === 'boolean')) ? config.visible: true;
+            delete config.visible;
           }
           const idx = pluginList.indexOf(name);
           if (idx === -1) {
@@ -211,17 +211,18 @@ class AMap extends Component {
   }
   
   installPlugin(name, opts) {
+    opts = opts || {};
     switch(name) {
-      case 'scale':
+      case 'Scale':
         this.setScalePlugin(opts);
         break;
-      case 'toolbar':
+      case 'ToolBar':
         this.setToolbarPlugin(opts);
         break;
-      case 'overview':
+      case 'OverView':
         this.setOverviewPlugin(opts);
         break;
-      case 'maptype':
+      case 'MapType':
         this.setMapTypePlugin(opts);
         break;
       default:
@@ -230,57 +231,78 @@ class AMap extends Component {
   }
   
   setMapTypePlugin(opts) {
-    if (this.pluginMap['maptype']) {
-      this.pluginMap.maptype.show();
+    if (this.pluginMap['MapType']) {
+      this.pluginMap.MapType.show();
     } else {
-      const initOpts = opts || defaultOpts.maptype;
+      const { onCreated, ...restOpts } = opts;
+      const initOpts = {...defaultOpts.MapType, ...restOpts};
       this.map.plugin(['AMap.MapType'], () => {
-        this.pluginMap.maptype = new window.AMap.MapType(initOpts);
-        this.map.addControl(this.pluginMap.maptype);
+        this.pluginMap.MapType = new window.AMap.MapType(initOpts);
+        this.map.addControl(this.pluginMap.MapType);
+        if (isFun(onCreated)) {
+          onCreated(this.pluginMap.MapType);
+        }
       });
     }
   }
   
   setOverviewPlugin(opts) {
-    if (this.pluginMap['overview']) {
-      this.pluginMap.overview.show();
+    if (this.pluginMap['OverView']) {
+      this.pluginMap.OverView.show();
     } else {
-      const initOpts = opts || defaultOpts.overview;
+      const { onCreated, ...restOpts } = opts;
+      const initOpts = {...defaultOpts.OverView, ...restOpts};
       this.map.plugin(['AMap.OverView'], () => {
-        this.pluginMap.overview = new window.AMap.OverView(initOpts);
-        this.map.addControl(this.pluginMap.overview);
+        this.pluginMap.OverView = new window.AMap.OverView(initOpts);
+        this.map.addControl(this.pluginMap.OverView);
+        if (isFun(onCreated)) {
+          onCreated(this.pluginMap.OverView);
+        }
       });
     }
   }
   
-  setScalePlugin() {
-    if (this.pluginMap['scale']) {
-      this.pluginMap.scale.show();
+  setScalePlugin(opts) {
+    if (this.pluginMap['Scale']) {
+      this.pluginMap.Scale.show();
     } else {
       this.map.plugin(['AMap.Scale'], () => {
-        this.pluginMap.scale = new window.AMap.Scale();
-        this.map.addControl(this.pluginMap.scale);
+        this.pluginMap.Scale = new window.AMap.Scale();
+        this.map.addControl(this.pluginMap.Scale);
+        if (isFun(opts.onCreated)) {
+          opts.onCreated(this.pluginMap.Scale);
+        }
       });
     }
   }
   
   setToolbarPlugin(opts) {
-    if (this.pluginMap['toolbar']) {
-      this.pluginMap.toolbar.show();
+    if (this.pluginMap['ToolBar']) {
+      this.pluginMap.ToolBar.show();
     } else {
-      const initOpts = opts || defaultOpts.toolbar;
+      const { onCreated, ...restOpts } = opts;
+      const initOpts = {...defaultOpts.ToolBar, ...restOpts};
       this.map.plugin(['AMap.ToolBar'], () => {
-        this.pluginMap.toolbar = new window.AMap.ToolBar(initOpts);
-        this.map.addControl(this.pluginMap.toolbar);
+        this.pluginMap.ToolBar = new window.AMap.ToolBar(initOpts);
+        this.map.addControl(this.pluginMap.ToolBar);
+        if (isFun(onCreated)) {
+          onCreated(this.pluginMap.ToolBar);
+        }
       });
     }
   }
   
-  // 用户可以通过 onInit 事件获取 map 实例
-  liftMapInstance() {
-    if (isFun(this.props.onInit)) {
-      this.props.onInit(this.map);
+  // 用户可以通过 onCreated 事件获取 map 实例
+  exposeMapInstance() {
+    if ('events' in this.props) {
+      const events = this.props.events || {};
+      if (isFun(events.created)) {
+        events.created(this.map);
+        delete events.created;
+      }
+      return events;
     }
+    return false;
   }
   
   render() {
@@ -288,7 +310,7 @@ class AMap extends Component {
       <div ref={(div)=>{this.mapWrapper = div }} style={{ width: '100%', height: '100%' }}>
         <div style={{ background: '#eee', width: '100%', height: '100%' }}></div>
       </div>
-      <div style={{position:'absolute', top: 0, left: 0}}>
+      <div>
         { this.state.mapLoaded ? this.renderChildren() : null }
       </div>
     </div>);
@@ -301,5 +323,7 @@ AMap.Polyline = Polyline;
 AMap.InfoWindow = InfoWindow;
 AMap.Circle = Circle;
 AMap.GroundImage = GroundImage;
+AMap.CircleEditor = CircleEditor;
+AMap.PolyEditor = PolyEditor;
 
 export default AMap;

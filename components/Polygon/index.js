@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
+import PolyEditor from '../../components/PolyEditor';
 /*
  * props
  * {
@@ -8,8 +9,6 @@ import error from '../../lib/utils/error';
  *
  * }
  */
-
-const Component = React.Component;
 
 const defaultOpts = {
   style: {
@@ -30,7 +29,6 @@ class Polygon extends Component {
       this.map = props.__map__;
       this.element = props.__ele__;
       this.prevPath = [];
-      this.polyEditable = false;
       this.initMapPolygon(props);
     }
   }
@@ -50,32 +48,45 @@ class Polygon extends Component {
     if(this.map) {
       if (this.setVisible(nextProps)) {
         this.setPath(nextProps);
-        this.setEditable(nextProps);
         this.setStyle(nextProps);
       }
     }
   }
   
   initMapPolygon(props) {
-    this.polygon = new window.AMap.Polygon({
-      map: this.map,
-      path: this.prevPath,
-    });
-    this.polygon.on('click', (e) => {
-      this.onPolygonClick(e);
-    });
-    this.polygon.on('mouseover', (e) => {
-      this.onPolygonMouseOver(e);
-    });
-    this.polygon.on('mouseout', (e) => {
-      this.onPolygonMouseOut(e);
-    });
+    let opts = {};
+    if ('createOptions' in props) {
+      opts = props.createOptions;
+    }
+    opts.map = this.map;
+    this.polygon = new window.AMap.Polygon(opts);
+  
+    const events = this.exposeInstance();
+    events && this.bindOriginEvents(events);
     
     if (this.setVisible(props)) {
       this.setPath(props);
-      this.setEditable(props);
       this.setStyle(props);
     }
+  }
+  
+  exposeInstance(){
+    if ('events' in this.props) {
+      const events = this.props.events;
+      if (isFun(events.created)) {
+        events.created(this.polygon);
+      }
+      delete events.created;
+      return events;
+    }
+    return false;
+  }
+  
+  bindOriginEvents(events){
+    const list = Object.keys(events);
+    list.length && list.forEach((evName) => {
+      this.polygon.on(evName, events[evName]);
+    });
   }
   
   setVisible(props) {
@@ -97,25 +108,15 @@ class Polygon extends Component {
         this.buildPath(props.path);
         this.prevPath = props.path;
       }
-    } else {
-      this.clearPath();
     }
-  }
-  
-  setEditable(props) {
-    this.toggleEditable(props.editable);
-    // if ('editable' in props) {
-    // }
   }
   
   setStyle(props) {
     let style;
     if ('style' in props) {
       style = this.buildStyle(props.style);
-    } else {
-      style = defaultOpts.style;
+      this.polygon.setOptions(style);
     }
-    this.polygon.setOptions(style);
   }
   
   buildStyle(styleOpts) {
@@ -135,39 +136,21 @@ class Polygon extends Component {
     return style;
   }
   
-  onPolygonClick(e) {
-    if (isFun(this.props.onClick)) {
-      this.props.onClick(e);
-    }
-  }
-  
-  onPolygonMouseOver(e) {
-    if (isFun(this.props.onMouseOver)) {
-      this.props.onMouseOver(e);
-    }
-  }
-  
-  onPolygonMouseOut(e) {
-    if (isFun(this.props.onMouseOut)) {
-      this.props.onMouseOut(e);
-    }
-  }
-  
-  onPolygonChange(type) {
-    if (isFun(this.props.onChange) && type !== 'end') {
-      const path = this.polygon.getPath();
-      const externalPath = [];
-      if (path && path.length) {
-        path.forEach((p) => {
-          externalPath.push({
-            longitude: p.getLng(),
-            latitude: p.getLat(),
-          });
-        });
-      }
-      this.props.onChange(externalPath);
-    }
-  }
+  // onPolygonChange(type) {
+  //   if (isFun(this.props.onChange) && type !== 'end') {
+  //     const path = this.polygon.getPath();
+  //     const externalPath = [];
+  //     if (path && path.length) {
+  //       path.forEach((p) => {
+  //         externalPath.push({
+  //           longitude: p.getLng(),
+  //           latitude: p.getLat(),
+  //         });
+  //       });
+  //     }
+  //     this.props.onChange(externalPath);
+  //   }
+  // }
   
   buildPath(path) {
     if(path && path.length) {
@@ -190,66 +173,26 @@ class Polygon extends Component {
     this.map.setFitView();
   }
   
-  toggleEditable(editable) {
-    if (editable) {
-      if (!this.polyEditable) {
-        this.activeEditable();
-      }
-    } else {
-      if (this.polyEditable) {
-        this.inactiveEditable();
-      }
+  renderEditor(children) {
+    if (!children) {
+      return null;
     }
-  }
-  
-  initEditorInstance() {
-    this.polyEditor = new window.AMap.PolyEditor(this.map, this.polygon);
-    this.polyEditor.on('addnode',() => {
-      this.onPolygonChange('addnode');
-    });
-    this.polyEditor.on('adjust',() => {
-      this.onPolygonChange('adjust');
-    });
-    this.polyEditor.on('removenode',() => {
-      this.onPolygonChange('removenode');
-      
-    });
-    this.polyEditor.on('end',() => {
-      this.onPolygonChange('end');
-    });
-    return this.polyEditor;
-  }
-  
-  // PolyEditor 是需要额外加载的插件
-  loadPolyEditor() {
-    if (this.polyEditor) {
-      return new Promise((resolve) => {
-        resolve(this.polyEditor);
+    if (React.Children.count(children) !== 1) {
+      return null;
+    }
+    const child = React.Children.only(children);
+    if (child.type === PolyEditor) {
+      return React.cloneElement(child, {
+        __poly__: this.polygon,
+        __map__: this.map,
+        __ele__: this.element,
       });
     }
-    return new Promise((resolve, reject) => {
-      this.map.plugin(['AMap.PolyEditor'], () => {
-        resolve(this.initEditorInstance());
-      });
-    });
-  }
-  
-  activeEditable() {
-    this.loadPolyEditor().then((editor) => {
-      this.polyEditable = true;
-      editor.open();
-    });
-  }
-  
-  inactiveEditable() {
-    this.polyEditable = false;
-    if (this.polyEditor) {
-      this.polyEditor.close();
-    }
+    return null;
   }
   
   render() {
-    return (null);
+    return (this.renderEditor(this.props.children));
   }
 }
 

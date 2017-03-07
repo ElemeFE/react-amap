@@ -25,7 +25,8 @@ class InfoWindow extends Component {
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
-      this.initInfoWindow(props);
+      this.isCustom = true;
+      this.createInfoWindow(props);
     }
   }
   
@@ -33,36 +34,53 @@ class InfoWindow extends Component {
     this.drawWindow(this.props);
   }
   
-  initInfoWindow(props) {
-    this.infoDOM = document.createElement('div');
-    const offset = 'offset' in props ? props.offset : defaultOpts.offset;
-    
-    this.infoWindow = new window.AMap.InfoWindow({
-      isCustom: true,
-      autoMove: true,
-      content: this.infoDOM,
-      closeWhenClickMap: false,
-      offset: this.getOffset(offset),
-    });
-    
-    this.infoWindow.on('close',() => {
-      this.onWindowClose();
-    });
-    this.infoWindow.on('open',() => {
-      this.onWindowOpen();
-    });
+  createInfoWindow(props) {
+    let opts = {};
+    if ('createOptions' in props) {
+      opts = props.createOptions;
+    }
+    if ('isCustom' in opts) {
+      this.isCustom = opts.isCustom;
+    } else {
+      opts.isCustom = true;
+    }
+    if (this.isCustom) {
+      let content;
+      if ('content' in opts) {
+        // TODO(slh)
+        console.warn('更推荐不定义 content（默认），组件内部的实现可以直接以 JSX 语法写窗体内容。')
+      } else {
+        this.infoDOM = document.createElement('div');
+        opts.content = this.infoDOM;
+      }
+      opts.offset = 'offset' in props ? props.offset : this.getOffset(defaultOpts.offset);
+    } else {
+      // TODO(slh)
+      console.warn('更推荐设置 isCustom 为 true（默认）可以直接以 JSX 语法写窗体内容。')
+    }
+    this.infoWindow = new window.AMap.InfoWindow(opts);
+  
+    const events = this.exposeWindowInstance(props);
+    events && this.bindWindowEvents(events);
   }
   
-  onWindowClose() {
-    if (isFun(this.props.onClose)) {
-      this.props.onClose();
+  exposeWindowInstance(props) {
+    if ('events' in props) {
+      const events = props.events || {};
+      if (isFun(events.created)) {
+        events.created(this.infoWindow);
+      }
+      delete events.created;
+      return events;
     }
+    return false;
   }
   
-  onWindowOpen() {
-    if (isFun(this.props.onOpen)) {
-      this.props.onOpen();
-    }
+  bindWindowEvents(events) {
+    const list = Object.keys(events);
+    list.length && list.forEach((evName) => {
+      this.infoWindow.on(evName, events[evName]);
+    });
   }
   
   getOffset(os) {
@@ -88,21 +106,29 @@ class InfoWindow extends Component {
   }
   
   setChild(props) {
-    const child = props.children;
-    if (Children.count(child) === 1) {
-      render(child, this.infoDOM);
+    if (this.infoDOM) {
+      const child = props.children;
+      if (Children.count(child) === 1) {
+        render(child, this.infoDOM);
+      } else {
+        render(<div>{props.children}</div>, this.infoDOM);
+      }
     } else {
-      render(<div>{props.children}</div>, this.infoDOM);
+      if (props.children) {
+        console.warn('InfoWindow 的 Children 被忽略');
+      }
     }
   }
   
   setClassName(props) {
-    // 刷新 className
-    let cls = 'amap_markers_pop_window';
-    if ('className' in props) {
-      cls = `amap_markers_pop_window ${props.className}`;
+    if (this.infoDOM) {
+      // 刷新 className
+      let cls = 'amap_markers_pop_window';
+      if ('className' in props) {
+        cls = `amap_markers_pop_window ${props.className}`;
+      }
+      this.infoDOM.className = cls;
     }
-    this.infoDOM.className = cls;
   }
   
   setOpen(props) {
@@ -135,8 +161,6 @@ class InfoWindow extends Component {
       if (needRefresh) {
         this.infoWindow.open(this.map, this.showPos);
       }
-    } else {
-      error('WINDOW_POSITION_REQUIRED', true);
     }
   }
   

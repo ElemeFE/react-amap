@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-  source: ['./components', './docs'],
+  source: './components',
   output: './_site',
   theme: './_theme',
   themeConfig: {
@@ -14,8 +14,6 @@ module.exports = {
       Basic: 0,
       Cover: 1,
       InfoWindow: 2,
-      
-      
     }
   },
   htmlTemplate: './_theme/static/template.html',

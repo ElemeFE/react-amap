@@ -1,6 +1,6 @@
 import React from 'react';
 import error from '../../lib/utils/error';
-import bindEvent from '../../lib/utils/bindEvent';
+import isFun from '../../lib/utils/isFun';
 /*
  * props
  * {
@@ -36,6 +36,7 @@ class GroundImage extends Component {
       (nextProps.src !== this.image.getImageUrl())
       ) {
         this.image.setMap(null);
+        delete this.image;
         this.initGroundImage(nextProps);
       } else {
         this.setOpacity(nextProps);
@@ -73,7 +74,27 @@ class GroundImage extends Component {
       opacity,
     });
     
-    bindEvent(this.image, ['Click', 'DblClick'], this);
+    const events = this.exopseImageInstance(props);
+    events && this.bindEvents(events);
+  }
+  
+  exopseImageInstance(props) {
+    if ('events' in props) {
+      const events = props.events || {};
+      if (isFun(events.created)) {
+        events.created(this.image);
+      }
+      delete events.created;
+      return events;
+    }
+    return false;
+  }
+  
+  bindEvents(events) {
+    const list = Object.keys(events);
+    list.length && list.forEach((evName) => {
+      this.image.on(evName, events[evName]);
+    })
   }
   
   checkBoundsChange(nextProps) {

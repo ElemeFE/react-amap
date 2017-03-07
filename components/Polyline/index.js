@@ -1,6 +1,7 @@
 import React from 'react';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
+import PolyEditor from '../../components/PolyEditor';
 /*
  * props
  * {
@@ -51,41 +52,53 @@ class Polyline extends Component {
     if (this.map) {
       if (this.setVisible(nextProps)) {
         this.setPath(nextProps);
-        this.setEditable(nextProps);
         this.setStyle(nextProps);
       }
     }
   }
   
   initMapPolyline(props) {
-    this.polyline = new window.AMap.Polyline({
-      map: this.map,
-      path: this.prevPath,
-    });
-    this.polyline.on('click', (e) => {
-      this.onPolylineClick(e);
-    });
-    this.polyline.on('mouseover', (e) => {
-      this.onPolylineMouseOver(e);
-    });
-    this.polyline.on('mouseout', (e) => {
-      this.onPolylineMouseOut(e);
-    });
+    let opts = {};
+    if ('createOptions' in props) {
+      opts = props.createOptions;
+    }
+    opts.map = this.map;
+    this.polyline = new window.AMap.Polyline(opts);
+    
+    const events = this.exposeLineInstance(props);
+    events && this.bingLineEvents(events);
+    
     if (this.setVisible(props)) {
       this.setPath(props);
-      this.setEditable(props);
       this.setStyle(props);
     }
+  }
+  
+  exposeLineInstance(props) {
+    if ('events' in props) {
+      const events = props.events;
+      if (isFun(events.created)) {
+        events.created(this.polyline);
+      }
+      delete events.created;
+      return events;
+    }
+    return false;
+  }
+  
+  bingLineEvents(events) {
+    const list = Object.keys(events);
+    list.length && list.forEach((evName) => {
+      this.polyline.on(evName, events[evName]);
+    })
   }
   
   setStyle(props) {
     let style;
     if ('style' in props) {
       style = this.buildStyle(props.style);
-    } else {
-      style = defaultOpts.style;
+      this.polyline.setOptions(style);
     }
-    this.polyline.setOptions(style);
   }
   
   buildStyle(styleOpts) {
@@ -125,58 +138,6 @@ class Polyline extends Component {
         this.buildPath(props.path);
         this.prevPath = props.path;
       }
-    } else {
-      this.clearPath();
-    }
-  }
-  
-  setEditable(props) {
-    let editable = false;
-    if ('editable' in props && props.editable === true ) {
-      editable = true;
-    }
-    if (editable) {
-      if (!this.lineEditable) {
-        this.activeEditable();
-      }
-    } else {
-      if (this.lineEditable) {
-        this.inactiveEditable();
-      }
-    }
-  }
-  
-  onPolylineClick(e) {
-    if (isFun(this.props.onClick)) {
-      this.props.onClick(e);
-    }
-  }
-  
-  onPolylineMouseOver(e) {
-    if (isFun(this.props.onMouseOver)) {
-      this.props.onMouseOver(e);
-    }
-  }
-  
-  onPolylineMouseOut(e) {
-    if (isFun(this.props.onMouseOut)) {
-      this.props.onMouseOut(e);
-    }
-  }
-  
-  onPolylineChange(type) {
-    if (isFun(this.props.onChange) && type !== 'end') {
-      const path = this.polyline.getPath();
-      const externalPath = [];
-      if (path && path.length) {
-        path.forEach((p) => {
-          externalPath.push({
-            longitude: p.getLng(),
-            latitude: p.getLat(),
-          });
-        });
-      }
-      this.props.onChange(externalPath);
     }
   }
   
@@ -201,53 +162,26 @@ class Polyline extends Component {
     this.map.setFitView();
   }
   
-  initEditorInstance() {
-    this.polyEditor = new window.AMap.PolyEditor(this.map, this.polyline);
-    this.polyEditor.on('addnode',() => {
-      this.onPolylineChange('addnode');
-    });
-    this.polyEditor.on('adjust',() => {
-      this.onPolylineChange('adjust');
-    });
-    this.polyEditor.on('removenode',() => {
-      this.onPolylineChange('removenode');
-    });
-    this.polyEditor.on('end',() => {
-      this.onPolylineChange('end');
-    });
-    return this.polyEditor;
-  }
-  
-  // PolyEditor 是需要额外加载的插件
-  loadPolyEditor() {
-    if (this.polyEditor) {
-      return new Promise((resolve) => {
-        resolve(this.polyEditor);
+  renderEditor(children) {
+    if (!children) {
+      return null;
+    }
+    if (React.Children.count(children) !== 1) {
+      return null;
+    }
+    const child = React.Children.only(children);
+    if (child.type === PolyEditor) {
+      return React.cloneElement(child, {
+        __poly__: this.polyline,
+        __map__: this.map,
+        __ele__: this.element,
       });
     }
-    return new Promise((resolve, reject) => {
-      this.map.plugin(['AMap.PolyEditor'], () => {
-        resolve(this.initEditorInstance());
-      });
-    });
-  }
-  
-  activeEditable() {
-    this.loadPolyEditor().then((editor) => {
-      this.lineEditable = true;
-      editor.open();
-    });
-  }
-  
-  inactiveEditable() {
-    this.lineEditable = false;
-    if (this.polyEditor) {
-      this.polyEditor.close();
-    }
+    return null;
   }
   
   render() {
-    return (null);
+    return (this.renderEditor(this.props.children));
   }
 }
 

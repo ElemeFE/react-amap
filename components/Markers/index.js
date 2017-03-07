@@ -94,38 +94,38 @@ class Markers extends Component {
   
   onMarkerClick(e) {
     const marker = e.target;
-    this.triggerMarkerClick(marker);
+    this.triggerMarkerClick(e, marker);
   }
   
   onMarkerHover(e) {
     e.target.setTop(true);
-    this.setMarkerHovered(e.target);
+    this.setMarkerHovered(e, e.target);
   }
   
   onMarkerHoverOut(e) {
     e.target.setTop(false);
-    this.setMarkerHoverOut(e.target);
+    this.setMarkerHoverOut(e, e.target);
   }
   
   onWindowMarkerClick(span) {
     const pointIndex = span.getAttribute('pointIndex');
     const marker = this.markersCache[pointIndex];
-    this.triggerMarkerClick(marker);
+    this.triggerMarkerClick(null, marker);
   }
   
   onWindowMarkerHover(span) {
     const pointIndex = span.getAttribute('pointIndex');
     const marker = this.markersCache[pointIndex];
-    this.setMarkerHovered(marker);
+    this.setMarkerHovered(null, marker);
   }
   
   onWindowMarkerHoverOut(span) {
     const pointIndex = span.getAttribute('pointIndex');
     const marker = this.markersCache[pointIndex];
-    this.setMarkerHoverOut(marker);
+    this.setMarkerHoverOut(null, marker);
   }
   
-  setMarkerHovered(marker) {
+  setMarkerHovered(e, marker) {
     this.setMarkerData(marker, 'isHover', true);
     this.setMarkerIcon(marker);
     
@@ -139,10 +139,10 @@ class Markers extends Component {
       );
       span.innerHTML = html;
     }
-    this.triggerMarkerHover(marker);
+    this.triggerMarkerHover(e, marker);
   }
   
-  setMarkerHoverOut(marker) {
+  setMarkerHoverOut(e, marker) {
     this.setMarkerData(marker, 'isHover', false);
     this.setMarkerIcon(marker);
     
@@ -156,7 +156,7 @@ class Markers extends Component {
       );
       span.innerHTML = html;
     }
-    this.triggerMarkerHoverOut(marker);
+    this.triggerMarkerHoverOut(e, marker);
   }
   
   setMarkerIcon(marker) {
@@ -184,27 +184,29 @@ class Markers extends Component {
     return extData[key];
   }
   
-  triggerMarkerClick(marker) {
+  triggerMarkerClick(e, marker) {
     const raw = this.getMarkerData(marker, 'raw');
-    if (isFun(this.props.onClick)) {
-      this.props.onClick(raw);
+    const events = this.props.events || {};
+    if (isFun(events.click)) {
+      events.click(e, raw);
     }
   }
   
-  triggerMarkerHover(marker) {
+  triggerMarkerHover(e, marker) {
     const raw = this.getMarkerData(marker, 'raw');
-    if (isFun(this.props.onMouseOver)) {
-      this.props.onMouseOver(raw);
+    const events = this.props.events || {};
+    if (isFun(events.mouseover)) {
+      events.mouseover(e, raw);
     }
   }
   
-  triggerMarkerHoverOut(marker) {
+  triggerMarkerHoverOut(e, marker) {
     const raw = this.getMarkerData(marker, 'raw');
-    if (isFun(this.props.onMouseOut)) {
-      this.props.onMouseOut(raw);
+    const events = this.props.events || {};
+    if (isFun(events.mouseout)) {
+      events.mouseout(e, raw);
     }
   }
-  
   
   initMapCluster() {
     if (this.useCluster) {
@@ -231,7 +233,6 @@ class Markers extends Component {
       }
     }
   }
-  
   
   initClusterMarkerWindow() {
     this.markersWindow = new window.AMap.InfoWindow({
@@ -287,7 +288,7 @@ class Markers extends Component {
       if (length > MAX_INFO_MARKERS) {
         const warning = document.createElement('div');
         warning.className = 'amap_markers_window_overflow_warning';
-        warning.innerText = '更多运单请放大地图查看';
+        warning.innerText = '更多坐标请放大地图查看';
         this.markersDOM.appendChild(warning);
       }
     }
@@ -315,6 +316,7 @@ class Markers extends Component {
         const marker = new window.AMap.Marker({
           position: [m.longitude, m.latitude],
           visible: true,
+          draggable: true,
           offset: this.resetOffset,
           content: this.generateMarkerContent(!!m.isSelected, false, content),
           extData: {
@@ -326,12 +328,73 @@ class Markers extends Component {
             pointIndex: idx,
           },
         });
+        // const marker = this.createMarkerInstance(m);
         marker.on('click', (e) => { this.onMarkerClick(e); });
         marker.on('mouseover', (e) => { this.onMarkerHover(e); });
         marker.on('mouseout', (e) => { this.onMarkerHoverOut(e); });
+        
+        this.bindMarkerEvents(marker);
         this.markersCache.push(marker);
       });
     }
+    this.exposeMarkerInstance();
+  }
+  
+  createMarkerInstance(raw) {
+    const propsList = [
+      'position',
+      'offset',
+      'icon',
+      'content',
+      'topWhenClick',
+      'bubble',
+      'draggable',
+      'raiseOnDrag',
+      'cursor',
+      'visible',
+      'zIndex',
+      'angle',
+      'autoRotation',
+      'animation',
+      'shadow',
+      'title',
+      'clickable',
+      'shape',
+      'extData',
+      'label',
+    ];
+    const createOptions = {
+      map: this.map,
+    };
+    propsList.forEach((prop) => {
+      if (prop in raw) {
+        if (prop === 'content') {
+          
+        }
+        const cur = raw[prop];
+        createOptions[prop] = cur;
+      }
+    });
+  }
+  
+  exposeMarkerInstance() {
+    if ('events' in this.props) {
+      const events = this.props.events || {};
+      if (isFun(events.created)) {
+        events.created(this.markersCache);
+      }
+    }
+  }
+  
+  bindMarkerEvents(marker) {
+    const events = this.props.events || {};
+    const list = Object.keys(events);
+    const preserveEv = ['click', 'mouseover', 'mouseout', 'created'];
+    list.length && list.forEach((evName) => {
+      if (preserveEv.indexOf(evName) === -1) {
+        marker.on(evName, events[evName]);
+      }
+    });
   }
   
   clearPrevMarkers() {

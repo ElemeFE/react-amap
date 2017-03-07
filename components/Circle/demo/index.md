@@ -19,9 +19,21 @@ class App extends React.Component{
     }
     
     render(){
+        const events = {
+            created: (ins) => {console.log(ins)},
+            click: () => {console.log('clicked')},
+            mouseover: () => {console.log('mouseover')}
+        }
         return <div style={{width: '400px', height: '300px'}}>
-            <AMap plugins={['toolbar']} center={this.state.center}>
-                <Circle center={ this.state.center } radius={ this.state.radius }/>
+            <AMap plugins={['ToolBar']} center={this.state.center}>
+                <Circle 
+                    createOptions={{
+                        strokeColor: '#f00'
+                    }}
+                    center={ this.state.center } 
+                    radius={ this.state.radius }
+                    events={events}
+                />
             </AMap>
         </div>
     }

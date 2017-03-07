@@ -27,5 +27,8 @@ module.exports = {
     path: '/component/:doc',
     dataPath: '/:doc',
     component: './template/Doc'
+  }, {
+    path: '/playground',
+    component: './template/Playground'
   }]
 };

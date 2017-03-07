@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
 import bindEvent from '../../lib/utils/bindEvent';
+import CircleEditor from '../../components/CircleEditor';
 /*
  * props
  * {
  *  __map__ 父级组件传过来的地图实例
  * }
  */
-const Component = React.Component;
 
 const defaultOpts = {
   style: {
@@ -29,7 +29,6 @@ class Circle extends Component {
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
-      this.circleEditable = false;
       this.initMapCircle(props);
     }
   }
@@ -39,105 +38,57 @@ class Circle extends Component {
       this.setCenter(nextProps);
       this.setRadius(nextProps);
       this.setStyle(nextProps);
-      this.setEditable(nextProps);
     }
   }
   
   initMapCircle(props) {
-    this.mapCircle = new window.AMap.Circle({
-      map: this.map
-    });
-    const eventList = [
-      'Click',
-      'DblClick',
-      'MouseDown',
-      'MouseUp',
-      'MouseOver',
-      'MouseOut',
-    ];
-    bindEvent(this.mapCircle, eventList, this);
+    let opts = {};
+    if ('createOptions' in props) {
+      opts = props.createOptions;
+    }
+    opts.map = this.map;
+    this.mapCircle = new window.AMap.Circle(opts);
+    const events = this.exposeCircleInstance(props);
+    events && this.bindCircleEvents(events);
     
     if (this.setVisible(props)) {
       this.setCenter(props);
       this.setRadius(props);
       this.setStyle(props);
-      this.setEditable(props);
     }
   }
   
-  setEditable(props) {
-    let editable = false;
-    if ('editable' in props && props.editable === true ) {
-      editable = true;
-    }
-    
-    if (editable) {
-      if (!this.circleEditable) {
-        this.activeEdit();
+  exposeCircleInstance(props) {
+    if ('events' in props) {
+      const events = props.events || {};
+      if (isFun(events.created)) {
+        events.created(this.mapCircle);
       }
-    } else {
-      if (this.circleEditable) {
-        this.inactiveEdit();
-      }
+      delete events.created;
+      return events;
     }
+    return false;
   }
   
-  loadCircleEditor() {
-    if (this.circleEditor) {
-      return new Promise((resolve) => {
-        resolve(this.circleEditor);
-      });
-    }
-    return new Promise((resolve, reject) => {
-      this.map.plugin(['AMap.CircleEditor'], () => {
-        resolve(this.initEditorInstance());
-      });
+  bindCircleEvents(events) {
+    const list = Object.keys(events);
+    list.length && list.forEach((evName) => {
+      this.mapCircle.on(evName, events[evName]);
     });
-  }
-  
-  initEditorInstance() {
-    this.circleEditor = new window.AMap.CircleEditor(this.map, this.mapCircle);
-    this.circleEditor.on('move',() => {
-      this.onCircleChange('move');
-    });
-    this.circleEditor.on('adjust',() => {
-      this.onCircleChange('adjust');
-    });
-    this.circleEditor.on('end',() => {
-      this.onCircleChange('end');
-      
-    });
-    return this.circleEditor;
-  }
-  
-  activeEdit() {
-    this.loadCircleEditor().then((editor) => {
-      this.circleEditable = true;
-      editor.open();
-    });
-  }
-  
-  inactiveEdit() {
-    this.circleEditable = false;
-    if (this.circleEditor) {
-      this.circleEditor.close();
-    }
   }
   
   setCenter(props) {
     let center;
     if ('center' in props) {
       center = new window.AMap.LngLat(props.center.longitude, props.center.latitude);
-    } else {
-      error('CIRCLE_CENTER_REQUIRED', true);
-    }
-    const curCenter = this.mapCircle.getCenter();
-    if (curCenter) {
-      if (!curCenter.equals(center)) {
+      const curCenter = this.mapCircle.getCenter();
+      if (curCenter) {
+        if (!curCenter.equals(center)) {
+          this.mapCircle.setCenter(center);
+        }
+      } else {
         this.mapCircle.setCenter(center);
       }
-    } else {
-      this.mapCircle.setCenter(center);
     }
   }
   
@@ -145,11 +96,9 @@ class Circle extends Component {
     let radius;
     if ('radius' in props) {
       radius = props.radius;
-    } else {
-      error('CIRCLE_RADIUS_REQUIRED', true);
-    }
-    if (this.mapCircle.getRadius() !== radius) {
-      this.mapCircle.setRadius(radius);
+      if (this.mapCircle.getRadius() !== radius) {
+        this.mapCircle.setRadius(radius);
+      }
     }
   }
   
@@ -157,10 +106,8 @@ class Circle extends Component {
     let style;
     if ('style' in props) {
       style = this.buildStyle(props.style);
-    } else {
-      style = defaultOpts.style;
+      this.mapCircle.setOptions(style);
     }
-    this.mapCircle.setOptions(style);
   }
   
   setVisible(props) {
@@ -192,23 +139,22 @@ class Circle extends Component {
     return style;
   }
   
-  onCircleChange(type) {
-    if (isFun(this.props.onChange) && type !== 'end') {
-      const center = this.mapCircle.getCenter();
-      const radius = this.mapCircle.getRadius();
-      this.props.onChange({
-        center: {
-          longitude: center.getLng(),
-          latitude: center.getLat(),
-        },
-        radius,
-      })
+  renderEditor(children) {
+    if (!children) {
+      return null;
     }
+    if (React.Children.count(children) !== 1) {
+      return null;
+    }
+    return React.cloneElement(React.Children.only(children), {
+      __circle__: this.mapCircle,
+      __map__: this.map,
+      __ele__: this.element,
+    });
   }
   
-  
   render() {
-    return (null);
+    return (this.renderEditor(this.props.children));
   }
 }
 

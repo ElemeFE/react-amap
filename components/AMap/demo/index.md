@@ -7,13 +7,47 @@ title: AMap 的基本使用
 
 ### 其他一些内容
 
+onCreated
+createOption
+
 ```jsx
 import AMap from 'react-amap';
 
 class App extends React.Component{
+    // 
+    handleMapInstance(map){
+        this.mapInstance = map;
+        console.log(this.mapInstance.getZoom());
+    }
+    
     render(){
+        plugins = [
+            'MapType',
+            'Scale',
+            'OverView',
+            {
+                name: 'ToolBar',
+                options: {
+                    visible: true,  // 不设置该属性默认就是 true
+                    onCreated(ins){
+                        console.log(ins);
+                    },
+                },
+            }
+        ]
+        
+        const events = {
+            click:() => {console.log('Clicked')},
+            dblclick: () => {console.log('dblclick')},
+            mapmove: () => {console.log('mapmove')},
+            zoomstart: () => {console.log('zoom start')},
+            created: (map) => {console.log('map is below');console.log(map)}
+        };
         return <div style={{width: '400px', height: '300px'}}>
-            <AMap/>
+            <AMap
+                plugins={plugins}
+                events={events}
+            />
         </div>
     }
 }

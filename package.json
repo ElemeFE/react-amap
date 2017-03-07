@@ -24,6 +24,7 @@
     "bisheng-plugin-antd": "^0.12.2",
     "bisheng-plugin-react": "^0.5.4",
     "css-loader": "^0.26.1",
+    "dora-plugin-proxy": "^0.8.5",
     "extract-text-webpack-plugin": "^2.0.0",
     "file-loader": "^0.10.0",
     "html-webpack-plugin": "^2.28.0",
