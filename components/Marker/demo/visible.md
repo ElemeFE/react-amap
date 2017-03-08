@@ -1,8 +1,9 @@
 ---
-title: Marker 的使用
-order: 2
+order: 1
+title: visible 属性切换
 ---
 
+这个例子里展示 visible 属性切换
 
 ```jsx
 import AMap from 'react-amap';

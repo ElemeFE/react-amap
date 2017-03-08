@@ -1,14 +1,11 @@
 ---
 title: AMap 的基本使用
+order: 3
 ---
 
 
-# 这里是 AMap 的使用
+这里是 AMap 的使用
 
-### 其他一些内容
-
-onCreated
-createOption
 
 ```jsx
 import AMap from 'react-amap';
@@ -21,7 +18,7 @@ class App extends React.Component{
     }
     
     render(){
-        plugins = [
+        const plugins = [
             'MapType',
             'Scale',
             'OverView',
