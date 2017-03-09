@@ -6,8 +6,6 @@ import { Menu } from 'antd';
 import { Link } from 'react-router';
 
 
-import Nav from './Nav';
-
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
@@ -26,7 +24,7 @@ export default class Doc extends React.Component{
   
   getMenuItem(menus) {
     return menus.sort((a, b) => (a.meta.order - b.meta.order)).map((item) => {
-      return <Menu.Item key={item.meta.chinese}>
+      return <Menu.Item key={item.key}>
         { this.getMenuLink(item.meta)}
       </Menu.Item>
     });
@@ -42,7 +40,9 @@ export default class Doc extends React.Component{
       const curCategory = data[key].index.meta.category;
       const idx = componentOrder.indexOf(curCategory);
       if (idx !== -1) {
-        menuGroups[idx].menus.push(data[key].index);
+        const menuData = data[key].index;
+        menuData.key = key;
+        menuGroups[idx].menus.push(menuData);
       }
     }
     return menuGroups.map((item) => {
@@ -53,9 +53,12 @@ export default class Doc extends React.Component{
   }
   
   getSideMenu() {
+    const defaultSelectedKeys = [this.props.routeParams.doc];
+  
     return (<Menu
         mode="inline"
         defaultOpenKeys={['components']}
+        defaultSelectedKeys={defaultSelectedKeys}
       >
         <Menu.Item key="getstart">快速上手</Menu.Item>
         <Menu.Item key="introduction">基本介绍</Menu.Item>
@@ -66,6 +69,7 @@ export default class Doc extends React.Component{
   }
   
   render() {
+    console.log(this.props);
     const props = this.props;
     const { pageData } = props;
     const demoComponent = Object.keys(pageData.demo).map(key => pageData.demo[key])
@@ -82,16 +86,15 @@ export default class Doc extends React.Component{
           {item.preview(React, ReactDOM)}
         </DemoItem>);
       });
-  
     const pageContent = pageData.index.content;
     const pageAPI = pageData.index.api;
     const menu = this.getSideMenu();
-    return <Layout>
+    return <Layout route={this.props.route}>
       <div id="doc">
-        <aside>
+        <aside id="aside">
           {menu}
         </aside>
-        <article>
+        <article id="article">
           <h1>{pageData.index.meta.chinese}</h1>
           <div className="page-content">
             {props.utils.toReactComponent(pageContent)}

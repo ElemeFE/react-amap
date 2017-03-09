@@ -85,15 +85,15 @@ const defaultOpts = {
 };
 
 class AMap extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       mapLoaded: false,
     };
     this.pluginMap = {};
     this.prevCenter = undefined;
     this.prevZoom = undefined;
-    this.loader = new APILoader().load();
+    this.loader = new APILoader(props.key).load();
   }
   
   componentWillReceiveProps(nextProps) {

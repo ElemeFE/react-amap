@@ -11,19 +11,11 @@ module.exports = {
   }, {
     path: '/components/:doc',
     component: './template/Doc'
+  },{
+    path: '/articles/:doc',
+    component: './template/Article'
   }, {
-    path: '/playground',
-    component: './template/Playground'
+    path: '/404',
+    component: './template/NotFound'
   }],
-  // routes: [
-  //   {
-  //     path: '/',
-  //     component: './template/Cover',
-  //     indexRoute: { component: './template/Layout' },
-  //     childRoutes: [
-  //       { path: '/playground/', component: './template/Playground' },
-  //       { path: '/component/:contentName', component: './template/Doc' },
-  //     ],
-  //   },
-  // ],
 };

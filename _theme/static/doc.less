@@ -1,28 +1,20 @@
 #doc {
-  background: #fff;
-  width: 90%;
-  margin:auto;
-  margin-top: 20px;
-  padding: 0;
-  position: relative;
-  border-radius: 4px;
-  overflow: hidden;
-  aside{
+  #aside{
     position: absolute;
     top: 15px;
     left: 0;
     width: 250px;
     height: 800px;
   }
-  article{
+  #article{
     margin-left: 249px;
-    padding: 0 15px;
+    padding: 20px 15px 30px 15px;
     border-left: 1px solid #e9e9e9;
+    min-height: 500px;
   }
   h1{
     font-weight: 200;
     font-size: 30px;
-    margin-top: 20px;
   }
   h2{
     .anchor{
@@ -32,18 +24,28 @@
   .page-content{
     margin: 15px 0;
   }
-  hr{
-    margin: 10px 0;
-    border: 0;
-    border-top: 1px solid #e3e3e3;
+  .page-api{
+    table{
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead{
+      background: #f3f3f3;
+    }
+    td, th{
+      border: 1px solid #e3e3e3;
+      text-align: left;
+      padding: 8px 0 8px 10px;
+    }
   }
 
   .demo-item{
     padding: 10px;
     width: 100%;
-    margin: 0 auto 20px auto;
+    margin: 10px auto 30px auto;
     border-radius: 8px;
     border: 1px solid #f3f3f3;
+    background: rgba(243, 243, 243, 0.4);
   }
   .demo-desc{
     margin: 10px 0;
@@ -58,5 +60,21 @@
     border: 1px solid #e0e0e0;
     border-left: 0;
     height: 400px;
+  }
+}
+
+article{
+  hr{
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid #e3e3e3;
+  }
+  blockquote{
+    border-left: 3px solid #eee;
+    padding: 5px 0 5px 6px;
+    margin: 10px 0;
+  }
+  ul li{
+
   }
 }

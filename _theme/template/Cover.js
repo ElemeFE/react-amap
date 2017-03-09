@@ -1,6 +1,6 @@
 import React from 'react';
 import AMap from 'react-amap';
-import { Button } from 'antd';
+import { Link } from 'react-router';
 
 export default function Cover(props) {
   console.log(props);
@@ -24,7 +24,7 @@ export default function Cover(props) {
       <h3>react-amap</h3>
       <div className="cover-link">
         <a className="github" href="https://github.com" target="_blank">GitHub</a>
-        <a className="start" href="/components/AMap" target="_self">Get Started</a>
+        <Link className="start" to="/components/AMap" >Get Started</Link>
       </div>
       <div className="slogan">
         Make AMap Great Again
