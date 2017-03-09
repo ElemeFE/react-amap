@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-  source: ['./components'],
+  source: ['./components', './articles'],
   output: './_site',
   entry: {
     index: {

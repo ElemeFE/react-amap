@@ -30,7 +30,7 @@ class App extends React.Component{
             removenode: () => {console.log('polyeditor removenode')},
             end: () => {console.log('polyeditor end')},
         }
-        return <div style={{width: '400px', height: '300px'}}>
+        return <div style={{width: '100%', height: '300px'}}>
             <AMap>
                 <Polygon path={path}>
                     <PolyEditor

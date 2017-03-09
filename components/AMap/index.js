@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import APILoader from '../../lib/utils/APILoader';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
-
+import toCapitalString from '../../lib/utils/toCapitalString';
 import Marker from '../Marker';
 import Markers from '../Markers';
 import Polygon from '../Polygon';
@@ -35,6 +35,39 @@ const ComponentList = [
   Polygon,
 ];
 
+const configurableProps = [
+  'layers',
+  'zoom',
+  'center',
+  'labelzIndex',
+  'lang',
+  'rotateEnable',
+  'mapStyle',
+  'features',
+  'cursor',
+  'defaultLayer',
+];
+
+const allProps = configurableProps.concat([
+  'view',
+  'zooms',
+  'crs',
+  'animateEnable',
+  'isHotspot',
+  'resizeEnable',
+  'showIndoorMap',
+  'indoorMap',
+  'expandZoomRange',
+  'dragEnable',
+  'zoomEnable',
+  'doubleClickZoom',
+  'keyboardEnable',
+  'jogEnable',
+  'scrollWheel',
+  'touchZoom',
+  'showBuildingBlock'
+]);
+
 const defaultOpts = {
   MapType: {
     showRoad: false,
@@ -64,10 +97,12 @@ class AMap extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
+    const prevProps = this.props;
     this.loader.then(() => {
       if (this.map) {
-        this.setZoomAndCenter(nextProps);
-        this.setPlugins(nextProps);
+        // this.setZoomAndCenter(nextProps);
+        // this.setPlugins(nextProps);
+        this.refreshMapLayout(prevProps, nextProps);
       }
     });
   }
@@ -105,27 +140,46 @@ class AMap extends Component {
   
   initMapInstance() {
     if (!this.map) {
-      let opts = {};
-      if ('createOptions' in this.props) {
-        opts = this.props.createOptions;
-      } else {
-        if ('zoom' in this.props) {
-          opts.zoom = this.props.zoom;
-          this.prevZoom = opts.zoom;
-        }
-        if ('center' in this.props) {
-          opts.center = new window.AMap.LngLat(
-            this.props.center.longitude,
-            this.props.center.latitude
-          );
-          this.prevCenter = opts.center;
-        }
-      }
-      this.map = new window.AMap.Map(this.mapWrapper, opts);
+      // let opts = {};
+      // if ('createOptions' in this.props) {
+      //   opts = this.props.createOptions;
+      // } else {
+      //   if ('zoom' in this.props) {
+      //     opts.zoom = this.props.zoom;
+      //     this.prevZoom = opts.zoom;
+      //   }
+      //   if ('center' in this.props) {
+      //     opts.center = new window.AMap.LngLat(
+      //       this.props.center.longitude,
+      //       this.props.center.latitude
+      //     );
+      //     this.prevCenter = opts.center;
+      //   }
+      // }
+      const options = this.buildCreateOptions();
+      this.map = new window.AMap.Map(this.mapWrapper, options);
       const events = this.exposeMapInstance();
       events && this.bindAMapEvents(events);
       this.setPlugins(this.props);
     }
+  }
+  
+  buildCreateOptions() {
+    const props = this.props;
+    const options = {};
+    allProps.forEach((key) => {
+      if (key in props) {
+        options[key] = this.getSetterParam(key, props);
+      }
+    });
+    return options;
+  }
+  
+  buildPosition(pos) {
+    if ('getLng' in pos) {
+      return pos;
+    }
+    return new window.AMap.LngLat(pos.longitude, pos.latitude);
   }
   
   bindAMapEvents(events){
@@ -133,6 +187,40 @@ class AMap extends Component {
     list.length && list.forEach((evName) => {
       this.map.on(evName,events[evName]);
     });
+  }
+  
+  refreshMapLayout(prevProps, nextProps) {
+    configurableProps.forEach((key) => {
+      if (key in nextProps) {
+        if (this.detectPropChanged(key, prevProps, nextProps)) {
+          const setterName = this.getSetterName(key);
+          const setterParam = this.getSetterParam(key, nextProps);
+          this.map[setterName](setterParam);
+        }
+      }
+    });
+  }
+  
+  getSetterParam(key, props) {
+    if (key === 'center') {
+      return this.buildPosition(props.center);
+    }
+    return props[key];
+  }
+  
+  getSetterName(key) {
+    if (key === 'labelzIndex') {
+      return 'setlabelzIndex';
+    } else if( key === 'cursor') {
+      return 'setDefaultCursor';
+    } else if (key === 'rotateEnable') {
+      return 'setRotation';
+    }
+    return `set${toCapitalString(key)}`
+  }
+  
+  detectPropChanged(key, prevProps, nextProps) {
+    return prevProps[key] !== nextProps[key];
   }
   
   setZoomAndCenter(props) {

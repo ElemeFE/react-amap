@@ -29,7 +29,7 @@ class App extends React.Component{
             removenode: (e) => {console.log('editor removenode')},
             end: (e) => {console.log('editor end')},
         }
-        return <div style={{width: 500, height: 400}}>
+        return <div style={{width: '100%', height: 400}}>
             <AMap>
                 <Polygon
                     createOptions={{}}

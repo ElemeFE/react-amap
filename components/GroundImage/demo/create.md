@@ -19,7 +19,7 @@ class App extends React.Component{
             ne: {longitude: 140, latitude: 50},
         };
         
-        return <div style={{width: 500, height: 400}}>
+        return <div style={{width: '100%', height: 400}}>
             <AMap center={{longitude: 120, latitude: 30}} zoom={12}>
                 <GroundImage
                     bounds={bounds}

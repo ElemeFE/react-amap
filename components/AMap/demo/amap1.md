@@ -13,8 +13,11 @@ class App extends React.Component{
 
     
     render(){
-        return <div><h2>使用例子1</h2><div style={{width: '400px', height: '300px'}}>
-            <AMap/>
+        const events = {
+            click: (e) => {console.log(e)}
+        }
+        return <div><h2>使用例子1</h2><div style={{width: '100%', height: '300px'}}>
+            <AMap events={events}/>
         </div></div>
     }
 }

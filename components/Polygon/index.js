@@ -2,6 +2,7 @@ import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
 import PolyEditor from '../../components/PolyEditor';
+import toCapitalString from '../../lib/utils/toCapitalString';
 /*
  * props
  * {
@@ -10,16 +11,21 @@ import PolyEditor from '../../components/PolyEditor';
  * }
  */
 
-const defaultOpts = {
-  style: {
-    strokeColor: '#00f',
-    strokeOpacity: 0.4,
-    strokeWeight: 4,
-    fillColor: '#1791fc',
-    fillOpacity: 0.65,
-    strokeStyle: 'solid',
-  },
-};
+
+const configurableProps = [
+  'path',
+  'extData',
+  
+  /* 本插件扩展的属性*/
+  'style',
+  'visible',
+];
+
+const allProps = configurableProps.concat([
+  'zIndex',
+  'bubble',
+]);
+
 class Polygon extends Component {
   constructor(props) {
     super(props);
@@ -45,29 +51,89 @@ class Polygon extends Component {
      *  onMouseOut
      * }
      */
-    if(this.map) {
-      if (this.setVisible(nextProps)) {
-        this.setPath(nextProps);
-        this.setStyle(nextProps);
-      }
-    }
+    this.refreshPolygonLayout(nextProps);
   }
   
   initMapPolygon(props) {
-    let opts = {};
-    if ('createOptions' in props) {
-      opts = props.createOptions;
-    }
-    opts.map = this.map;
-    this.polygon = new window.AMap.Polygon(opts);
+    const options = this.buildCreateOptions(props);
+    options.map = this.map;
+    this.polygon = new window.AMap.Polygon(options);
   
     const events = this.exposeInstance();
     events && this.bindOriginEvents(events);
     
-    if (this.setVisible(props)) {
-      this.setPath(props);
-      this.setStyle(props);
+    if ('visible' in props) {
+      if (props.visible) {
+        this.polygon.show();
+      } else {
+        this.polygon.hide();
+      }
     }
+  }
+  
+  buildCreateOptions(props) {
+    const options = {};
+    allProps.forEach((key) => {
+      if (key in props) {
+        if (key === 'style') {
+          const styleItem = Object.keys(props.style);
+          styleItem.forEach((item) => {
+            options[item] = props.style[item];
+          });
+          // visible 做特殊处理
+        } else if(key !== 'visible') {
+          options[key] = this.getSetterValue(key, props[key]);
+        }
+      }
+    });
+    return options;
+  }
+  
+  refreshPolygonLayout(nextProps) {
+    configurableProps.forEach((key) => {
+      if (key in nextProps) {
+        if (this.detectPropChanged(key, nextProps)) {
+          if (key === 'visible') {
+            if (nextProps.visible) {
+              this.polygon.show();
+            } else {
+              this.polygon.hide();
+            }
+          } else if(key === 'style') {
+            this.polygon.setOptions(nextProps.style);
+          } else {
+            const setterName = `set${toCapitalString(key)}`;
+            const setterValue = this.getSetterValue(key, nextProps[key]);
+            this.polygon[setterName](setterValue);
+          }
+        }
+      }
+    });
+  }
+  
+  detectPropChanged(key, nextProps) {
+    return this.props[key] !== nextProps[key];
+  }
+  
+  getSetterValue(key, value) {
+    if (key === 'path') {
+      return this.buildPathValue(value);
+    }
+    return value;
+  }
+  
+  buildPathValue(path) {
+    if (path.length) {
+      if ('getLng' in path[0]) {
+        return path;
+      }
+      return path.map((p) => (this.buildPosition(p)));
+    }
+    return path;
+  }
+  
+  buildPosition(pos) {
+    return new window.AMap.LngLat(pos.longitude, pos.latitude);
   }
   
   exposeInstance(){
@@ -87,90 +153,6 @@ class Polygon extends Component {
     list.length && list.forEach((evName) => {
       this.polygon.on(evName, events[evName]);
     });
-  }
-  
-  setVisible(props) {
-    let visible = true;
-    if ('visible' in props && props.visible === false) {
-      visible = false;
-    }
-    if (visible) {
-      this.polygon.show();
-    } else {
-      this.polygon.hide();
-    }
-    return visible;
-  }
-  
-  setPath(props) {
-    if ('path' in props) {
-      if (this.prevPath !== props.path) {
-        this.buildPath(props.path);
-        this.prevPath = props.path;
-      }
-    }
-  }
-  
-  setStyle(props) {
-    let style;
-    if ('style' in props) {
-      style = this.buildStyle(props.style);
-      this.polygon.setOptions(style);
-    }
-  }
-  
-  buildStyle(styleOpts) {
-    const keys = [
-      'strokeColor',
-      'strokeOpacity',
-      'strokeWeight',
-      'fillColor',
-      'fillOpacity',
-      'strokeStyle',
-      'strokeDasharray',
-    ];
-    const style = {};
-    keys.forEach(key => {
-      style[key] = (key in styleOpts) ? styleOpts[key] : defaultOpts.style[key];
-    });
-    return style;
-  }
-  
-  // onPolygonChange(type) {
-  //   if (isFun(this.props.onChange) && type !== 'end') {
-  //     const path = this.polygon.getPath();
-  //     const externalPath = [];
-  //     if (path && path.length) {
-  //       path.forEach((p) => {
-  //         externalPath.push({
-  //           longitude: p.getLng(),
-  //           latitude: p.getLat(),
-  //         });
-  //       });
-  //     }
-  //     this.props.onChange(externalPath);
-  //   }
-  // }
-  
-  buildPath(path) {
-    if(path && path.length) {
-      const mapPath = [];
-      path.forEach((p) => {
-        mapPath.push(new window.AMap.LngLat(p.longitude, p.latitude));
-      });
-      this.polygon.setPath(mapPath);
-      this.setFitView();
-    } else {
-      this.clearPath();
-    }
-  }
-  
-  clearPath() {
-    this.polygon.setPath([]);
-  }
-  
-  setFitView() {
-    this.map.setFitView();
   }
   
   renderEditor(children) {

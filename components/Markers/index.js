@@ -328,7 +328,6 @@ class Markers extends Component {
             pointIndex: idx,
           },
         });
-        // const marker = this.createMarkerInstance(m);
         marker.on('click', (e) => { this.onMarkerClick(e); });
         marker.on('mouseover', (e) => { this.onMarkerHover(e); });
         marker.on('mouseout', (e) => { this.onMarkerHoverOut(e); });
@@ -338,43 +337,6 @@ class Markers extends Component {
       });
     }
     this.exposeMarkerInstance();
-  }
-  
-  createMarkerInstance(raw) {
-    const propsList = [
-      'position',
-      'offset',
-      'icon',
-      'content',
-      'topWhenClick',
-      'bubble',
-      'draggable',
-      'raiseOnDrag',
-      'cursor',
-      'visible',
-      'zIndex',
-      'angle',
-      'autoRotation',
-      'animation',
-      'shadow',
-      'title',
-      'clickable',
-      'shape',
-      'extData',
-      'label',
-    ];
-    const createOptions = {
-      map: this.map,
-    };
-    propsList.forEach((prop) => {
-      if (prop in raw) {
-        if (prop === 'content') {
-          
-        }
-        const cur = raw[prop];
-        createOptions[prop] = cur;
-      }
-    });
   }
   
   exposeMarkerInstance() {

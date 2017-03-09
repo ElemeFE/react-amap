@@ -29,12 +29,12 @@ class App extends React.Component{
             end: () => {console.log('circle end')},
             created: (ins) => {console.log(ins)}
         }
-        return <div style={{width: 500, height: 400}}>
+        return <div style={{width: '100%', height: 400}}>
             <AMap center={{longitude: 120, latitude: 30}} zoom={12}>
                 <Circle radius={5000} center={{longitude: 120, latitude: 30}}>
                     <CircleEditor events={events} active={this.state.active} />
                 </Circle>
-                <button onClick={()=>{this.toggleEdit()}}>toggle</button>
+                <button onClick={()=>{this.toggleEdit()}}>toggle editable</button>
             </AMap>
         </div>
     }

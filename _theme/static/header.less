@@ -1,0 +1,50 @@
+#header{
+    background: #fff;
+    line-height: 50px;
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #f3f3f3;
+
+    .header-inner{
+        height: 50px;
+        background: url('http://oslhtemp.qiniudn.com/17-3-6/98901898-file_1488814957235_9457.png');
+        background-position: left center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 90%;
+        margin:auto;
+
+        display: flex;
+        justify-content: space-between;
+    }
+    h2{
+        height: 50px;
+        line-height: 50px;
+        text-align: left;
+        padding-left: 70px;
+        font-size: 25px;
+        font-weight: 100;
+    }
+    ul{
+    }
+    li {
+        display: inline-block;
+        a{
+            display: inline-block;
+            height: 50px;
+            padding: 0 10px;
+            border-bottom: 2px solid transparent;
+            transition: all .9s;
+            &:hover{
+                border-bottom: 2px solid #999;
+                color: #999;
+                transition: all .9s;
+            }
+            &.current{
+                border-bottom: 2px solid #666;
+                color: #666;
+                transition: all .9s;
+            }
+        }
+    }
+}

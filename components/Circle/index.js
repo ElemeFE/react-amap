@@ -3,6 +3,7 @@ import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
 import bindEvent from '../../lib/utils/bindEvent';
 import CircleEditor from '../../components/CircleEditor';
+import toCapitalString from '../../lib/utils/toCapitalString';
 /*
  * props
  * {
@@ -21,6 +22,21 @@ const defaultOpts = {
   },
 };
 
+const configurableProps = [
+  'center',
+  'radius',
+  'extData',
+  
+  /* 原生的接口中并没有这些对象，这是本组件的扩展 */
+  'visible',
+  'style',
+];
+
+const allProps = configurableProps.concat([
+  'zIndex',
+  'bubble',
+]);
+
 class Circle extends Component {
   constructor(props) {
     super(props);
@@ -34,30 +50,82 @@ class Circle extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    if (this.setVisible(nextProps)) {
-      this.setCenter(nextProps);
-      this.setRadius(nextProps);
-      this.setStyle(nextProps);
-    }
+    this.refreshCircleLayout(nextProps);
   }
   
   initMapCircle(props) {
-    let opts = {};
-    if ('createOptions' in props) {
-      opts = props.createOptions;
-    }
-    opts.map = this.map;
-    this.mapCircle = new window.AMap.Circle(opts);
+    const options = this.buildCreateOptions(props);
+    options.map = this.map;
+    this.mapCircle = new window.AMap.Circle(options);
     const events = this.exposeCircleInstance(props);
     events && this.bindCircleEvents(events);
     
-    if (this.setVisible(props)) {
-      this.setCenter(props);
-      this.setRadius(props);
-      this.setStyle(props);
+    if ('visible' in props) {
+      if (!props.visible) {
+        this.mapCircle.hide();
+      }
     }
   }
   
+  buildCreateOptions(props) {
+    const options = {};
+    allProps.forEach((key) => {
+      if (key in props) {
+        if (key === 'style') {
+          const styleItem = Object.keys(props.style);
+          styleItem.forEach((item) => {
+            options[item] = props.style[item];
+          });
+        } else {
+          if (key !== 'visible') {
+            options[key] = this.getSetterValue(key, props);
+          }
+        }
+      }
+    });
+    return options;
+  }
+  
+  refreshCircleLayout(nextProps) {
+    configurableProps.forEach((key) => {
+      if ('key' in nextProps) {
+        if (this.checkPropChanged(key, nextProps)) {
+          if (key === 'visible') {
+            if (nextProps.visible) {
+              this.mapCircle.show();
+            } else {
+              this.mapCircle.hide();
+            }
+          } else if (key === 'style') {
+            this.mapCircle.setOptions(nextProps.style);
+          } else {
+            const setterName = `set${toCapitalString(key)}`;
+            const setterParam = this.getSetterValue(key, nextProps);
+            this.mapCircle[setterName](setterParam);
+          }
+        }
+      }
+    });
+  }
+  
+  checkPropChanged(key, nextProps) {
+    return this.props[key] !== nextProps[key];
+  }
+  
+  getSetterValue(key, props) {
+    if (key === 'center') {
+      return this.buildPosition(props.center);
+    }
+    return props[key];
+  }
+  
+  buildPosition(pos) {
+    if ('getLng' in pos) {
+      return pos;
+    }
+    return new window.AMap.LngLat(pos.longitude, pos.latitude);
+  }
+   
   exposeCircleInstance(props) {
     if ('events' in props) {
       const events = props.events || {};
@@ -75,68 +143,6 @@ class Circle extends Component {
     list.length && list.forEach((evName) => {
       this.mapCircle.on(evName, events[evName]);
     });
-  }
-  
-  setCenter(props) {
-    let center;
-    if ('center' in props) {
-      center = new window.AMap.LngLat(props.center.longitude, props.center.latitude);
-      const curCenter = this.mapCircle.getCenter();
-      if (curCenter) {
-        if (!curCenter.equals(center)) {
-          this.mapCircle.setCenter(center);
-        }
-      } else {
-        this.mapCircle.setCenter(center);
-      }
-    }
-  }
-  
-  setRadius(props) {
-    let radius;
-    if ('radius' in props) {
-      radius = props.radius;
-      if (this.mapCircle.getRadius() !== radius) {
-        this.mapCircle.setRadius(radius);
-      }
-    }
-  }
-  
-  setStyle(props) {
-    let style;
-    if ('style' in props) {
-      style = this.buildStyle(props.style);
-      this.mapCircle.setOptions(style);
-    }
-  }
-  
-  setVisible(props) {
-    let visible = true;
-    if ('visible' in props && props.visible === false) {
-      visible = false;
-    }
-    if (visible) {
-      this.mapCircle.show();
-    } else {
-      this.mapCircle.hide();
-    }
-    return visible;
-  }
-  
-  buildStyle(styleOpts) {
-    const keys = [
-      'strokeColor',
-      'strokeOpacity',
-      'strokeWeight',
-      'fillColor',
-      'fillOpacity',
-      'strokeStyle'
-    ];
-    const style = {};
-    keys.forEach(key => {
-      style[key] = (key in styleOpts) ? styleOpts[key] : defaultOpts.style[key];
-    });
-    return style;
   }
   
   renderEditor(children) {

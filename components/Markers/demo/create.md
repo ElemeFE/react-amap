@@ -18,8 +18,7 @@ const randomMarker = (len) => (
 class App extends React.Component{
     constructor(){
         super();
-        
-        this.markers = randomMarker(10);
+        this.markers = randomMarker(100);
     }
     render(){   
         const events = {
@@ -27,7 +26,7 @@ class App extends React.Component{
             click: (...args) => {console.log(args)},
             dragstart: (e) => {console.log(e.target.getExtData().raw.content)}
         }
-        return <div style={{width: 500, height: 400}}>
+        return <div style={{width: '100%', height: 300}}>
             <AMap plugins={['ToolBar']} center={{longitude: 120, latitude: 30}} zoom={12}>
                 <Markers 
                     markers={this.markers}

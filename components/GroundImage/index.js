@@ -84,7 +84,6 @@ class GroundImage extends Component {
       if (isFun(events.created)) {
         events.created(this.image);
       }
-      delete events.created;
       return events;
     }
     return false;
@@ -93,7 +92,9 @@ class GroundImage extends Component {
   bindEvents(events) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
-      this.image.on(evName, events[evName]);
+      if (evName !== 'created') {
+        this.image.on(evName, events[evName]);
+      }
     })
   }
   

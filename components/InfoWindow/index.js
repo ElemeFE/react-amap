@@ -2,6 +2,8 @@ import React from 'react';
 import { findDOMNode, render } from 'react-dom';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
+import toCapitalString from '../../lib/utils/toCapitalString';
+
 /*
  * props
  * {
@@ -17,6 +19,22 @@ const defaultOpts = {
   closeWhenClickMap: false,
 };
 
+const configurableProps = [
+  'content',
+  'position',
+  'size',
+  /* 以下属性是本插件的扩展 */
+  'visible',
+];
+
+const allProps = configurableProps.concat([
+  'isCustom',
+  'autoMove',
+  'closeWhenClickMap',
+  'offset',
+  'showShadow',
+]);
+
 class InfoWindow extends Component {
   constructor(props) {
     super(props);
@@ -31,38 +49,136 @@ class InfoWindow extends Component {
   }
   
   componentDidMount() {
-    this.drawWindow(this.props);
+    const props = this.props;
+    if ('visible' in props) {
+      if (!!props.visible) {
+        this.showWindow();
+        this.setClassName(props);
+        this.setChild(props);
+      } else {
+        this.closeWindow();
+      }
+    }
+  }
+  
+  componentWillReceiveProps(nextProps) {
+    /*
+     * {
+     *  __map__,
+     *  __ele__,
+     * }
+     */
+    this.refreshWindowLayout(nextProps);
   }
   
   createInfoWindow(props) {
-    let opts = {};
-    if ('createOptions' in props) {
-      opts = props.createOptions;
-    }
-    if ('isCustom' in opts) {
-      this.isCustom = opts.isCustom;
-    } else {
-      opts.isCustom = true;
-    }
-    if (this.isCustom) {
-      let content;
-      if ('content' in opts) {
-        // TODO(slh)
-        console.warn('更推荐不定义 content（默认），组件内部的实现可以直接以 JSX 语法写窗体内容。')
-      } else {
-        this.infoDOM = document.createElement('div');
-        opts.content = this.infoDOM;
-      }
-      opts.offset = 'offset' in props ? props.offset : this.getOffset(defaultOpts.offset);
-    } else {
-      // TODO(slh)
-      console.warn('更推荐设置 isCustom 为 true（默认）可以直接以 JSX 语法写窗体内容。')
-    }
-    this.infoWindow = new window.AMap.InfoWindow(opts);
+    const options = this.buildCreateOptions(props);
+    this.infoWindow = new window.AMap.InfoWindow(options);
   
     const events = this.exposeWindowInstance(props);
     events && this.bindWindowEvents(events);
   }
+  
+  refreshWindowLayout(nextProps) {
+    configurableProps.forEach((key) => {
+      if (key in nextProps) {
+        if (this.checkPropChanged(key, nextProps)) {
+          if (key === 'visible') {
+            if (nextProps.visible) {
+              this.showWindow();
+            } else {
+              this.closeWindow();
+            }
+          } else {
+            const setterName = `set${toCapitalString(key)}`;
+            const setterValue = this.getSetterValue(key, nextProps[key]);
+            this.infoWindow[setterName](setterValue);
+          }
+        }
+      }
+    });
+    this.setChild(nextProps);
+    this.setClassName(nextProps);
+  }
+  
+  checkPropChanged(key, nextProps) {
+    return this.props[key] !== nextProps[key];
+  }
+  
+  showWindow() {
+    this.infoWindow.open(this.map, this.infoWindow.getPosition());
+  }
+  
+  closeWindow() {
+    this.infoWindow.close();
+  }
+  
+  buildCreateOptions(props) {
+    const options = {};
+  
+    // 如果开发者没有设置 isCustom 属性，必需优先设置为 true
+    if ('isCustom' in props) {
+      options.isCustom = !!props.isCustom;
+    } else {
+      options.isCustom = true;
+    }
+  
+    if (options.isCustom) {
+      if ('content' in props) {
+        options.content = props.content;
+        console.warn('更推荐不定义 content（默认），组件内部的实现可以直接以 JSX 语法写窗体内容。');
+      } else {
+        this.infoDOM = document.createElement('div');
+        options.content = this.infoDOM;
+      }
+    } else {
+      options.content = props.content;
+      console.warn('更推荐设置 isCustom 为 true（默认）可以直接以 JSX 语法写窗体内容。')
+    }
+    allProps.forEach((key) => {
+      if (key in props) {
+        if (['visible', 'isCustom', 'content'].indexOf(key) === -1) {
+          options[key] = this.getSetterValue(key, props[key]);
+        }
+      }
+    });
+    return options;
+  }
+  
+  getSetterValue(key, value) {
+    if (key === 'size') {
+      return this.buildSize(value);
+    }
+    if (key === 'offset') {
+      return this.buildPixel(value);
+    }
+    if (key === 'position') {
+      return this.buildPosition(value);
+    }
+    return value;
+  }
+  
+  buildSize(size) {
+    if ('getWidth' in size) {
+      return size;
+    }
+    return new window.AMap.Size(size.width, size.height);
+  }
+  
+  buildPosition(pos) {
+    if ('getLng' in pos) {
+      return pos;
+    }
+    return new window.AMap.LngLat(pos.longitude, pos.latitude);
+  }
+  
+  buildPixel(os) {
+    if ('getX' in os) {
+      return os;
+    }
+    return new window.AMap.Pixel(os[0], os[1]);
+  }
+  
   
   exposeWindowInstance(props) {
     if ('events' in props) {
@@ -83,28 +199,6 @@ class InfoWindow extends Component {
     });
   }
   
-  getOffset(os) {
-    return new window.AMap.Pixel(os[0], os[1]);
-  }
-  
-  componentWillReceiveProps(nextProps) {
-    /*
-     * {
-     *  __map__,
-     *  __ele__,
-     * }
-     */
-    this.drawWindow(nextProps);
-  }
-  
-  drawWindow(props) {
-    // 刷新开启关闭状态
-    if (this.setOpen(props)) {
-      this.setClassName(props);
-      this.setChild(props);
-    }
-  }
-  
   setChild(props) {
     if (this.infoDOM) {
       const child = props.children;
@@ -115,7 +209,7 @@ class InfoWindow extends Component {
       }
     } else {
       if (props.children) {
-        console.warn('InfoWindow 的 Children 被忽略');
+        console.warn('因为你设置 isCustom 为 true，InfoWindow 的 Children 被忽略');
       }
     }
   }
@@ -128,39 +222,6 @@ class InfoWindow extends Component {
         cls = `amap_markers_pop_window ${props.className}`;
       }
       this.infoDOM.className = cls;
-    }
-  }
-  
-  setOpen(props) {
-    let open = true;
-    if ('open' in props && props.open === false) {
-      open = false;
-    }
-    if (open) {
-      this.showInfoWindow(props);
-    } else {
-      this.infoWindow.close();
-    }
-    return open;
-  }
-  
-  showInfoWindow(props) {
-    if ('position' in props) {
-      const { position } = props;
-      this.showPos = new window.AMap.LngLat(position.longitude, position.latitude);
-      const prevOpen = this.infoWindow.getIsOpen();
-      let needRefresh = true;
-      // 如果之前窗口已经是开启状态
-      // 检测一下新属性的位置是否改变，如果没有改变，不需要调用 open 方法
-      if (prevOpen) {
-        const prevPosition = this.infoWindow.getPosition();
-        if (prevPosition.equals(this.showPos)) {
-          needRefresh = false;
-        }
-      }
-      if (needRefresh) {
-        this.infoWindow.open(this.map, this.showPos);
-      }
     }
   }
   

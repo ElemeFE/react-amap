@@ -2,6 +2,8 @@ import React from 'react';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
 import PolyEditor from '../../components/PolyEditor';
+import toCapitalString from '../../lib/utils/toCapitalString';
+
 /*
  * props
  * {
@@ -11,17 +13,21 @@ import PolyEditor from '../../components/PolyEditor';
 
 const Component = React.Component;
 
-const defaultOpts = {
-  style: {
-    isOutline: false,
-    outlineColor: '#000',
-    strokeColor: '#3366ff',
-    strokeOpacity: 0.8,
-    strokeWeight: 4,
-    strokeStyle: 'solid',
-    strokeDasharray: [0, 0, 0],
-  }
-};
+const configurableProps = [
+  'path',
+  'extData',
+  
+  /* 扩展属性*/
+  'visible',
+  'style'
+];
+
+const allProps = configurableProps.concat([
+  'zIndex',
+  'bubble',
+  'showDir',
+]);
+
 
 class Polyline extends Component {
   constructor(props) {
@@ -33,7 +39,7 @@ class Polyline extends Component {
       this.element = props.__ele__;
       this.prevPath = [];
       this.lineEditable = false;
-      this.initMapPolyline(props);
+      this.createMapPolyline(props);
     }
   }
   
@@ -49,29 +55,89 @@ class Polyline extends Component {
      *  onMouseOut
      * }
      */
-    if (this.map) {
-      if (this.setVisible(nextProps)) {
-        this.setPath(nextProps);
-        this.setStyle(nextProps);
+    this.refreshPolylineLayout(nextProps);
+  }
+  
+  createMapPolyline(props) {
+    const options = this.buildCreateOptions(props);
+    options.map = this.map;
+    this.polyline = new window.AMap.Polyline(options);
+    
+    const events = this.exposeLineInstance(props);
+    events && this.bingLineEvents(events);
+  
+    if ('visible' in props) {
+      if (props.visible) {
+        this.polyline.show();
+      } else {
+        this.polyline.hide();
       }
     }
   }
   
-  initMapPolyline(props) {
-    let opts = {};
-    if ('createOptions' in props) {
-      opts = props.createOptions;
+  buildCreateOptions(props) {
+    const options = {};
+    allProps.forEach((key) => {
+      if (key in props) {
+        if (key === 'style') {
+          const styleItem = Object.keys(props.style);
+          styleItem.forEach((item) => {
+            options[item] = props.style[item];
+          });
+          // visible 做特殊处理
+        } else if(key !== 'visible') {
+          options[key] = this.getSetterValue(key, props[key]);
+        }
+      }
+    });
+    return options;
+  }
+  
+  refreshPolylineLayout(nextProps) {
+    configurableProps.forEach((key) => {
+      if (key in nextProps) {
+        if (this.detectPropChanged(key, nextProps)) {
+          if (key === 'visible') {
+            if (nextProps.visible) {
+              this.polyline.show();
+            } else {
+              this.polyline.hide();
+            }
+          } else if(key === 'style') {
+            this.polyline.setOptions(nextProps.style);
+          } else {
+            const setterName = `set${toCapitalString(key)}`;
+            const setterValue = this.getSetterValue(key, nextProps[key]);
+            this.polyline[setterName](setterValue);
+          }
+        }
+      }
+    });
+  }
+  
+  detectPropChanged(key, nextProps) {
+    return this.props[key] !== nextProps[key];
+  }
+  
+  getSetterValue(key, value) {
+    if (key === 'path') {
+      return this.buildPathValue(value);
     }
-    opts.map = this.map;
-    this.polyline = new window.AMap.Polyline(opts);
-    
-    const events = this.exposeLineInstance(props);
-    events && this.bingLineEvents(events);
-    
-    if (this.setVisible(props)) {
-      this.setPath(props);
-      this.setStyle(props);
+    return value;
+  }
+  
+  buildPathValue(path) {
+    if (path.length) {
+      if ('getLng' in path[0]) {
+        return path;
+      }
+      return path.map((p) => (this.buildPosition(p)));
     }
+    return path;
+  }
+  
+  buildPosition(pos) {
+    return new window.AMap.LngLat(pos.longitude, pos.latitude);
   }
   
   exposeLineInstance(props) {
@@ -91,75 +157,6 @@ class Polyline extends Component {
     list.length && list.forEach((evName) => {
       this.polyline.on(evName, events[evName]);
     })
-  }
-  
-  setStyle(props) {
-    let style;
-    if ('style' in props) {
-      style = this.buildStyle(props.style);
-      this.polyline.setOptions(style);
-    }
-  }
-  
-  buildStyle(styleOpts) {
-    const keys = [
-      'isOutline',
-      'outlineColor',
-      'strokeColor',
-      'strokeOpacity',
-      'strokeWeight',
-      'strokeStyle',
-      'strokeDasharray',
-    ];
-    const style = {};
-    keys.forEach(key => {
-      style[key] = (key in styleOpts) ? styleOpts[key] : defaultOpts.style[key];
-    });
-    return style;
-  }
-  
-  
-  setVisible(props) {
-    let visible = true;
-    if ('visible' in props && props.visible === false) {
-      visible = false;
-    }
-    if (visible) {
-      this.polyline.show();
-    } else {
-      this.polyline.hide();
-    }
-    return visible;
-  }
-  
-  setPath(props) {
-    if ('path' in props) {
-      if (this.prevPath !== props.path) {
-        this.buildPath(props.path);
-        this.prevPath = props.path;
-      }
-    }
-  }
-  
-  buildPath(path) {
-    if(path && path.length) {
-      const mapPath = [];
-      path.forEach((p) => {
-        mapPath.push(new window.AMap.LngLat(p.longitude, p.latitude));
-      });
-      this.polyline.setPath(mapPath);
-      this.setFitView();
-    } else {
-      this.clearPath();
-    }
-  }
-  
-  clearPath() {
-    this.polyline.setPath([]);
-  }
-  
-  setFitView() {
-    this.map.setFitView();
   }
   
   renderEditor(children) {

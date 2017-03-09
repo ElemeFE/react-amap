@@ -40,7 +40,7 @@ class App extends React.Component{
             zoomstart: () => {console.log('zoom start')},
             created: (map) => {console.log('map is below');console.log(map)}
         };
-        return <div style={{width: '400px', height: '300px'}}>
+        return <div style={{width: '100%', height: '300px'}}>
             <AMap
                 plugins={plugins}
                 events={events}
