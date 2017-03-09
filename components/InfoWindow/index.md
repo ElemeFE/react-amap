@@ -1,6 +1,6 @@
 ---
-category: Components
-order: 6,
+category: 信息窗体
+order: 6
 chinese: InfoWindow 组件
 ---
 

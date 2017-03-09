@@ -1,6 +1,6 @@
 ---
-category: Components
-order: 2,
+category: 覆盖物
+order: 2
 chinese: Markers 组件
 ---
 

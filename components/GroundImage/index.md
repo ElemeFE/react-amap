@@ -1,6 +1,6 @@
 ---
-category: Components
-order: 5,
+category: 覆盖物
+order: 5
 chinese: GroundImage 组件
 ---
 

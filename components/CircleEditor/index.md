@@ -1,6 +1,6 @@
 ---
-category: Components
-order: 4,
+category: 覆盖物
+order: 7
 chinese: CircleEditor 组件
 ---
 

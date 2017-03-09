@@ -1,6 +1,6 @@
 ---
-category: Components
-order: 8,
+category: 覆盖物
+order: 3
 chinese: Polygon 组件
 ---
 

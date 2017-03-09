@@ -29,7 +29,7 @@ class App extends React.Component{
     }
     
     render(){
-        return <div style={{width: '100%', height: 300}}>
+        return <div style={{width: '100%', height: 400}}>
            <AMap 
                plugins={['ToolBar']} 
                center={{longitude: 120, latitude: 35}} 

@@ -1,5 +1,5 @@
 ---
-category: Components
+category: 地图
 order: 1
 chinese: AMap 组件
 ---

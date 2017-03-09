@@ -1,6 +1,6 @@
 ---
-category: Components
-order: 1
+category: 覆盖物
+order: 6
 chinese: Circle 组件
 ---
 

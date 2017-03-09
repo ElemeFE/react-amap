@@ -28,7 +28,7 @@ class App extends React.Component{
             lineHeight: '40px'
         }
         return <div>
-            <div style={{width: '100%', height: 300}}>
+            <div style={{width: '100%', height: 400}}>
                 <AMap 
                     plugins={['ToolBar']} 
                     center={{longitude: 121, latitude: 34}} 

@@ -50,7 +50,7 @@ class App extends React.Component{
     
     render(){   
         return <div>
-            <div style={{width: '100%', height: 300}}>
+            <div style={{width: '100%', height: 360}}>
                 <AMap plugins={['ToolBar']} center={this.state.position} zoom={6}>
                     <Marker 
                         events={{click:() => {console.log('marker clicked!')}}}
