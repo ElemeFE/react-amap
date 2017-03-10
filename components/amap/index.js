@@ -160,6 +160,12 @@ class AMap extends Component {
       const events = this.exposeMapInstance();
       events && this.bindAMapEvents(events);
       this.setPlugins(this.props);
+      
+      if ('rotateEnable' in this.props) {
+        if (typeof this.props.rotateEnable === 'number') {
+          this.map.setRotation(this.props.rotateEnable);
+        }
+      }
     }
   }
   
@@ -168,7 +174,15 @@ class AMap extends Component {
     const options = {};
     allProps.forEach((key) => {
       if (key in props) {
-        options[key] = this.getSetterParam(key, props);
+        if (key === 'rotateEnable') {
+          if (typeof props.rotateEnable === 'number') {
+            options[key] = true;
+          } else {
+            options[key] = props.rotateEnable;
+          }
+        } else {
+          options[key] = this.getSetterParam(key, props);
+        }
       }
     });
     return options;
