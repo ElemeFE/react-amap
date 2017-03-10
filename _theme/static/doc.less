@@ -16,10 +16,11 @@
     font-weight: 200;
     font-size: 30px;
   }
-  h2{
-    .anchor{
-      color: transparent;
-    }
+  h3{
+    margin: 16px 0 8px 0;
+  }
+  .anchor{
+    color: transparent;
   }
   .page-content{
     margin: 15px 0;
@@ -74,7 +75,29 @@ article{
     padding: 5px 0 5px 6px;
     margin: 10px 0;
   }
+  li{
+    margin: 5px 0;
+  }
+  li > p{
+    display: inline-block;
+  }
   ul li{
-
+    list-style: circle;
+    list-style-position: inside;
+  }
+  ol li{
+    list-style: decimal;
+    list-style-position: inside;
+  }
+}
+.pure-article{
+  code{
+    background: #f9f9f9;
+    border: 1px solid #f0f0f0;
+  }
+  p{
+    margin: 5px 0;
+    font-size: 12px;
+    line-height: 18px;
   }
 }

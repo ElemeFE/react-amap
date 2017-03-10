@@ -1,7 +1,7 @@
 ---
 category: 信息窗体
-order: 6
-chinese: InfoWindow 组件
+order: 10
+title: InfoWindow 组件
 ---
 
 

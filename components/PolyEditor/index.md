@@ -1,7 +1,7 @@
 ---
 category: 覆盖物
 order: 5
-chinese: PolyEditor 插件
+title: PolyEditor 插件
 ---
 
 

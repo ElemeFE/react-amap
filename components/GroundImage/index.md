@@ -1,7 +1,7 @@
 ---
 category: 覆盖物
-order: 5
-chinese: GroundImage 组件
+order: 10
+title: GroundImage 组件
 ---
 
 

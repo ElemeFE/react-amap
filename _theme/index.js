@@ -10,10 +10,10 @@ module.exports = {
     component: './template/Cover'
   }, {
     path: '/components/:doc',
-    component: './template/Doc'
+    component: './template/Components'
   },{
     path: '/articles/:doc',
-    component: './template/Article'
+    component: './template/Articles'
   }, {
     path: '/404',
     component: './template/NotFound'

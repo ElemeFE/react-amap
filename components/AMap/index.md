@@ -1,7 +1,7 @@
 ---
 category: 地图
 order: 1
-chinese: AMap 组件
+title: AMap 组件
 ---
 
 ## 何时使用

@@ -1,7 +1,7 @@
 ---
 category: 覆盖物
 order: 7
-chinese: CircleEditor 组件
+title: CircleEditor 组件
 ---
 
 

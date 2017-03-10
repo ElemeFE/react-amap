@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Router, History } from 'react-router';
+import { Link } from 'react-router';
 
 export default function Header(props) {
   const route = props.route;

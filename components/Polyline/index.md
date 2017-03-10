@@ -1,7 +1,7 @@
 ---
 category: 覆盖物
 order: 4
-chinese: Polyline 组件
+title: Polyline 组件
 ---
 
 

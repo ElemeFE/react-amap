@@ -31,7 +31,7 @@ class App extends React.Component{
             end: () => {console.log('polyeditor end')},
         }
         return <div style={{width: '100%', height: '300px'}}>
-            <AMap>
+            <AMap zoom={3}>
                 <Polygon path={path}>
                     <PolyEditor
                      active

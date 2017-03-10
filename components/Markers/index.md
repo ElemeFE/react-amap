@@ -1,7 +1,7 @@
 ---
 category: 覆盖物
 order: 2
-chinese: Markers 组件
+title: Markers 组件
 ---
 
 

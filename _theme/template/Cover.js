@@ -32,7 +32,3 @@ export default function Cover(props) {
     </div>
   </div>
 }
-
-
-
-

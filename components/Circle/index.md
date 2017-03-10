@@ -1,7 +1,7 @@
 ---
 category: 覆盖物
 order: 6
-chinese: Circle 组件
+title: Circle 组件
 ---
 
 ## 何时使用
