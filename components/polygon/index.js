@@ -1,35 +1,32 @@
-import React from 'react';
+import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
-import PolyEditor from '../../components/PolyEditor';
+import PolyEditor from '../../components/polyeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
-
 /*
  * props
  * {
  *  __map__ 父级组件传过来的地图实例
+ *
  * }
  */
 
-const Component = React.Component;
 
 const configurableProps = [
   'path',
   'extData',
   
-  /* 扩展属性*/
+  /* 本插件扩展的属性*/
+  'style',
   'visible',
-  'style'
 ];
 
 const allProps = configurableProps.concat([
   'zIndex',
   'bubble',
-  'showDir',
 ]);
 
-
-class Polyline extends Component {
+class Polygon extends Component {
   constructor(props) {
     super(props);
     if (!props.__map__) {
@@ -38,8 +35,7 @@ class Polyline extends Component {
       this.map = props.__map__;
       this.element = props.__ele__;
       this.prevPath = [];
-      this.lineEditable = false;
-      this.createMapPolyline(props);
+      this.initMapPolygon(props);
     }
   }
   
@@ -55,22 +51,22 @@ class Polyline extends Component {
      *  onMouseOut
      * }
      */
-    this.refreshPolylineLayout(nextProps);
+    this.refreshPolygonLayout(nextProps);
   }
   
-  createMapPolyline(props) {
+  initMapPolygon(props) {
     const options = this.buildCreateOptions(props);
     options.map = this.map;
-    this.polyline = new window.AMap.Polyline(options);
-    
-    const events = this.exposeLineInstance(props);
-    events && this.bingLineEvents(events);
+    this.polygon = new window.AMap.Polygon(options);
   
+    const events = this.exposeInstance();
+    events && this.bindOriginEvents(events);
+    
     if ('visible' in props) {
       if (props.visible) {
-        this.polyline.show();
+        this.polygon.show();
       } else {
-        this.polyline.hide();
+        this.polygon.hide();
       }
     }
   }
@@ -93,22 +89,22 @@ class Polyline extends Component {
     return options;
   }
   
-  refreshPolylineLayout(nextProps) {
+  refreshPolygonLayout(nextProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
         if (this.detectPropChanged(key, nextProps)) {
           if (key === 'visible') {
             if (nextProps.visible) {
-              this.polyline.show();
+              this.polygon.show();
             } else {
-              this.polyline.hide();
+              this.polygon.hide();
             }
           } else if(key === 'style') {
-            this.polyline.setOptions(nextProps.style);
+            this.polygon.setOptions(nextProps.style);
           } else {
             const setterName = `set${toCapitalString(key)}`;
             const setterValue = this.getSetterValue(key, nextProps[key]);
-            this.polyline[setterName](setterValue);
+            this.polygon[setterName](setterValue);
           }
         }
       }
@@ -140,11 +136,11 @@ class Polyline extends Component {
     return new window.AMap.LngLat(pos.longitude, pos.latitude);
   }
   
-  exposeLineInstance(props) {
-    if ('events' in props) {
-      const events = props.events;
+  exposeInstance(){
+    if ('events' in this.props) {
+      const events = this.props.events;
       if (isFun(events.created)) {
-        events.created(this.polyline);
+        events.created(this.polygon);
       }
       delete events.created;
       return events;
@@ -152,11 +148,11 @@ class Polyline extends Component {
     return false;
   }
   
-  bingLineEvents(events) {
+  bindOriginEvents(events){
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
-      this.polyline.on(evName, events[evName]);
-    })
+      this.polygon.on(evName, events[evName]);
+    });
   }
   
   renderEditor(children) {
@@ -169,7 +165,7 @@ class Polyline extends Component {
     const child = React.Children.only(children);
     if (child.type === PolyEditor) {
       return React.cloneElement(child, {
-        __poly__: this.polyline,
+        __poly__: this.polygon,
         __map__: this.map,
         __ele__: this.element,
       });
@@ -182,4 +178,4 @@ class Polyline extends Component {
   }
 }
 
-export default Polyline;
+export default Polygon;

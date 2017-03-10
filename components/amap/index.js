@@ -4,20 +4,19 @@ import APILoader from '../../lib/utils/APILoader';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
 import toCapitalString from '../../lib/utils/toCapitalString';
-import Marker from '../Marker';
-import Markers from '../Markers';
-import Polygon from '../Polygon';
-import Polyline from '../Polyline';
-import InfoWindow from '../InfoWindow';
-import Circle from '../Circle';
-import GroundImage from '../GroundImage';
-import CircleEditor from '../CircleEditor';
-import PolyEditor from '../PolyEditor';
+import Marker from '../marker';
+import Markers from '../markers';
+import Polygon from '../polygon';
+import Polyline from '../polyline';
+import InfoWindow from '../infowindow';
+import Circle from '../circle';
+import GroundImage from '../groundimage';
+import CircleEditor from '../circleeditor';
+import PolyEditor from '../polyeditor';
 
 /*
  * props
  * {
- *  onInit(func),
  *  center,
  *  zoom
  * }

@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import DemoItem from './DemoItem';
 
-
 export default function DemoArticle(props) {
   const pageData = props.pageData;
   const demoComponent = Object.keys(pageData.demo).map(key => pageData.demo[key])

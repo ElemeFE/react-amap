@@ -1,8 +1,7 @@
 import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
 import error from '../../lib/utils/error';
-import bindEvent from '../../lib/utils/bindEvent';
-import CircleEditor from '../../components/CircleEditor';
+import CircleEditor from '../../components/circleeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
 /*
  * props

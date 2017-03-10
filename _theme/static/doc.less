@@ -17,7 +17,8 @@
     font-size: 30px;
   }
   h3{
-    margin: 16px 0 8px 0;
+    font-size: 20px;
+    margin: 25px 0 8px 0;
   }
   .anchor{
     color: transparent;
@@ -25,19 +26,33 @@
   .page-content{
     margin: 15px 0;
   }
-  .page-api{
-    table{
-      width: 100%;
-      border-collapse: collapse;
-    }
-    thead{
-      background: #f3f3f3;
-    }
-    td, th{
-      border: 1px solid #e3e3e3;
-      text-align: left;
-      padding: 8px 0 8px 10px;
-    }
+
+  table{
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead{
+    background: #f3f3f3;
+  }
+  td, th{
+    border: 1px solid #e3e3e3;
+    text-align: left;
+    padding: 8px 10px 8px 10px;
+  }
+  code{
+    background: #f9f9f9;
+    border: 1px solid #f0f0f0;
+  }
+  p{
+    margin: 5px 0;
+    font-size: 12px;
+    line-height: 18px;
+  }
+  p > code, td > code {
+    border: 1px solid #dedede;
+    padding: 2px 3px;
+    margin: 0 2px;
+    border-radius: 2px;
   }
 
   .demo-item{
@@ -56,6 +71,10 @@
     height: 400px;
     overflow: scroll;
     background: #fff;
+    pre code{
+      border: 0;
+      background: #fff;
+    }
   }
   .demo-item-preview{
     border: 1px solid #e0e0e0;
@@ -72,7 +91,7 @@ article{
   }
   blockquote{
     border-left: 3px solid #eee;
-    padding: 5px 0 5px 6px;
+    padding-left: 6px;
     margin: 10px 0;
   }
   li{
@@ -91,13 +110,5 @@ article{
   }
 }
 .pure-article{
-  code{
-    background: #f9f9f9;
-    border: 1px solid #f0f0f0;
-  }
-  p{
-    margin: 5px 0;
-    font-size: 12px;
-    line-height: 18px;
-  }
+
 }

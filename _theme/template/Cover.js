@@ -24,7 +24,7 @@ export default function Cover(props) {
       <h3>react-amap</h3>
       <div className="cover-link">
         <a className="github" href="https://github.com" target="_blank">GitHub</a>
-        <Link className="start" to="/components/AMap" >Get Started</Link>
+        <Link className="start" to="/components/amap" >Get Started</Link>
       </div>
       <div className="slogan">
         Make AMap Great Again

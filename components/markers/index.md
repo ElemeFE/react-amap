@@ -7,7 +7,7 @@ title: Markers 组件
 
 ## 何时使用
 
-显示坐标点的时候使用；注意与 [Marker](/components/Marker) 的区别。这个插件专门针对大量坐标点进行过优化；
+显示坐标点的时候使用；注意与 [Marker](/components/marker) 的区别。这个插件专门针对大量坐标点进行过优化；
 
 
 ## API

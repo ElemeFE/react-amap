@@ -13,7 +13,7 @@ export default function Header(props) {
       <ul>
         <li><Link to="/">首页</Link></li>
         <li><Link className={path.indexOf('articles') === -1 ? '': 'current'} to="/articles/start">快速开始</Link></li>
-        <li><Link className={path.indexOf('components') === -1 ? '': 'current'} to="/components/AMap">组件文档</Link></li>
+        <li><Link className={path.indexOf('components') === -1 ? '': 'current'} to="/components/amap">组件文档</Link></li>
         <li><a href="https://github.com" target="_blank">GitHub</a></li>
       </ul>
     </div>

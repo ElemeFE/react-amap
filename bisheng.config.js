@@ -22,5 +22,6 @@ module.exports = {
   
     };
     return config;
-  }
+  },
+  root: '/react-amap/'
 };
