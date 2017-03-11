@@ -14,6 +14,19 @@ const defaultOpts = {
   visible: true,
 };
 
+const configurableProps = [
+  'opacity',
+  'src',
+  'bounds',
+  
+  /* 扩展属性 */
+  'visible',
+];
+
+const allProps = configurableProps.concat([
+  'clickable',
+]);
+
 class GroundImage extends Component {
   constructor(props) {
     super(props);
@@ -22,29 +35,73 @@ class GroundImage extends Component {
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
-      this.circleEditable = false;
-      this.initGroundImage(props);
+      this.createGroundImage(props);
     }
   }
   
+  shouldComponentUpdate(){
+    return false;
+  }
+  
   componentWillReceiveProps(nextProps) {
-    if (this.setVisible(nextProps)) {
-      if (
-        // 高德提供的 GroundImage 不支持动态刷新 bounds 和 src；
-      // 检测到这两个属性变化后，需要删除当前实例，并重新创建实例
-      this.checkBoundsChange(nextProps) ||
-      (nextProps.src !== this.image.getImageUrl())
-      ) {
-        this.image.setMap(null);
-        delete this.image;
-        this.initGroundImage(nextProps);
+    this.refreshGroundImage(nextProps);
+  }
+  
+  refreshGroundImage(nextProps) {
+    configurableProps.forEach((key) => {
+      if (key in nextProps) {
+        if (this.checkPropsChanged(nextProps, key)) {
+          if (key === 'visible') {
+            this.setVisible(nextProps);
+          } else if(key === 'opacity') {
+            this.setOpacity(nextProps);
+          } else if(key === 'src') {
+            this.setImageUrl(nextProps);
+          } else if (key === 'bounds') {
+            this.setBounds(nextProps);
+          }
+        }
+      }
+    });
+  }
+  
+  setBounds(nextProps) {
+    // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
+    if ('setBounds' in this.image) {
+      this.image.setBounds(this.buildBounds(nextProps));
+    }
+  }
+  
+  setImageUrl(nextProps) {
+    // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
+    if ('setImageUrl' in this.image) {
+      this.image.setImageUrl(nextProps.src);
+    }
+  }
+  
+  setVisible(nextProps) {
+    // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
+    if ('show' in this.image) {
+      if (nextProps.visible) {
+        this.image.show();
       } else {
-        this.setOpacity(nextProps);
+        this.image.hide();
       }
     }
   }
   
-  initGroundImage(props) {
+  setOpacity(nextProps) {
+    this.image.setOpacity(nextProps.opacity);
+  }
+  
+  checkPropsChanged(nextProps, key) {
+    // if (key === 'bounds') {
+    //   return this.checkBoundsChange(nextProps);
+    // }
+    return this.props[key] !== nextProps[key];
+  }
+  
+  createGroundImage(props) {
     let src, bounds, opacity, clickable;
     if ('src' in props) {
       src = props.src;
@@ -62,7 +119,6 @@ class GroundImage extends Component {
     } else {
       clickable = defaultOpts.clickable;
     }
-    
     if ('opacity' in props) {
       opacity = props.opacity;
     } else {
@@ -73,7 +129,6 @@ class GroundImage extends Component {
       clickable,
       opacity,
     });
-    
     const events = this.exopseImageInstance(props);
     events && this.bindEvents(events);
   }
@@ -98,56 +153,30 @@ class GroundImage extends Component {
     })
   }
   
-  checkBoundsChange(nextProps) {
-    let changed = true;
-    const nextBounds = this.buildBounds(nextProps);
-    const curBounds = this.image.getBounds();
-    if (
-      curBounds.getNorthEast().equals(nextBounds.getNorthEast()) &&
-      curBounds.getSouthWest().equals(nextBounds.getSouthWest())
-    ) {
-      changed = false;
-    }
-    return changed;
-  }
+  // checkBoundsChange(nextProps) {
+  //   let changed = true;
+  //   const nextBounds = this.buildBounds(nextProps);
+  //   const curBounds = this.image.getBounds();
+  //   if (
+  //     curBounds.getNorthEast().equals(nextBounds.getNorthEast()) &&
+  //     curBounds.getSouthWest().equals(nextBounds.getSouthWest())
+  //   ) {
+  //     changed = false;
+  //   }
+  //   return changed;
+  // }
   
   
   buildBounds(props) {
     const rawBounds = props.bounds;
+    if ('getSouthWest' in rawBounds) {
+      return rawBounds;
+    }
     const bounds = new window.AMap.Bounds(
       new window.AMap.LngLat(rawBounds.sw.longitude, rawBounds.sw.latitude),
       new window.AMap.LngLat(rawBounds.ne.longitude, rawBounds.ne.latitude)
     );
     return bounds;
-  }
-  
-  setOpacity(props) {
-    let opacity = defaultOpts.opacity;
-    if ('opacity' in props) {
-      opacity = props.opacity;
-    }
-    if (opacity !== this.image.getOpacity()) {
-      this.image.setOpacity(opacity);
-    }
-  }
-  
-  setVisible(props) {
-    let visible = defaultOpts.visible;
-    if ('visible' in props) {
-      visible = props.visible;
-    }
-    if (visible) {
-      if (!this.prevVisible) {
-        this.image.setMap(this.map);
-        this.prevVisible = true;
-      }
-    } else {
-      if (this.prevVisible) {
-        this.image.setMap(null);
-        this.prevVisible = false;
-      }
-    }
-    return visible;
   }
   
   render() {

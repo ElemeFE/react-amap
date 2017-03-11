@@ -15,17 +15,22 @@ title: Circle 组件
 
 | 属性 | 类型 | 默认取值 | 说明 |
 |------|-----|------|-----|
-| `center` | TODO | TODO | TODO |
-| `radius` | TODO | TODO | TODO |
-| `extData` | TODO | TODO | TODO |
+| `center` | [LngLat](http://lbs.amap.com/api/javascript-api/reference/core#LngLat) 或者 `{longitude, latitude}`  | / | 圆心位置 |
+| `radius` | Number | / | 圆半径，单位:米 |
+| `extData` | 任意 | / | 用户自定义属性，支持JavaScript API任意数据类型，如Circle的id等 |
   
 
 ### 不可响应属性
 
-+ `zIndex`
-+ `bubble`
+| 属性     | 类型 | 默认取值 | 说明     |
+|----------|-----------|-------|-----|
+| `zIndex` | `Number`  | 10    | 层叠顺序 |
+| `bubble` | `Boolean` | false | 是否将覆盖物的鼠标或touch等事件冒泡到地图上 |
 
-### 扩展属性
 
-+ `visible`
-+ `style`
+### 扩展的可响应式属性
+
+| 属性     | 类型 | 默认取值 | 说明     |
+|----------|-----------|-------|-----|
+| `style`   | `{ strokeColor, strokeOpacity, strokeWeight, fillColor, fillOpacity, strokeStyle, strokeDasharray }` | / | 绘制圆形的外观，各个字段取值类型参考[CircleOptions](http://lbs.amap.com/api/javascript-api/reference/overlay#Circle) |
+| `visible` | `Boolean` | true | 圆形的显示/隐藏状态 |

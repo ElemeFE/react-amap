@@ -50,11 +50,12 @@ function getComponentsMenuGroups(data){
 }
 
 
-export default function renderComponentsMenu(data, defaultSelectedKey) {
+export default function ComponentsMenu(props) {
+  const { data, defaultSelectedKey } = props;
   return (<Menu
     mode="inline"
     defaultOpenKeys={['components']}
-    defaultSelectedKeys={[defaultSelectedKey]}
+    selectedKeys={[defaultSelectedKey]}
   >
     <Menu.Item key="about">
       <Link to="/components/about">基本介绍</Link>

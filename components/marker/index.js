@@ -41,6 +41,10 @@ class Marker extends Component {
     }
   }
   
+  shouldComponentUpdate(){
+    return false;
+  }
+  
   componentWillReceiveProps(nextProps) {
     this.refreshMarkerLayout(nextProps);
   }

@@ -61,6 +61,10 @@ class InfoWindow extends Component {
     }
   }
   
+  shouldComponentUpdate(){
+    return false;
+  }
+  
   componentWillReceiveProps(nextProps) {
     /*
      * {

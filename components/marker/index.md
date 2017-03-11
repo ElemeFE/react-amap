@@ -75,3 +75,7 @@ const events = {
 ```
 
 ## 用[Marker](/components/marker)还是[Markers](/components/markers)？
+
++ 如果仅在地图上展示坐标点，使用 Markers
++ 如果想使用聚合插件，目前只能使用 Markers
++ 如果需要对点进行比较复杂的操作，并且需要自定义外观，使用 Marker

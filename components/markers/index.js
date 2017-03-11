@@ -36,9 +36,6 @@ const defaultOpts = {
  *  markers(array<>)坐标列表
  *  __map__ 父级组件传过来的地图实例
  *  __ele__ 父级组件传过来的地图容器
- *  onClick(func),
- *  onMouseOver(func),
- *  onMouseOut(func),
  *
  * }
  */
@@ -62,6 +59,11 @@ class Markers extends Component {
       this.renderMarkers();
     }
   }
+  
+  shouldComponentUpdate(){
+    return false;
+  }
+  
   componentWillReceiveProps(nextProps) {
     if (this.map) {
       let markerChanged = false;
@@ -135,7 +137,7 @@ class Markers extends Component {
       const html = this.generateMarkerContent(
         this.getMarkerData(marker, 'isSelected'),
         true,
-        this.getMarkerData(marker, 'content'),
+        this.getMarkerData(marker, 'label'),
       );
       span.innerHTML = html;
     }
@@ -152,7 +154,7 @@ class Markers extends Component {
       const html = this.generateMarkerContent(
         this.getMarkerData(marker, 'isSelected'),
         false,
-        this.getMarkerData(marker, 'content'),
+        this.getMarkerData(marker, 'label'),
       );
       span.innerHTML = html;
     }
@@ -161,10 +163,10 @@ class Markers extends Component {
   
   setMarkerIcon(marker) {
     const extData = marker.getExtData() || {};
-    const content = ('content' in extData) ? extData.content : '';
+    const label = ('label' in extData) ? extData.label : '';
     const isSelected = extData.isSelected;
     const isHover = extData.isHover;
-    const html = this.generateMarkerContent(isSelected, isHover, content);
+    const html = this.generateMarkerContent(isSelected, isHover, label);
     marker.setContent(html);
     if (isHover) {
       marker.setOffset(this.hoverOffset);
@@ -267,11 +269,11 @@ class Markers extends Component {
       markers.forEach((m) => {
         const id = this.getMarkerData(m, 'id');
         const pointIndex = this.getMarkerData(m, 'pointIndex');
-        const content = this.getMarkerData(m, 'content');
+        const label = this.getMarkerData(m, 'label');
         const tmp = this.generateMarkerContent(
           this.getMarkerData(m, 'isSelected'),
           this.getMarkerData(m, 'isHover'),
-          content
+          label
         );
         
         const tmpSpan = document.createElement('span');
@@ -301,7 +303,7 @@ class Markers extends Component {
     this.markerIDCache = [];
     if (rawMarkerData && rawMarkerData.length) {
       rawMarkerData.forEach((m, idx) => {
-        const content = ('content' in m) ? m.content : '';
+        const label = ('label' in m) ? m.label : '';
         let id;
         if ('id' in m) {
           id = m.id;
@@ -314,15 +316,15 @@ class Markers extends Component {
           error('MARKER_ID_REQUIRED');
         }
         const marker = new window.AMap.Marker({
-          position: [m.longitude, m.latitude],
+          position: [m.position.longitude, m.position.latitude],
           visible: true,
-          draggable: true,
+          draggable: false,
           offset: this.resetOffset,
-          content: this.generateMarkerContent(!!m.isSelected, false, content),
+          content: this.generateMarkerContent(!!m.isSelected, false, label),
           extData: {
             id,
             raw: m,
-            content,
+            label,
             isSelected: !!m.isSelected,
             isHover: false,
             pointIndex: idx,

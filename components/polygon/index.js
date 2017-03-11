@@ -126,10 +126,18 @@ class Polygon extends Component {
     if (path.length) {
       if ('getLng' in path[0]) {
         return path;
+      } else if('longitude' in path[0]) {
+        return path.map((p) => (this.buildPosition(p)));
+      } else if(path.length === 2){
+        // Ring
+        const out = this.buildPathValue(path[0]);
+        const inner = this.buildPathValue(path[1]);
+        return [out, inner];
+      } else {
+        return [];
       }
-      return path.map((p) => (this.buildPosition(p)));
     }
-    return path;
+    return [];
   }
   
   buildPosition(pos) {

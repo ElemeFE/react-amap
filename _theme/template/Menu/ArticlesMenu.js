@@ -20,7 +20,8 @@ function getArticlesMenu(menuData) {
   });
 }
 
-export default function renderArticlesMenu(data, defaultSelectedKey) {
+export default function ArticlesMenu(props) {
+  const {data, defaultSelectedKey} = props;
   return (<Menu
     mode="inline"
     defaultSelectedKeys={[defaultSelectedKey]}
