@@ -25,13 +25,15 @@ const configurableProps = [
   'size',
   /* 以下属性是本插件的扩展 */
   'visible',
+  
+  /* 这个 setOffset  方法高德并没有明确在文档中列出来，不确定会不会撤销 */
+  'offset',
 ];
 
 const allProps = configurableProps.concat([
   'isCustom',
   'autoMove',
   'closeWhenClickMap',
-  'offset',
   'showShadow',
 ]);
 
@@ -66,19 +68,12 @@ class InfoWindow extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    /*
-     * {
-     *  __map__,
-     *  __ele__,
-     * }
-     */
     this.refreshWindowLayout(nextProps);
   }
   
   createInfoWindow(props) {
     const options = this.buildCreateOptions(props);
     this.infoWindow = new window.AMap.InfoWindow(options);
-  
     const events = this.exposeWindowInstance(props);
     events && this.bindWindowEvents(events);
   }
@@ -120,25 +115,36 @@ class InfoWindow extends Component {
   buildCreateOptions(props) {
     const options = {};
   
-    // 如果开发者没有设置 isCustom 属性，必需优先设置为 true
+    // 如果开发者没有设置 isCustom 属性，默认设置为 false
     if ('isCustom' in props) {
       options.isCustom = !!props.isCustom;
     } else {
-      options.isCustom = true;
+      options.isCustom = false;
     }
   
-    if (options.isCustom) {
-      if ('content' in props) {
-        options.content = props.content;
-        console.warn('更推荐不定义 content（默认），组件内部的实现可以直接以 JSX 语法写窗体内容。');
-      } else {
-        this.infoDOM = document.createElement('div');
-        options.content = this.infoDOM;
-      }
-    } else {
+    if ('content' in props) {
       options.content = props.content;
-      console.warn('更推荐设置 isCustom 为 true（默认）可以直接以 JSX 语法写窗体内容。')
+    } else {
+      this.infoDOM = document.createElement('div');
+      options.content = this.infoDOM;
     }
+  
+    // if (options.isCustom) {
+    //   if ('content' in props) {
+    //     options.content = props.content;
+    //     console.warn('更推荐不定义 content（默认），组件内部的实现可以直接以 JSX 语法写窗体内容。');
+    //   } else {
+    //     this.infoDOM = document.createElement('div');
+    //     options.content = this.infoDOM;
+    //   }
+    // } else {
+    //   if ('content' in options) {
+    //     options.content = props.content;
+    //     console.warn('更推荐设置 isCustom 为 true 可以直接以 JSX 语法写窗体内容。')
+    //   } else {
+    //     //
+    //   }
+    // }
     allProps.forEach((key) => {
       if (key in props) {
         if (['visible', 'isCustom', 'content'].indexOf(key) === -1) {
@@ -204,8 +210,8 @@ class InfoWindow extends Component {
   }
   
   setChild(props) {
-    if (this.infoDOM) {
-      const child = props.children;
+    const child = props.children;
+    if (this.infoDOM && child) {
       if (Children.count(child) === 1) {
         render(child, this.infoDOM);
       } else {
@@ -219,13 +225,16 @@ class InfoWindow extends Component {
   }
   
   setClassName(props) {
+    let baseClsValue = '';
+    if (props.isCustom === true) {
+      baseClsValue = 'amap_markers_pop_window ';
+    }
     if (this.infoDOM) {
       // 刷新 className
-      let cls = 'amap_markers_pop_window';
       if ('className' in props) {
-        cls = `amap_markers_pop_window ${props.className}`;
+        baseClsValue += props.className;
       }
-      this.infoDOM.className = cls;
+      this.infoDOM.className = baseClsValue;
     }
   }
   

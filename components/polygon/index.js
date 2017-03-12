@@ -14,6 +14,7 @@ import toCapitalString from '../../lib/utils/toCapitalString';
 
 const configurableProps = [
   'path',
+  'draggable',
   'extData',
   
   /* 本插件扩展的属性*/

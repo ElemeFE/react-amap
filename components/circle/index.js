@@ -24,6 +24,7 @@ const defaultOpts = {
 const configurableProps = [
   'center',
   'radius',
+  'draggable',
   'extData',
   
   /* 原生的接口中并没有这些对象，这是本组件的扩展 */
@@ -87,7 +88,7 @@ class Circle extends Component {
   
   refreshCircleLayout(nextProps) {
     configurableProps.forEach((key) => {
-      if ('key' in nextProps) {
+      if (key in nextProps) {
         if (this.checkPropChanged(key, nextProps)) {
           if (key === 'visible') {
             if (nextProps.visible) {

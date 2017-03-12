@@ -16,7 +16,6 @@ export default class Doc extends React.Component{
     if (props.pageData.demo) {
       type = 'demo';
     }
-    console.log(props);
     return <Layout route={props.route}>
       <div id="doc">
         <aside id="aside">

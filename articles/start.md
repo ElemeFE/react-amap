@@ -38,4 +38,4 @@ order: 1
 + 直接把你的 key 定义在全局变量 `window.AMAP_KEY` 上，react-amap 在调用高德接口时会尝试从这里读取。
 
     
-组件的使用请查看这里
+组件的使用请查看[组件文档](/components/about)

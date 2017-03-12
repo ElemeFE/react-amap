@@ -78,7 +78,7 @@ class App extends React.Component{
   }
   render(){
     return <div>
-      <div style={{width: '100%', height: 370}}>
+      <div style={{width: '100%', height: '370px'}}>
         <AMap plugins={['ToolBar']} center={this.state.mapCenter} zoom={6}>
           <GroundImage
             visible={this.state.visible}
@@ -89,11 +89,11 @@ class App extends React.Component{
             clickable
           />
         </AMap>
-        <button onClick={ () => { this.toggleVisible() }}>Toggle Visible</button>
-        <button onClick={ () => { this.toggleOpacity() }}>Toggle Opacity</button>
-        <button onClick={ () => { this.randomPic() }}>Random Pic</button>
-        <button onClick={ () => { this.randomBounds() }}>Random Bounds</button>
       </div>
+      <button onClick={ () => { this.toggleVisible() }}>Toggle Visible</button>
+      <button onClick={ () => { this.toggleOpacity() }}>Toggle Opacity</button>
+      <button onClick={ () => { this.randomPic() }}>Random Pic</button>
+      <button onClick={ () => { this.randomBounds() }}>Random Bounds</button>
     </div>
   }
 }

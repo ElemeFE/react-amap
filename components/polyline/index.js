@@ -16,6 +16,7 @@ const Component = React.Component;
 const configurableProps = [
   'path',
   'extData',
+  'draggable',
   
   /* 扩展属性*/
   'visible',
@@ -37,24 +38,11 @@ class Polyline extends Component {
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
-      this.prevPath = [];
-      this.lineEditable = false;
       this.createMapPolyline(props);
     }
   }
   
   componentWillReceiveProps(nextProps) {
-    /*
-     * {
-     *  __map__,
-     *  __ele__,
-     *  path,<pos>
-     *  onChange
-     *  onClick
-     *  onMouseOver
-     *  onMouseOut
-     * }
-     */
     this.refreshPolylineLayout(nextProps);
   }
   
