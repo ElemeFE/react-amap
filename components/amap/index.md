@@ -11,7 +11,7 @@ title: AMap 组件
 
 ## API
 
-### 可响应式属性
+### 动态属性
 
 | 属性 | 类型 | 默认取值 | 说明 |
 |------|-----|------|-----|
@@ -28,9 +28,9 @@ title: AMap 组件
 
 <p id="rotate">关于<code>rotateEnable</code>：如果传入的是 Number 类型，启用旋转，传入值定义为旋转角度；</p>
 
-### 不可响应属性
+### 静态属性
 
-AMap 的不可响应属性有如下 17 个，属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/map)
+AMap 的静态属性有如下 17 个，属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/map)
 
 + `view`
 + `zooms`

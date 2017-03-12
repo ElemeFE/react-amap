@@ -1,6 +1,6 @@
 ---
 order: 2
-title: 响应式更改 Marker 属性
+title: 动态更改 Marker 属性
 ---
 
 这个例子里展示用 state 管理图标的状态

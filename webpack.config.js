@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: './lib/',
@@ -37,5 +38,8 @@ module.exports = {
   externals: {
     'react': 'react',
     'react-dom': 'react-dom',
-  }
+  },
+  plugins: [
+    new UglifyJSPlugin()
+  ]
 };

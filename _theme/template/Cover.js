@@ -3,7 +3,6 @@ import AMap from 'react-amap';
 import { Link } from 'react-router';
 
 export default function Cover(props) {
-  console.log(props);
   const elemeAdd = {
     longitude: 121.3807354258945,
     latitude: 31.231765630889992
@@ -19,12 +18,12 @@ export default function Cover(props) {
     </div>
     <div className="cover-content">
       <div className="cover-icon">
-        <img src="http://oslhtemp.qiniudn.com/17-3-6/98901898-file_1488814957235_9457.png" alt=""/>
+        <img src="https://cloud.githubusercontent.com/assets/3898898/23833571/e5c7ae68-0782-11e7-8590-cecf4f3c969f.png" alt=""/>
       </div>
       <h3>react-amap</h3>
       <div className="cover-link">
-        <a className="github" href="https://github.com" target="_blank">GitHub</a>
-        <Link className="start" to="/components/amap" >Get Started</Link>
+        <a className="github" href="https://github.com/ElemeFE/react-amap" target="_blank">GitHub</a>
+        <Link className="start" to="/articles/start" >Get Started</Link>
       </div>
       <div className="slogan">
         Make AMap Great Again

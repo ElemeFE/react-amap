@@ -12,7 +12,7 @@ title: Marker 组件
 
 ## API
 
-### 可响应式属性
+### 动态属性
 
 | 属性 | 类型 | 默认取值 | 说明 |
 |------|-----|------|-----|
@@ -32,9 +32,9 @@ title: Marker 组件
 |extData| 任意 | / | 用户自定义属性，支持JavaScript API任意数据类型，如Marker的id等 |
 |label| `{content,offset}` | / | 添加文本标注，content为文本标注的内容，offset为偏移量，左上角为偏移量为（0,0） |
 
-### 不可响应属性
+### 静态属性
 
-Marker 的不可响应属性有如下 6 个；，属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/overlay#Marker)
+Marker 的静态属性有如下 6 个；，属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/overlay#Marker)
 
 + `topWhenClick`
 + `bubble`

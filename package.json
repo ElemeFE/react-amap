@@ -34,6 +34,8 @@
     "jsonml-to-react-component": "^0.2.6",
     "react-router": "^3.0.2",
     "style-loader": "^0.13.1",
+    "uglify-js": "^2.8.12",
+    "uglifyjs-webpack-plugin": "^0.3.0",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1"

@@ -21,16 +21,8 @@ export default class Playground extends React.Component{
     const longitude = lnglat.getLng();
     const latitude = lnglat.getLat();
     
-    console.log(this.fetchAPI(longitude, latitude));
   }
   
-  fetchAPI(lng, lat) {
-    // const url = `https://mainsite-restapi.ele.me/shopping/restaurants?latitude=${lat}&longitude=${lng}&limit=24&offset=1`
-    // const url = 'http://www.baidu.com';
-    // const url = '/restaurants';
-    const url = 'http://www.baidu.com/api';
-    return fetch(url)
-  }
   
   renderMyLogo(){
     return <div className="react-amap-icon">

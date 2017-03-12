@@ -14,8 +14,8 @@ class App extends React.Component{
     return <div>
       <div style={{width: '100%', height: 400}}>
         <AMap 
-            plugins={['ToolBar']} 
-            center={{longitude: 120, latitude: 35}} 
+          plugins={['ToolBar']} 
+          center={{longitude: 120, latitude: 35}} 
         >
           <Marker position={{longitude: 120, latitude: 35 }} />
         </AMap>

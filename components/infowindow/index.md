@@ -13,7 +13,7 @@ title: InfoWindow 组件
 
 ## API
 
-### 可响应式属性
+### 动态属性
 
 | 属性 | 类型 | 默认取值 | 说明 |
 |------|-----|------|-----|
@@ -23,7 +23,7 @@ title: InfoWindow 组件
 | offset | `[x, y]` 或者 [Pixel](http://lbs.amap.com/api/javascript-api/reference/core#Pixel) | / | 相对于基点的偏移量。默认情况是信息窗体的底部中心点(BOTTOM_CENTER) 和基点之间的偏移量 |
 
 
-### 不可响应属性
+### 静态属性
 
 | 属性 | 类型 | 默认取值 | 说明 |
 |------|-----|------|-----|
