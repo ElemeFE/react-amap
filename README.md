@@ -48,7 +48,8 @@
 ```
 
 ##### CDN 地址
-
++ https://unpkg.com/react-amap@0.1.0/dist/react-amap.js
++ https://unpkg.com/react-amap@0.1.0/dist/react-amap.min.js
 
 ### 关于 key
 
@@ -60,4 +61,4 @@
 + 直接把你的 key 定义在全局变量 `window.AMAP_KEY` 上，react-amap 在调用高德接口时会尝试从这里读取。
 
 
-组件的使用请查看[组件文档](https://github.com/ElemeFE/react-amap)
+组件的使用请查看[组件文档](https://elemefe.github.io/react-amap/components/about)

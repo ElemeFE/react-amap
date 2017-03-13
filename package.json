@@ -5,7 +5,8 @@
   "main": "dist/amap.js",
   "scripts": {
     "build": "webpack && NODE_ENV=production webpack",
-    "deploy": "bisheng build",
+    "site": "bisheng build",
+    "deploy": "bisheng gh-pages",
     "start": "bisheng start",
     "prepublish": "npm run build"
   },
