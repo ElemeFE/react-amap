@@ -28,6 +28,35 @@ order: 1
     
 最简单的使用场景下这样就可以了；会在 div 中展示一个地图；需要注意的是：Map 的父元素必须要高度和宽度。
 
+
+### CDN 使用
+
+在 HTML 页面中加入 react-amap 库的 CDN 地址，插件会暴露在 window.ReactAMAP 变量下；然后即可使用。如：
+
+```html
+<script src="path/to/react.js"></script>
+<script src="path/to/react-dom.js"></script>
+<script src="path/to/react-amap.js"></script>
+<script>
+  var Map = ReactAMAP.Map;
+  var Marker = ReactAMAP.Marker;
+  
+  var pos = {longitude: 120, latitude: 30};
+  var YourApp = React.createElement(
+    Map, 
+    {center: pos}, 
+    React.createElement(
+      Marker, 
+      {position: pos}, 
+      null
+    )
+  );
+  ReactDOM.render(YourApp, document.getElementById('root'));
+</script>
+```
+
+##### CDN 地址
+
 ### 关于 key
 
 在上面的例子中需要在 Map 传入 key 变量，这个是高德地图给开发者分配的开发者 key；你可以在[高德开放平台](http://lbs.amap.com/faq/account/key/67)申请你自己的key；
@@ -39,3 +68,5 @@ order: 1
 
     
 组件的使用请查看[组件文档](/components/about)
+
+
