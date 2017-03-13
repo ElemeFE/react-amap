@@ -2,7 +2,7 @@
   "name": "react-amap",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/amap.js",
+  "main": "dist/react-amap.js",
   "scripts": {
     "build": "webpack && NODE_ENV=production webpack",
     "site": "bisheng build",
