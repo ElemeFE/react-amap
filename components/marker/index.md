@@ -69,9 +69,11 @@ const events = {
 
 利用 JSX 的强大语法，我们有能力非常个性化的定制标记的外观：直接 Marker 组件下写子组件，再也不用拼接 HTML 字符串了。
 ```jsx 
-<Marker position={{longitude: 121, latitude: 34 }} >
-  <div style={YOUR_STYLE}>A</div>
-</Marker>
+<Map>
+  <Marker position={{longitude: 121, latitude: 34 }} >
+    <div style={YOUR_STYLE}>A</div>
+  </Marker>
+</Map>
 ```
 
 ## 用[Marker](/components/marker)还是[Markers](/components/markers)？
