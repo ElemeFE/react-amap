@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack && NODE_ENV=production webpack",
     "deploy": "bisheng build",
-    "start": "bisheng start"
+    "start": "bisheng start",
+    "prepublish": "build"
   },
   "author": "",
   "license": "ISC",
