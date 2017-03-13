@@ -53,7 +53,7 @@ function getComponentsMenuGroups(data){
 export default function ComponentsMenu(props) {
   const { data, defaultSelectedKey } = props;
   return (<Menu
-    mode="inline"
+    mode={props.mode}
     defaultOpenKeys={['components']}
     selectedKeys={[defaultSelectedKey]}
   >

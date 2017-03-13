@@ -30,6 +30,9 @@
     li {
         display: inline-block;
         a{
+            span{
+                margin-left: 3px;
+            }
             display: inline-block;
             height: 50px;
             padding: 0 10px;
@@ -44,6 +47,33 @@
                 border-bottom: 2px solid #666;
                 color: #666;
                 transition: all .9s;
+            }
+        }
+    }
+}
+@media(max-width: 800px){
+    #header{
+        padding: 10px;
+        line-height: 36px;
+        .header-inner{
+            height: 36px;
+            width: 100%;
+        }
+        h2{
+            height: 36px;
+            line-height: 36px;
+            font-size: 14px;
+            padding-left: 40px;
+        }
+        li{
+            height: 36px;
+            a{
+                height: 36px;
+                line-height: 36px;
+                font-size: 20px;
+                span{
+                    display: none;
+                }
             }
         }
     }

@@ -8,12 +8,14 @@ export default class DemoItem extends React.Component {
       <h3 className="demo-title">{props.title}</h3>
       <div className="demo-desc">{props.content}</div>
       <Row>
-        <Col span={12} className="demo-item-code">
+        <Col span={this.props.isWide ? 12 : 24 } className="demo-item-code">
           {props.code}
         </Col>
-        <Col span={12} className="demo-item-preview">
-          {props.children}
-        </Col>
+        {
+          this.props.isWide ? <Col span={12} className="demo-item-preview">
+              {props.children}
+            </Col> : null
+        }
       </Row>
     </div>
   }

@@ -23,7 +23,7 @@ function getArticlesMenu(menuData) {
 export default function ArticlesMenu(props) {
   const {data, defaultSelectedKey} = props;
   return (<Menu
-    mode="inline"
+    mode={props.mode}
     defaultSelectedKeys={[defaultSelectedKey]}
   >
     { getArticlesMenu(data)}
