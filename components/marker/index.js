@@ -1,5 +1,6 @@
 import React, { Component, Children } from 'react';
 import { render } from 'react-dom';
+import log from '../../lib/utils/log';
 import isFun from '../../lib/utils/isFun';
 import toCapitalString from '../../lib/utils/toCapitalString';
 const configurableProps = [
@@ -33,7 +34,7 @@ class Marker extends Component {
   constructor(props) {
     super(props);
     if (!props.__map__) {
-      // TODO(slh)
+      log.warning('MAP_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
@@ -46,11 +47,15 @@ class Marker extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    this.refreshMarkerLayout(nextProps);
+    if (this.map) {
+      this.refreshMarkerLayout(nextProps);
+    }
   }
   
   componentDidMount() {
-    this.setChildComponent(this.props);
+    if (this.map) {
+      this.setChildComponent(this.props);
+    }
   }
   
   createMarker(props) {

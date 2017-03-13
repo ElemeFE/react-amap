@@ -9,7 +9,7 @@ export default function Header(props) {
   }
   return <header id="header">
     <div className="header-inner">
-      <h2>REACT AMAP</h2>
+      <h2>REACT-AMAP</h2>
       <ul>
         <li><Link to="/">首页</Link></li>
         <li><Link className={path.indexOf('articles') === -1 ? '': 'current'} to="/articles/start">快速开始</Link></li>

@@ -60,9 +60,9 @@ const events = {
 }
 
 /* ... */
-<AMap>
+<Map>
   <Marker position={{longitude: 110, latitude: 30 }} events={events} />
-</AMap>
+</Map>
 ```
 
 ## 推荐用法

@@ -6,7 +6,7 @@ order: 3
 可以通过`events`属性给地图绑定事件；
 
 ```jsx
-import AMap from 'react-amap';
+import { Map } from 'react-amap';
 class App extends React.Component{
   render(){
     const events = {
@@ -14,7 +14,7 @@ class App extends React.Component{
       click: () => {console.log('You Clicked The Map')}
     }
     return <div style={{width: '100%', height: '400px'}}>
-      <AMap events={events}/>
+      <Map events={events}/>
     </div>
   }
 }

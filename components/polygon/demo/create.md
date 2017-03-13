@@ -5,8 +5,7 @@ order: 1
 
 
 ```jsx
-import AMap from 'react-amap';
-const Polygon = AMap.Polygon;
+import { Map, Polygon } from 'react-amap';
 const randomPath = () => ({
    longitude: 100 + Math.random() * 50,
    latitude: 10 + Math.random() * 40,
@@ -49,14 +48,14 @@ class App extends React.Component{
   render(){
     return <div>
       <div style={{width: '100%', height: 400}}>
-        <AMap zoom={3} center={this.mapCenter}>
+        <Map zoom={3} center={this.mapCenter}>
           <Polygon
             events={this.events}
             path={this.state.path}
             draggable={this.state.draggable}
             visible={this.state.visible}
           />
-        </AMap>
+        </Map>
         <button onClick={() => { this.toggleVisible() }}>Toggle Visible</button>
         <button onClick={() => { this.toggleDraggable() }}>Toggle Draggable</button>
         <button onClick={() => { this.randomPath() }}>Change Path</button>

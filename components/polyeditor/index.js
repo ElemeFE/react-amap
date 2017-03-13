@@ -1,11 +1,12 @@
 import React from 'react';
 import isFun from '../../lib/utils/isFun';
+import log from '../../lib/utils/log';
 
 class PolyEditor extends React.Component {
   constructor(props) {
     super(props);
     if (!(props.__map__ && props.__poly__ )) {
-      // TODO(slh)
+      log.warning('MAP_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
@@ -16,7 +17,9 @@ class PolyEditor extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    this.onPropsUpdate(nextProps);
+    if (this.map) {
+      this.onPropsUpdate(nextProps);
+    }
   }
   
   onPropsUpdate(props) {

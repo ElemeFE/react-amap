@@ -6,8 +6,7 @@ title: 动态更改 Marker 属性
 这个例子里展示用 state 管理图标的状态
 
 ```jsx
-import AMap from 'react-amap';
-const Marker = AMap.Marker;
+import { Map, Marker } from 'react-amap';
 
 class App extends React.Component{
   constructor(){
@@ -50,7 +49,7 @@ class App extends React.Component{
   render(){   
     return <div>
       <div style={{width: '100%', height: 360}}>
-        <AMap plugins={['ToolBar']} center={this.state.position} zoom={6}>
+        <Map plugins={['ToolBar']} center={this.state.position} zoom={6}>
           <Marker 
             events={{click:() => {console.log('marker clicked!')}}}
             position={this.state.position} 
@@ -58,7 +57,7 @@ class App extends React.Component{
             clickable={this.state.clickable}  
             draggable={this.state.draggable}
           />
-        </AMap>
+        </Map>
       </div>
       <button onClick={() => {this.toggleVisible() }}>Visible</button>
       <button onClick={() => {this.randomPosition() }}>Position</button>

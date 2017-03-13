@@ -6,8 +6,7 @@ order: 1
 这个例子演示如何创建一个圆形，并且动态改变属性；
 
 ```jsx
-import AMap from 'react-amap';
-const Circle = AMap.Circle;
+import { Map, Circle } from 'react-amap';
 const randomIndex = (len) => (Math.floor(Math.random() * len));
 const randomColor = () => {
   const chars = '0123456789abcdef'.split('');
@@ -70,7 +69,7 @@ class App extends React.Component{
   render(){
     return <div>
       <div style={{width: '100%', height: '370px'}}>
-        <AMap plugins={['ToolBar']} center={this.state.center}>
+        <Map plugins={['ToolBar']} center={this.state.center}>
           <Circle 
             center={ this.state.center } 
             radius={ this.state.radius }
@@ -79,7 +78,7 @@ class App extends React.Component{
             style={ this.state.style }
             draggable={ this.state.draggable }
           />
-        </AMap>
+        </Map>
       </div>
       <button onClick={() => { this.changeCenter() }}>Random Center</button>
       <button onClick={() => { this.changeRadius() }}>Change Radius</button>

@@ -1,6 +1,6 @@
 import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
-import error from '../../lib/utils/error';
+import log from '../../lib/utils/log';
 import PolyEditor from '../../components/polyeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
 /*
@@ -31,28 +31,18 @@ class Polygon extends Component {
   constructor(props) {
     super(props);
     if (!props.__map__) {
-      error('NO_MAP_INSTANCE', true);
+      log.warning('MAP_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
-      this.prevPath = [];
       this.initMapPolygon(props);
     }
   }
   
   componentWillReceiveProps(nextProps) {
-    /*
-     * {
-     *  __map__,
-     *  __ele__,
-     *  path,<pos>
-     *  onChange
-     *  onClick
-     *  onMouseOver
-     *  onMouseOut
-     * }
-     */
-    this.refreshPolygonLayout(nextProps);
+    if (this.map) {
+      this.refreshPolygonLayout(nextProps);
+    }
   }
   
   initMapPolygon(props) {

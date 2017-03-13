@@ -6,9 +6,7 @@ order: 1
 这个例子演示了如何创建信息窗体和窗体的事件绑定，以及动态改变各个动态属性。
 
 ```jsx 
-import AMap from 'react-amap';
-const InfoWindow = AMap.InfoWindow;
-
+import { Map, InfoWindow } from 'react-amap';
 class App extends React.Component{
   constructor() {
     super();
@@ -79,7 +77,7 @@ class App extends React.Component{
     const html = `<div><h4>Greetings</h4><p>This is content of this info window</p><p>Click 'Change Value' Button: ${this.state.value}</p></div>`;
     return <div>
       <div style={{width: '100%', height: '345px'}}>
-        <AMap>
+        <Map>
           <InfoWindow
             position={this.state.position}
             visible={this.state.visible}
@@ -89,7 +87,7 @@ class App extends React.Component{
             offset={this.state.offset}
             events={this.windowEvents}
           />
-        </AMap>
+        </Map>
       </div>
       <button onClick={() => { this.toggleVisible() }}>Toggle Visible</button>
       <button onClick={() => { this.randomPosition() }}>Random Position</button>

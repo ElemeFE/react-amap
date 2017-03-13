@@ -2,12 +2,12 @@ var path = require('path');
 var webpack = require('webpack');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = {
+var webpackConfig = {
   entry: './lib/',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'amap.js',
-    library: 'AMap',
+    filename: 'react-amap.js',
+    library: 'ReactAMAP',
     libraryTarget: 'umd',
   },
   module: {
@@ -36,10 +36,25 @@ module.exports = {
     ]
   },
   externals: {
-    'react': 'react',
-    'react-dom': 'react-dom',
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react',
+    },
+    'react-dom': {
+      root: 'ReactDOM',
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
+    },
   },
-  plugins: [
-    new UglifyJSPlugin()
-  ]
+  plugins: []
 };
+
+if (process.env.NODE_ENV === 'production') {
+  webpackConfig.output.filename = 'react-amap.min.js';
+  webpackConfig.plugins.push(new UglifyJSPlugin());
+}
+
+module.exports = webpackConfig;

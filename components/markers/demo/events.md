@@ -6,9 +6,8 @@ order: 2
 Markers 组件的事件绑定方式与 Marker 类似，都是定义 events 属性；但是调用的参数不一样；
 
 ```jsx
-import AMap from 'react-amap';
+import { Map, Markers } from 'react-amap';
 
-const Markers = AMap.Markers;
 const randomMarker = (len) => (
   Array(len).fill(true).map((e, idx) => ({
     label: idx + 1,
@@ -34,13 +33,13 @@ class App extends React.Component{
   render(){   
     return <div>
       <div style={{width: '100%', height: 370}}>
-        <AMap plugins={['ToolBar']} center={this.center} zoom={12}>
+        <Map plugins={['ToolBar']} center={this.center} zoom={12}>
           <Markers 
             markers={this.markers}
             events={this.markersEvents}
             useCluster
           />
-        </AMap>
+        </Map>
       </div>
     </div>
   }

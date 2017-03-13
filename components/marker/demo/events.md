@@ -3,10 +3,9 @@ order: 4
 title: 给 Marker 绑定事件
 ---
 
-通过设置`events`属性可以方便的给图标绑定事件；高德 Marker 中所有原生的事件都可以；此外如果你有更高级的需求，我们还定义了`created`事件，在 AMap.Marker 组件实例创建成功时，让你获取原生的高德 Marker 实例，方便你直接调用高德的接口。
+通过设置`events`属性可以方便的给图标绑定事件；高德 Marker 中所有原生的事件都可以；此外如果你有更高级的需求，我们还定义了`created`事件，在 Marker 组件实例创建成功时，让你获取原生的高德 Marker 实例，方便你直接调用高德的接口。
 ```jsx
-import AMap from 'react-amap';
-const Marker = AMap.Marker;
+import { Map, Marker } from 'react-amap';
 
 class App extends React.Component{
   constructor(){
@@ -30,7 +29,7 @@ class App extends React.Component{
   
   render(){
     return <div style={{width: '100%', height: 400}}>
-      <AMap 
+      <Map 
         plugins={['ToolBar']} 
         center={{longitude: 120, latitude: 35}} 
       >
@@ -39,7 +38,7 @@ class App extends React.Component{
           clickable
           events={this.markerEvents}
         />
-      </AMap>
+      </Map>
      </div>
   }
 }

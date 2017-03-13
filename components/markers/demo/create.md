@@ -5,9 +5,8 @@ order: 1
 
 
 ```jsx
-import AMap from 'react-amap';
+import { Map, Markers } from 'react-amap';
 
-const Markers = AMap.Markers;
 const randomMarker = (len) => (
   Array(len).fill(true).map((e, idx) => ({
     label: idx + 1,
@@ -30,12 +29,12 @@ class App extends React.Component{
       dragstart: (e) => {console.log(e.target.getExtData().raw.label)}
     }
     return <div style={{width: '100%', height: 400}}>
-      <AMap plugins={['ToolBar']} center={{longitude: 120, latitude: 30}} zoom={12}>
+      <Map plugins={['ToolBar']} center={{longitude: 120, latitude: 30}} zoom={12}>
         <Markers 
           markers={this.markers}
           events={events}
         />
-      </AMap>
+      </Map>
     </div>
   }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import APILoader from '../../lib/utils/APILoader';
 import isFun from '../../lib/utils/isFun';
-import error from '../../lib/utils/error';
+import log from '../../lib/utils/log';
 import toCapitalString from '../../lib/utils/toCapitalString';
 import Marker from '../marker';
 import Markers from '../markers';
@@ -11,8 +11,8 @@ import Polyline from '../polyline';
 import InfoWindow from '../infowindow';
 import Circle from '../circle';
 import GroundImage from '../groundimage';
-import CircleEditor from '../circleeditor';
-import PolyEditor from '../polyeditor';
+// import CircleEditor from '../circleeditor';
+// import PolyEditor from '../polyeditor';
 
 /*
  * props
@@ -83,7 +83,7 @@ const defaultOpts = {
   OverView: {},
 };
 
-class AMap extends Component {
+class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -290,7 +290,7 @@ class AMap extends Component {
           }
           const idx = pluginList.indexOf(name);
           if (idx === -1) {
-            error('INVALID_AMAP_PLUGIN');
+            log.warning('INVALID_MAP_PLUGIN');
           } else {
             if (visible) {
               pluginList.splice(idx, 1);
@@ -420,14 +420,14 @@ class AMap extends Component {
   }
 }
 
-AMap.Marker = Marker;
-AMap.Markers = Markers;
-AMap.Polygon = Polygon;
-AMap.Polyline = Polyline;
-AMap.InfoWindow = InfoWindow;
-AMap.Circle = Circle;
-AMap.GroundImage = GroundImage;
-AMap.CircleEditor = CircleEditor;
-AMap.PolyEditor = PolyEditor;
+// Map.Marker = Marker;
+// Map.Markers = Markers;
+// Map.Polygon = Polygon;
+// Map.Polyline = Polyline;
+// Map.InfoWindow = InfoWindow;
+// Map.Circle = Circle;
+// Map.GroundImage = GroundImage;
+// Map.CircleEditor = CircleEditor;
+// Map.PolyEditor = PolyEditor;
 
-export default AMap;
+export default Map;

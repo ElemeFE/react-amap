@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/amap.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && NODE_ENV=production webpack",
     "deploy": "bisheng build",
     "start": "bisheng start"
   },

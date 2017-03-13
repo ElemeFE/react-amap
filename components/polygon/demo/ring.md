@@ -5,9 +5,7 @@ order: 2
 
 
 ```jsx
-import AMap from 'react-amap';
-
-const Polygon = AMap.Polygon;
+import { Map, Polygon } from 'react-amap';
 
 class App extends React.Component{
   constructor(){
@@ -30,9 +28,9 @@ class App extends React.Component{
 
   render(){
     return <div style={{width: '100%', height: 400}}>
-      <AMap zoom={4} center={this.mapCenter}>
+      <Map zoom={4} center={this.mapCenter}>
         <Polygon path={this.path} />
-      </AMap>
+      </Map>
     </div>
   }
 }

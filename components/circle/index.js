@@ -1,6 +1,6 @@
 import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
-import error from '../../lib/utils/error';
+import log from '../../lib/utils/log';
 import CircleEditor from '../../components/circleeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
 /*
@@ -41,7 +41,7 @@ class Circle extends Component {
   constructor(props) {
     super(props);
     if (!props.__map__) {
-      error('NO_MAP_INSTANCE', true);
+      log.warning('MAP_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
@@ -50,7 +50,9 @@ class Circle extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    this.refreshCircleLayout(nextProps);
+    if (this.map) {
+      this.refreshCircleLayout(nextProps);
+    }
   }
   
   initMapCircle(props) {

@@ -4,13 +4,8 @@ order: 1
 ---
 
 
-
-
 ```jsx 
-import AMap from 'react-amap';
-const Polygon = AMap.Polygon;
-const Polyline = AMap.Polyline;
-const PolyEditor = AMap.PolyEditor;
+import { Map, Polygon, Polyline, PolyEditor } from 'react-amap';
 
 class App extends React.Component{
   constructor() {
@@ -51,14 +46,14 @@ class App extends React.Component{
   render(){
     return <div>
       <div style={{width: '100%', height: '370px'}}>
-        <AMap zoom={3} center={this.mapCenter}>
+        <Map zoom={3} center={this.mapCenter}>
           <Polygon path={this.polygonPath}>
             <PolyEditor active={this.state.polygonActive} events={this.editorEvents} />
           </Polygon>
           <Polyline path={this.linePath}>
             <PolyEditor active={this.state.lineActive} />
           </Polyline>
-        </AMap>
+        </Map>
       </div>
       <button onClick={() => { this.togglePolyline() }} >Toggle Polyline Editable</button>
       <button onClick={() => { this.togglePolygon() }} >Toggle Polygon Editable</button>

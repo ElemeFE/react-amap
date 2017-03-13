@@ -11,8 +11,7 @@ react-amap 提供两种方式定义信息窗体的内容：
 
 
 ```jsx 
-import AMap from 'react-amap';
-const InfoWindow = AMap.InfoWindow;
+import { Map, InfoWindow } from 'react-amap';
 
 class App extends React.Component{
   constructor() {
@@ -62,7 +61,7 @@ class App extends React.Component{
     const html4 = `<div><h3>Window 4</h3><p>This is a window</p><p>Changing Value: ${this.state.count}</p></div>`;
     return <div>
       <div style={{width: '100%', height: '350px'}}>
-        <AMap zoom={3}>
+        <Map zoom={3}>
           <InfoWindow
             position={this.state.positionA}
             visible={this.state.curVisibleWindow === 1}
@@ -98,7 +97,7 @@ class App extends React.Component{
             content={html4}
             isCustom={false}
           />
-        </AMap>
+        </Map>
       </div>
       <button onClick={() => { this.showWindow(1) }}>Show Window 1</button>
       <button onClick={() => { this.showWindow(2) }}>Show Window 2</button>

@@ -1,11 +1,12 @@
 import React from 'react';
+import log from '../../lib/utils/log';
 import isFun from '../../lib/utils/isFun';
 
 class CircleEditor extends React.Component {
   constructor(props) {
     super(props);
     if (!(props.__map__ && props.__circle__ )) {
-      // TODO(slh)
+      log.warning('CIRCLE_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
@@ -16,7 +17,9 @@ class CircleEditor extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    this.onPropsUpdate(nextProps);
+    if (this.map) {
+      this.onPropsUpdate(nextProps);
+    }
   }
   
   onPropsUpdate(props) {

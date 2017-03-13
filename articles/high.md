@@ -9,14 +9,13 @@ order: 2
 我们现在提供的[所有组件](/components/about)，你都可以通过`events.created`方法获得原始的高德实例，然后你可以按照高德的 API，对这些实例进行更复杂的操作。
 
 ```jsx
-import AMap from 'react-amap';
-const Marker = AMap.Marker;
+import { Map, Marker } from 'react-amap';
 class App extends React.Component{
   constructor(){
     super();
     this.amapEvents = {
       created: (mapInstance) => {
-        console.log('高德地图 AMap 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：');
+        console.log('高德地图 Map 实例创建成功；如果你要亲自对实例进行操作，可以从这里开始。比如：');
         console.log(mapInstance.getZoom());
       }
     };
@@ -29,9 +28,9 @@ class App extends React.Component{
   }
   render(){
     return <div style={{width: '100%', height: '400px'}}>
-      <AMap events={this.amapEvents}>
+      <Map events={this.amapEvents}>
         <Marker position={{longitude: 120, latitude: 30}} events={this.markerEvents}/>
-      </AMap>
+      </Map>
     </div>
   }
 }

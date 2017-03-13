@@ -6,7 +6,7 @@ order: 5
 地图的**动态属性**在地图创建成功后可以动态的改变；
 
 ```jsx
-import AMap from 'react-amap';
+import { Map } from 'react-amap';
 class App extends React.Component{
   constructor(){
     super();
@@ -25,7 +25,7 @@ class App extends React.Component{
   render(){
     return <div>
       <div style={{width: '100%', height: '360px'}}>
-        <AMap center={this.state.center}/>
+        <Map center={this.state.center}/>
       </div>
       <button onClick={() => { this.changeCenter() }}>Random Change Center</button>
     </div>

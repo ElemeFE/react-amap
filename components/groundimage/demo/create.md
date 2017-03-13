@@ -5,9 +5,7 @@ title: GroundImage 的使用
 演示动态修改属性，以及绑定事件。
 
 ```jsx
-import AMap from 'react-amap';
-
-const GroundImage = AMap.GroundImage;
+import { Map, GroundImage } from 'react-amap';
 
 function randomBoundsAndCenter() {
   // 随机生成一个中心点，然后据此生成一个边界
@@ -79,7 +77,7 @@ class App extends React.Component{
   render(){
     return <div>
       <div style={{width: '100%', height: '370px'}}>
-        <AMap plugins={['ToolBar']} center={this.state.mapCenter} zoom={6}>
+        <Map plugins={['ToolBar']} center={this.state.mapCenter} zoom={6}>
           <GroundImage
             visible={this.state.visible}
             events={this.events}
@@ -88,7 +86,7 @@ class App extends React.Component{
             opacity={this.state.opacity}
             clickable
           />
-        </AMap>
+        </Map>
       </div>
       <button onClick={ () => { this.toggleVisible() }}>Toggle Visible</button>
       <button onClick={ () => { this.toggleOpacity() }}>Toggle Opacity</button>

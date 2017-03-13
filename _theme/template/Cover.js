@@ -1,5 +1,5 @@
 import React from 'react';
-import AMap from 'react-amap';
+import { Map } from 'react-amap';
 import { Link } from 'react-router';
 
 export default function Cover(props) {
@@ -9,7 +9,7 @@ export default function Cover(props) {
   };
   return <div className="cover-wrapper">
     <div className="cover-map">
-      <AMap
+      <Map
         zoom={18}
         features={['bg','road','building']}
         mapStyle={'fresh'}

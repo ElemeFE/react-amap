@@ -1,7 +1,6 @@
 import React from 'react';
-
 import isFun from '../../lib/utils/isFun';
-import error from '../../lib/utils/error';
+import log from '../../lib/utils/log';
 import clusterIcon from '../../lib/assets/map_cluster.png';
 import waitIcon from '../../lib/assets/map_wait.png';
 import waitHoverIcon from '../../lib/assets/map_wait_emphsis.png';
@@ -44,7 +43,7 @@ class Markers extends Component {
   constructor(props) {
     super(props);
     if (!props.__map__) {
-      error('NO_MAP_INSTANCE', true);
+      log.warning('MAP_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
@@ -308,12 +307,12 @@ class Markers extends Component {
         if ('id' in m) {
           id = m.id;
           if (this.markerIDCache.indexOf(id) !== -1) {
-            error('MARKER_ID_CONFLICT');
+            log.warning('MARKER_ID_CONFLICT');
           } else {
             this.markerIDCache.push(id);
           }
         } else {
-          error('MARKER_ID_REQUIRED');
+          log.warning('MARKER_ID_REQUIRED');
         }
         const marker = new window.AMap.Marker({
           position: [m.position.longitude, m.position.latitude],

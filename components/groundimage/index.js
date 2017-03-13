@@ -1,6 +1,6 @@
 import React from 'react';
-import error from '../../lib/utils/error';
 import isFun from '../../lib/utils/isFun';
+import log from '../../lib/utils/log';
 /*
  * props
  * {
@@ -31,7 +31,7 @@ class GroundImage extends Component {
   constructor(props) {
     super(props);
     if (!props.__map__) {
-      error('NO_MAP_INSTANCE', true);
+      log.warning('MAP_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
@@ -44,7 +44,9 @@ class GroundImage extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    this.refreshGroundImage(nextProps);
+    if (this.map) {
+      this.refreshGroundImage(nextProps);
+    }
   }
   
   refreshGroundImage(nextProps) {
@@ -106,12 +108,12 @@ class GroundImage extends Component {
     if ('src' in props) {
       src = props.src;
     } else {
-      error('SRC_REQUIRED', true);
+      log.warning('SRC_REQUIRED', true);
     }
     if ('bounds' in props) {
       bounds = this.buildBounds(props);
     } else {
-      error('BOUNDS_REQUIRED', true);
+      log.warning('BOUNDS_REQUIRED', true);
     }
     
     if ('clickable' in props) {

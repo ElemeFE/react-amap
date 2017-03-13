@@ -1,9 +1,8 @@
 import React from 'react';
 import { findDOMNode, render } from 'react-dom';
 import isFun from '../../lib/utils/isFun';
-import error from '../../lib/utils/error';
 import toCapitalString from '../../lib/utils/toCapitalString';
-
+import log from '../../lib/utils/log';
 /*
  * props
  * {
@@ -41,7 +40,7 @@ class InfoWindow extends Component {
   constructor(props) {
     super(props);
     if (!props.__map__) {
-      error('NO_MAP_INSTANCE', true);
+      log.warning('MAP_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
       this.element = props.__ele__;
@@ -51,14 +50,16 @@ class InfoWindow extends Component {
   }
   
   componentDidMount() {
-    const props = this.props;
-    if ('visible' in props) {
-      if (!!props.visible) {
-        this.showWindow();
-        this.setClassName(props);
-        this.setChild(props);
-      } else {
-        this.closeWindow();
+    if (this.map) {
+      const props = this.props;
+      if ('visible' in props) {
+        if (!!props.visible) {
+          this.showWindow();
+          this.setClassName(props);
+          this.setChild(props);
+        } else {
+          this.closeWindow();
+        }
       }
     }
   }
@@ -68,7 +69,9 @@ class InfoWindow extends Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    this.refreshWindowLayout(nextProps);
+    if (this.map) {
+      this.refreshWindowLayout(nextProps);
+    }
   }
   
   createInfoWindow(props) {

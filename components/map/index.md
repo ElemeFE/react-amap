@@ -1,7 +1,7 @@
 ---
 category: 地图
 order: 1
-title: AMap 组件
+title: Map 组件
 ---
 
 ## 何时使用
@@ -30,7 +30,7 @@ title: AMap 组件
 
 ### 静态属性
 
-AMap 的静态属性有如下 17 个，属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/map)
+Map 的静态属性有如下 17 个，属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/map)
 
 + `view`
 + `zooms`
@@ -67,7 +67,7 @@ const events = {
 }
 
 /* ... */
-<AMap events={events} />
+<Map events={events} />
 ```
 
 
@@ -87,7 +87,7 @@ const events = {
 ```jsx
 const plugins = ['Scale', 'ToolBar'];
 /* ... */
-<AMap plugins={plugins}/>
+<Map plugins={plugins}/>
 ```
 
 或者
@@ -107,7 +107,7 @@ const plugins = ['Scale', {
   }
 }];
 /* ... */
-<AMap plugins={plugins}/>
+<Map plugins={plugins}/>
 ```
 
 

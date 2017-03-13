@@ -9,7 +9,7 @@ order: 0
 
 | 名称 | 说明 |
 |------|------|
-| AMap | 显示地图；下面的其他组件（除`PolyEditor`和`CircleEditor`外）必须作为 `AMap` 的子组件使用|
+| Map | 显示地图；下面的其他组件（除`PolyEditor`和`CircleEditor`外）必须作为 `Map` 的子组件使用|
 | Marker | 在地图上显示单个坐标点 |
 | Markers | 在地图上显示多个坐标点 |
 | Polygon | 在地图上显示多边形 |
@@ -44,7 +44,7 @@ order: 0
 
 ```jsx 
 import React from 'react';
-import AMap from 'react-amap';
+import { Map, Polygon } from 'react-amap';
 
 class App extends React.Component{
     constructor(){
@@ -68,9 +68,9 @@ class App extends React.Component{
     render(){
         return <div>
             <div style={{width: '500px', height: '400px'}}>
-                <AMap>
+                <Map>
                     <Polygon path={this.state.path} bubble={this.state.bubble}/>
-                </AMap>
+                </Map>
             </div>
             <button onClick={() => {this.toggleBubble() } }>toggleBubble</button>
             <button onClick={() => {this.changePath() } }>changePath</button>
@@ -110,6 +110,6 @@ const events = {
     created: (instance) => { console.log(instance.getZoom())},
     click: () => { console.log('You clicked map') }
 }
-<AMap events={events}  />
+<Map events={events}  />
 /* ... */
 ```
