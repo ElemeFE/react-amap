@@ -7,7 +7,7 @@
     "build": "webpack && NODE_ENV=production webpack",
     "deploy": "bisheng build",
     "start": "bisheng start",
-    "prepublish": "build"
+    "prepublish": "npm run build"
   },
   "author": "",
   "license": "ISC",
