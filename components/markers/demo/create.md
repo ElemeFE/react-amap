@@ -3,14 +3,13 @@ title: Markers 的使用
 order: 1
 ---
 
+本及介绍创建大量标记的基本用法
 
 ```jsx
 import { Map, Markers } from 'react-amap';
 
 const randomMarker = (len) => (
   Array(len).fill(true).map((e, idx) => ({
-    label: idx + 1,
-    id: idx,
     position: {
       longitude: 100 + Math.random() * 20,
       latitude: 30 + Math.random() * 20,
@@ -23,16 +22,10 @@ class App extends React.Component{
     this.markers = randomMarker(100);
   }
   render(){   
-    const events = {
-      created: (...ms) => {console.log(ms)},
-      click: (...args) => {console.log(args)},
-      dragstart: (e) => {console.log(e.target.getExtData().raw.label)}
-    }
     return <div style={{width: '100%', height: 400}}>
-      <Map plugins={['ToolBar']} center={{longitude: 120, latitude: 30}} zoom={12}>
+      <Map plugins={['ToolBar']} center={{longitude: 110, latitude: 40}} zoom={6}>
         <Markers 
           markers={this.markers}
-          events={events}
         />
       </Map>
     </div>

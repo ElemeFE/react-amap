@@ -6,6 +6,10 @@ import toCapitalString from '../../lib/utils/toCapitalString';
 import {
   MarkerConfigurableProps,
   MarkerAllProps } from '../../lib/utils/markerUtils';
+import {
+  getAMapPosition,
+  getAMapPixel
+} from '../../lib/utils/utils';
 
 class Marker extends Component {
   constructor(props) {
@@ -63,21 +67,6 @@ class Marker extends Component {
     }
   }
   
-  buildPosition(pos) {
-    if ('getLng' in pos) {
-      return pos;
-    }
-    return new window.AMap.LngLat(pos.longitude, pos.latitude);
-  }
-  
-  buildOffset(os) {
-    if ('getX' in os) {
-      return os;
-    }
-    return new window.AMap.Pixel(os[0], os[1]);
-  }
-  
-  
   createContentWrapper(props) {
     this.contentWrapper = document.createElement('div');
     this.marker.setContent(this.contentWrapper);
@@ -119,9 +108,9 @@ class Marker extends Component {
   
   getSetterParam(key, val) {
     if (key === 'position') {
-      return this.buildPosition(val);
+      return getAMapPosition(val);
     } else if (key === 'offset') {
-      return this.buildOffset(val)
+      return getAMapPixel(val)
     }
     return val;
   }

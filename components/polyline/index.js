@@ -3,7 +3,7 @@ import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
 import PolyEditor from '../../components/polyeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
-
+import { getAMapPosition } from '../../lib/utils/utils';
 /*
  * props
  * {
@@ -121,13 +121,9 @@ class Polyline extends Component {
       if ('getLng' in path[0]) {
         return path;
       }
-      return path.map((p) => (this.buildPosition(p)));
+      return path.map((p) => (getAMapPosition(p)));
     }
     return path;
-  }
-  
-  buildPosition(pos) {
-    return new window.AMap.LngLat(pos.longitude, pos.latitude);
   }
   
   exposeLineInstance(props) {

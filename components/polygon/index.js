@@ -3,6 +3,7 @@ import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
 import PolyEditor from '../../components/polyeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
+import { getAMapPosition } from '../../lib/utils/utils';
 /*
  * props
  * {
@@ -118,7 +119,7 @@ class Polygon extends Component {
       if ('getLng' in path[0]) {
         return path;
       } else if('longitude' in path[0]) {
-        return path.map((p) => (this.buildPosition(p)));
+        return path.map((p) => (getAMapPosition(p)));
       } else if(path.length === 2){
         // Ring
         const out = this.buildPathValue(path[0]);
@@ -129,10 +130,6 @@ class Polygon extends Component {
       }
     }
     return [];
-  }
-  
-  buildPosition(pos) {
-    return new window.AMap.LngLat(pos.longitude, pos.latitude);
   }
   
   exposeInstance(){

@@ -7,12 +7,12 @@ title: Markers 组件
 
 ## 何时使用
 
-显示大量标记的时候使用；注意与 [Marker](/components/marker) 的区别。这个插件专门针对大量标记进行过优化，但是无法自定义标记的外观。
+显示大量标记的时候使用；注意与 [Marker](/components/marker) 的区别。这个插件专门针对需要显示大量标记的场景进行过优化，但是无法大部分属性是静态的；详见示例以及 API 部分说明。
 
 
 ## API
 
-### 属性
+### 动态属性
 
 | 属性 | 类型 | 默认取值 | 说明 |
 |------|-----|------|-----|
@@ -30,7 +30,23 @@ title: Markers 组件
 | position  | `{ longitude, latitude }` | / | 标记点的坐标位置 |
 
 
-#### Markers events 事件
+### 静态属性
+
+| 属性 | 类型 | 默认取值 | 说明 |
+|------|-----|------|-----|
+| events | Object | / | 这个属性用来绑定事件 |
+|  |||
+
+其他的[高德 Marker 组件](http://lbs.amap.com/api/javascript-api/reference/overlay#Marker)的属性都是可以在这里作为静态属性使用的；
+也可以在 markers 属性中作为原始数据设置好。
+
+
+### 标记点的外观
+
+根据高德官方的文档，我们还可以设定`content`,`icon`,`label`等属性来设定标记的外观；但是，如果你定义了 `render` 函数，`render`函数执行的结果（返回一个 React 组件）会作为最终外观覆盖其他的属性设定。
+
+
+### Markers events 事件说明
 
 事件有两类：
 

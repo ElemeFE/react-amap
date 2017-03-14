@@ -4,6 +4,7 @@ import APILoader from '../../lib/utils/APILoader';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
 import toCapitalString from '../../lib/utils/toCapitalString';
+import { getAMapPosition } from '../../lib/utils/utils';
 import Marker from '../marker';
 import Markers from '../markers';
 import Polygon from '../polygon';
@@ -191,13 +192,6 @@ class Map extends Component {
     return options;
   }
   
-  buildPosition(pos) {
-    if ('getLng' in pos) {
-      return pos;
-    }
-    return new window.AMap.LngLat(pos.longitude, pos.latitude);
-  }
-  
   bindAMapEvents(events){
     const list = Object.keys( events );
     list.length && list.forEach((evName) => {
@@ -219,7 +213,7 @@ class Map extends Component {
   
   getSetterParam(key, props) {
     if (key === 'center') {
-      return this.buildPosition(props.center);
+      return getAMapPosition(props.center);
     }
     return props[key];
   }

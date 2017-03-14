@@ -171,6 +171,9 @@ class GroundImage extends Component {
   
   buildBounds(props) {
     const rawBounds = props.bounds;
+    if (!rawBounds) {
+      return rawBounds;
+    }
     if ('getSouthWest' in rawBounds) {
       return rawBounds;
     }

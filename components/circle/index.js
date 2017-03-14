@@ -3,6 +3,7 @@ import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
 import CircleEditor from '../../components/circleeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
+import { getAMapPosition } from '../../lib/utils/utils';
 /*
  * props
  * {
@@ -116,16 +117,9 @@ class Circle extends Component {
   
   getSetterValue(key, props) {
     if (key === 'center') {
-      return this.buildPosition(props.center);
+      return getAMapPosition(props.center);
     }
     return props[key];
-  }
-  
-  buildPosition(pos) {
-    if ('getLng' in pos) {
-      return pos;
-    }
-    return new window.AMap.LngLat(pos.longitude, pos.latitude);
   }
    
   exposeCircleInstance(props) {

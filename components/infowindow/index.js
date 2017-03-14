@@ -3,6 +3,11 @@ import { findDOMNode, render } from 'react-dom';
 import isFun from '../../lib/utils/isFun';
 import toCapitalString from '../../lib/utils/toCapitalString';
 import log from '../../lib/utils/log';
+import {
+  getAMapPosition,
+  getAMapPixel,
+  getAMapSize
+} from '../../lib/utils/utils';
 /*
  * props
  * {
@@ -160,38 +165,16 @@ class InfoWindow extends Component {
   
   getSetterValue(key, value) {
     if (key === 'size') {
-      return this.buildSize(value);
+      return getAMapSize(value);
     }
     if (key === 'offset') {
-      return this.buildPixel(value);
+      return getAMapPixel(value);
     }
     if (key === 'position') {
-      return this.buildPosition(value);
+      return getAMapPosition(value);
     }
     return value;
   }
-  
-  buildSize(size) {
-    if ('getWidth' in size) {
-      return size;
-    }
-    return new window.AMap.Size(size.width, size.height);
-  }
-  
-  buildPosition(pos) {
-    if ('getLng' in pos) {
-      return pos;
-    }
-    return new window.AMap.LngLat(pos.longitude, pos.latitude);
-  }
-  
-  buildPixel(os) {
-    if ('getX' in os) {
-      return os;
-    }
-    return new window.AMap.Pixel(os[0], os[1]);
-  }
-  
   
   exposeWindowInstance(props) {
     if ('events' in props) {
