@@ -1,4 +1,5 @@
 import React from 'react';
+import { render } from 'react-dom';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
 import clusterIcon from '../../lib/assets/map_cluster.png';
@@ -6,6 +7,14 @@ import waitIcon from '../../lib/assets/map_wait.png';
 import waitHoverIcon from '../../lib/assets/map_wait_emphsis.png';
 import selectedIcon from '../../lib/assets/map_selected.png';
 import selectedHoverIcon from '../../lib/assets/map_selected_emphsis.png';
+
+import {
+  MarkerConfigurableProps,
+  MarkerAllProps,
+  getPropValue,
+} from '../../lib/utils/markerUtils';
+
+
 // import css from './assets/marker.css';
 
 require('../../lib/assets/marker.css');
@@ -27,6 +36,8 @@ const defaultOpts = {
   markersCache: [],
   markerIDCache: [],
 };
+
+const IdKey = '__react_amap__';
 
 /*
  * props
@@ -53,9 +64,11 @@ class Markers extends Component {
       this.resetOffset = new window.AMap.Pixel(- SIZE_WIDTH / 2, - SIZE_HEIGHT);
       this.hoverOffset = new window.AMap.Pixel(- SIZE_HOVER_WIDTH / 2, - SIZE_HOVER_HEIGHT);
       
-      this.handleCluster(props);
-      this.buildMapMarkers(props.markers);
-      this.renderMarkers();
+      // this.handleCluster(props);
+      // this.buildMapMarkers(props.markers);
+      // this.renderMarkers();
+      
+      this.createMarkers(props);
     }
   }
   
@@ -63,18 +76,127 @@ class Markers extends Component {
     return false;
   }
   
-  componentWillReceiveProps(nextProps) {
-    if (this.map) {
-      let markerChanged = false;
-      const clusterSettingChanged = this.handleCluster(nextProps);
-      if (nextProps.markers !== this.props.markers) {
-        this.buildMapMarkers(nextProps.markers);
-        markerChanged = true;
-      }
-      if (clusterSettingChanged || markerChanged) {
-        this.renderMarkers();
-      }
+  createMarkers(props) {
+    const markers = props.markers || [];
+    let renderFn;
+    if (isFun(props.render)) {
+      renderFn = props.render;
     }
+    const mapMarkers = [];
+    const markerReactChildDOM = {};
+    markers.length && markers.forEach((raw, idx) => {
+      const options = this.buildCreateOptions(props, raw, idx);
+      options.map = this.map;
+      
+      let markerContent = null;
+      if (isFun(props.render)) {
+        let markerChild = props.render.call(null, raw, idx);
+        if (markerChild !== false) {
+          const div = document.createElement('div');
+          div.setAttribute(IdKey, '1');
+          markerContent = div;
+          markerReactChildDOM[idx] = markerChild;
+        }
+      }
+      
+      if (!markerContent){
+        markerContent = document.createElement('div');
+        const img = document.createElement('img');
+        img.src = '//webapi.amap.com/theme/v1.3/markers/n/mark_bs.png';
+        markerContent.appendChild(img);
+      }
+      options.content = markerContent;
+  
+      const marker = new window.AMap.Marker(options);
+      marker.on('click', (e) => { this.onMarkerClick(e); });
+      marker.on('mouseover', (e) => { this.onMarkerHover(e); });
+      marker.on('mouseout', (e) => { this.onMarkerHoverOut(e); });
+  
+      this.bindMarkerEvents(marker);
+      mapMarkers.push(marker);
+    });
+    this.markersCache = mapMarkers;
+    this.markerReactChildDOM = markerReactChildDOM;
+    this.exposeMarkerInstance();
+  
+    if (props.useCluster === true) {
+      this.createCluster();
+    }
+  }
+  
+  createCluster(){
+    if (!this.mapCluster) {
+      const style = {
+        url: clusterIcon,
+        size: new window.AMap.Size(56, 56),
+        offset: new window.AMap.Pixel(-28, -28),
+      };
+      const clusterStyles = [style, style, style];
+      this.mapCluster = new window.AMap.MarkerClusterer(this.map, this.markersCache, {
+        minClusterSize: 2,
+        zoomOnClick: false,
+        gridSize: 60,
+        styles: clusterStyles,
+        averageCenter: true,
+      });
+      this.initClusterMarkerWindow();
+      this.bindClusterEvent();
+    }
+  }
+  
+  componentDidMount() {
+    this.setMarkerChild(this.props);
+  }
+  
+  setMarkerChild(props){
+    Object.keys(this.markerReactChildDOM).forEach((idx) => {
+      const dom = this.markersCache[idx].getContent();
+      const child = this.markerReactChildDOM[idx];
+      this.renderMarkerChild(dom, child);
+    })
+  }
+  
+  renderMarkerChild(dom, child){
+    render(<div>{child}</div>, dom);
+  }
+  
+  buildCreateOptions(props, raw, idx){
+    const result = {};
+    // 强制用户通过 render 函数来定义外观
+    // const disabledKeys = ['label', 'icon', 'content'];
+    // 还是不强制好，通过覆盖的方式来(如果有 render，覆盖 content/icon);
+    const disabledKeys = [];
+    MarkerAllProps.forEach((key) => {
+      if ((key in raw) && (disabledKeys.indexOf(key) === -1)) {
+        result[key] = getPropValue(key, raw[key]);
+      } else if(key in props) {
+        if (isFun(props[key])) {
+          const tmpValue = props[key].call(null, raw, idx);
+          result[key] = getPropValue(key, tmpValue);
+        } else {
+          if (key === 'extData') {
+            result.extData = raw;
+          } else {
+            result[key] = getPropValue(key, props[key]);
+          }
+        }
+      }
+    });
+    return result;
+  }
+  
+  componentWillReceiveProps(nextProps) {
+    // if (this.map) {
+    //   let markerChanged = false;
+    //   const clusterSettingChanged = this.handleCluster(nextProps);
+    //   if (nextProps.markers !== this.props.markers) {
+    //     this.buildMapMarkers(nextProps.markers);
+    //     markerChanged = true;
+    //   }
+    //   if (clusterSettingChanged || markerChanged) {
+    //     this.renderMarkers();
+    //   }
+    // }
   }
   
   handleCluster(props) {
@@ -108,55 +230,26 @@ class Markers extends Component {
     this.setMarkerHoverOut(e, e.target);
   }
   
-  onWindowMarkerClick(span) {
-    const pointIndex = span.getAttribute('pointIndex');
-    const marker = this.markersCache[pointIndex];
+  onWindowMarkerClick(element) {
+    const marker = element.markerRef;
     this.triggerMarkerClick(null, marker);
   }
   
-  onWindowMarkerHover(span) {
-    const pointIndex = span.getAttribute('pointIndex');
-    const marker = this.markersCache[pointIndex];
+  onWindowMarkerHover(element) {
+    const marker = element.markerRef;
     this.setMarkerHovered(null, marker);
   }
   
-  onWindowMarkerHoverOut(span) {
-    const pointIndex = span.getAttribute('pointIndex');
-    const marker = this.markersCache[pointIndex];
+  onWindowMarkerHoverOut(element) {
+    const marker = element.markerRef;
     this.setMarkerHoverOut(null, marker);
   }
   
   setMarkerHovered(e, marker) {
-    this.setMarkerData(marker, 'isHover', true);
-    this.setMarkerIcon(marker);
-    
-    const id = this.getMarkerData(marker, 'id');
-    const span = this.element.querySelector(`.map_marker_in_window_${id}`);
-    if (span) {
-      const html = this.generateMarkerContent(
-        this.getMarkerData(marker, 'isSelected'),
-        true,
-        this.getMarkerData(marker, 'label'),
-      );
-      span.innerHTML = html;
-    }
     this.triggerMarkerHover(e, marker);
   }
   
   setMarkerHoverOut(e, marker) {
-    this.setMarkerData(marker, 'isHover', false);
-    this.setMarkerIcon(marker);
-    
-    const id = this.getMarkerData(marker, 'id');
-    const span = this.element.querySelector(`.map_marker_in_window_${id}`);
-    if (span) {
-      const html = this.generateMarkerContent(
-        this.getMarkerData(marker, 'isSelected'),
-        false,
-        this.getMarkerData(marker, 'label'),
-      );
-      span.innerHTML = html;
-    }
     this.triggerMarkerHoverOut(e, marker);
   }
   
@@ -174,19 +267,8 @@ class Markers extends Component {
     }
   }
   
-  setMarkerData(marker, key, value) {
-    const extData = marker.getExtData() || {};
-    extData[key] = value;
-    marker.setExtData(extData);
-  }
-  
-  getMarkerData(marker, key) {
-    const extData = marker.getExtData() || {};
-    return extData[key];
-  }
-  
   triggerMarkerClick(e, marker) {
-    const raw = this.getMarkerData(marker, 'raw');
+    const raw = marker.getExtData();
     const events = this.props.events || {};
     if (isFun(events.click)) {
       events.click(e, raw);
@@ -194,7 +276,7 @@ class Markers extends Component {
   }
   
   triggerMarkerHover(e, marker) {
-    const raw = this.getMarkerData(marker, 'raw');
+    const raw = marker.getMarkerData();
     const events = this.props.events || {};
     if (isFun(events.mouseover)) {
       events.mouseover(e, raw);
@@ -202,7 +284,7 @@ class Markers extends Component {
   }
   
   triggerMarkerHoverOut(e, marker) {
-    const raw = this.getMarkerData(marker, 'raw');
+    const raw = marker.getMarkerData();
     const events = this.props.events || {};
     if (isFun(events.mouseout)) {
       events.mouseout(e, raw);
@@ -266,32 +348,44 @@ class Markers extends Component {
         markers = markers.slice(0, MAX_INFO_MARKERS);
       }
       markers.forEach((m) => {
-        const id = this.getMarkerData(m, 'id');
-        const pointIndex = this.getMarkerData(m, 'pointIndex');
-        const label = this.getMarkerData(m, 'label');
-        const tmp = this.generateMarkerContent(
-          this.getMarkerData(m, 'isSelected'),
-          this.getMarkerData(m, 'isHover'),
-          label
-        );
+        const contentDOM = m.getContent();
+        const itemDOM = document.createElement('div');
+        itemDOM.className = 'window_marker_item';
+        itemDOM.appendChild(contentDOM);
+        itemDOM.markerRef = m;
+  
+        itemDOM.addEventListener('click', this.onWindowMarkerClick.bind(this, itemDOM), true);
+        itemDOM.addEventListener('mouseover', this.onWindowMarkerHover.bind(this, itemDOM), true);
+        itemDOM.addEventListener('mouseout', this.onWindowMarkerHoverOut.bind(this, itemDOM), true);
         
-        const tmpSpan = document.createElement('span');
-        tmpSpan.className = `amap_markers_pop_window_item map_marker_in_window_${id}`;
-        tmpSpan.setAttribute('markerId', id);
-        tmpSpan.setAttribute('pointIndex', pointIndex);
-        tmpSpan.innerHTML = tmp;
-        
-        tmpSpan.addEventListener('click', this.onWindowMarkerClick.bind(this, tmpSpan), true);
-        tmpSpan.addEventListener('mouseover', this.onWindowMarkerHover.bind(this, tmpSpan), true);
-        tmpSpan.addEventListener('mouseout', this.onWindowMarkerHoverOut.bind(this, tmpSpan), true);
-        this.markersDOM.appendChild(tmpSpan);
+        this.markersDOM.appendChild(itemDOM);
+  
+   
+        // const id = this.getMarkerData(m, 'id');
+        // const pointIndex = this.getMarkerData(m, 'pointIndex');
+        // const label = this.getMarkerData(m, 'label');
+        // const tmp = this.generateMarkerContent(
+        //   this.getMarkerData(m, 'isSelected'),
+        //   this.getMarkerData(m, 'isHover'),
+        //   label
+        // );
+        //
+        // const tmpSpan = document.createElement('span');
+        // tmpSpan.className = `amap_markers_pop_window_item map_marker_in_window_${id}`;
+        // tmpSpan.setAttribute('markerId', id);
+        // tmpSpan.setAttribute('pointIndex', pointIndex);
+        // tmpSpan.innerHTML = tmp;
+        //
+
+        // this.markersDOM.appendChild(tmpSpan);
+        console.log(m.getContent());
       });
-      if (length > MAX_INFO_MARKERS) {
-        const warning = document.createElement('div');
-        warning.className = 'amap_markers_window_overflow_warning';
-        warning.innerText = '更多坐标请放大地图查看';
-        this.markersDOM.appendChild(warning);
-      }
+      // if (length > MAX_INFO_MARKERS) {
+      //   const warning = document.createElement('div');
+      //   warning.className = 'amap_markers_window_overflow_warning';
+      //   warning.innerText = '更多坐标请放大地图查看';
+      //   this.markersDOM.appendChild(warning);
+      // }
     }
     this.markersWindow.open(this.map, pos);
   }

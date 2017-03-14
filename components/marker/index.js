@@ -3,32 +3,9 @@ import { render } from 'react-dom';
 import log from '../../lib/utils/log';
 import isFun from '../../lib/utils/isFun';
 import toCapitalString from '../../lib/utils/toCapitalString';
-const configurableProps = [
-  'position',
-  'offset',
-  'icon',
-  'content',
-  'draggable',
-  'visible',
-  'zIndex',
-  'angle',
-  'animation',
-  'shadow',
-  'title',
-  'clickable',
-  'cursor',
-  'extData',
-  'label'
-];
-
-const allProps = configurableProps.concat([
-  'topWhenClick',
-  'bubble',
-  'raiseOnDrag',
-  'cursor',
-  'autoRotation',
-  'shape',
-]);
+import {
+  MarkerConfigurableProps,
+  MarkerAllProps } from '../../lib/utils/markerUtils';
 
 class Marker extends Component {
   constructor(props) {
@@ -69,7 +46,7 @@ class Marker extends Component {
   // 在创建实例时根据传入配置，设置初始化选项
   buildCreateOptions(props) {
     let opts = {};
-    allProps.forEach((key) => {
+    MarkerAllProps.forEach((key) => {
       if (key in props) {
         opts[key] = this.getSetterParam(key, props[key]);
       }
@@ -121,7 +98,7 @@ class Marker extends Component {
   }
   
   refreshMarkerLayout(nextProps) {
-    configurableProps.forEach((key) => {
+    MarkerConfigurableProps.forEach((key) => {
       // 必须确定属性改变才进行刷新
       if (this.props[key] !== nextProps[key]) {
         if (key === 'visible') {
