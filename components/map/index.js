@@ -127,13 +127,16 @@ class Map extends Component {
   
   renderChildren() {
     return Children.map(this.props.children, (child) => {
-      if (ComponentList.indexOf(child.type) === -1) {
-        return child;
+      if (child) {
+        if (ComponentList.indexOf(child.type) === -1) {
+          return child;
+        }
+        return React.cloneElement(child, {
+          __map__: this.map,
+          __ele__: this.mapWrapper,
+        })
       }
-      return React.cloneElement(child, {
-        __map__: this.map,
-        __ele__: this.mapWrapper,
-      })
+      return child;
     });
   }
   
