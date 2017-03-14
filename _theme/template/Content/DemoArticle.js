@@ -17,7 +17,8 @@ export default class DemoArticle extends React.Component{
   }
   
   shouldComponentUpdate(nextProps, nextState){
-    return this.state.isWide !== nextState.isWide;
+    return ((this.state.isWide !== nextState.isWide)
+      || (this.props.routeParams.doc !== nextProps.routeParams.doc));
   }
   
   changeLayout(){

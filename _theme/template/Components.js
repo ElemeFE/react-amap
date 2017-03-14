@@ -28,7 +28,7 @@ export default class Doc extends React.Component{
         <article id="article">
           {
             type === 'demo' ?
-              <DemoArticle pageData={props.pageData} utils={props.utils}/> :
+              <DemoArticle routeParams={props.routeParams} pageData={props.pageData} utils={props.utils}/> :
               <PureArticle pageData={props.pageData} utils={props.utils}/>
           }
         </article>
