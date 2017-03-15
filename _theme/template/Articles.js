@@ -4,6 +4,7 @@ import SideMenu from './Menu/SideMenu';
 import PureArticle from './Content/PureArticle';
 
 export default function Article (props){
+  const pageData = props.pageData;
   return <Layout route={props.route}>
     <div id="doc">
       <aside id="aside">
@@ -14,7 +15,7 @@ export default function Article (props){
         />
       </aside>
       <article id="article" className="pure-article">
-        <PureArticle pageData={props.pageData} utils={props.utils}/>
+        <PureArticle pageData={pageData} utils={props.utils}/>
       </article>
     </div>
   </Layout>

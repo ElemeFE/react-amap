@@ -26,6 +26,15 @@ const defaultOpts = {
   markerIDCache: [],
 };
 
+const ClusterProps = [
+  'gridSize',
+  'minClusterSize',
+  'maxZoom',
+  'averageCenter',
+  'styles',
+  'zoomOnClick',
+];
+
 const IdKey = '__react_amap__';
 
 /*
@@ -123,13 +132,9 @@ class Markers extends Component {
   }
   
   checkClusterSettings(props){
-    let useCluster = defaultOpts.useCluster;
-    if (typeof props.useCluster === 'boolean') {
-      useCluster = props.useCluster;
-    }
-    
+    const useCluster = !!props.useCluster;
     if (useCluster) {
-      this.loadClusterPlugin().then((cluster) => {
+      this.loadClusterPlugin(props.useCluster).then((cluster) => {
         cluster.setMarkers(this.markersCache);
       });
     } else {
@@ -191,48 +196,69 @@ class Markers extends Component {
   
   refreshMarkersLayout(nextProps){
     const markerChanged = (nextProps.markers !== this.props.markers);
+    const clusterChanged = ((!!this.props.useCluster) !== (!!nextProps.useCluster));
     if (markerChanged) {
       this.createMarkers(nextProps);
       this.setMarkerChild(this.props);
     }
-    if(markerChanged || (nextProps.useCluster !== this.props.useCluster)) {
+    if(markerChanged || (clusterChanged)) {
       if (this.markersWindow) {
         this.markersWindow.close();
       }
     }
-    this.checkClusterSettings(nextProps);
+    if (clusterChanged) {
+      this.checkClusterSettings(nextProps);
+    }
   }
   
-  loadClusterPlugin(){
+  loadClusterPlugin(clusterConfig){
     if(this.mapCluster) {
       return new Promise((resolve) => {
         resolve(this.mapCluster);
       })
     }
+    const config = (typeof clusterConfig === 'boolean')?  {} : clusterConfig;
     return new Promise((resolve) => {
       this.map.plugin(['AMap.MarkerClusterer'], () => {
-        resolve(this.createClusterPlugin());
+        resolve(this.createClusterPlugin(config));
       });
     })
   }
   
   
-  createClusterPlugin(){
+  createClusterPlugin(config){
+    let options = {};
     const style = {
       url: clusterIcon,
       size: new window.AMap.Size(56, 56),
       offset: new window.AMap.Pixel(-28, -28),
     };
-    const clusterStyles = [style, style, style];
-    this.mapCluster = new window.AMap.MarkerClusterer(this.map, [], {
+    const defalutOptions = {
       minClusterSize: 2,
       zoomOnClick: false,
       gridSize: 60,
-      styles: clusterStyles,
+      styles: [style, style, style],
       averageCenter: true,
+    };
+  
+    ClusterProps.forEach((key) => {
+      if (key in config) {
+        options[key] = config[key];
+      } else {
+        options[key] = defalutOptions[key];
+      }
     });
+    
+    this.mapCluster = new window.AMap.MarkerClusterer(this.map, [], options);
+    let events = {};
+    if ('events' in config){
+      events = config.events;
+      if ('created' in events) {
+        events.created(this.mapCluster);
+      }
+    }
     this.initClusterMarkerWindow();
-    this.bindClusterEvent();
+    this.bindClusterEvent(events);
     return this.mapCluster;
   }
   
@@ -312,9 +338,15 @@ class Markers extends Component {
     this.markersWindow.setContent(this.markersDOM);
   }
   
-  bindClusterEvent() {
+  bindClusterEvent(events) {
     this.mapCluster.on('click', (e) => {
-      this.showMarkersInfoWindow(e);
+      let returnValue = true;
+      if (isFun(events.click)) {
+        returnValue = events.click(e);
+      }
+      if (returnValue !== false) {
+        this.showMarkersInfoWindow(e);
+      }
     });
   }
   

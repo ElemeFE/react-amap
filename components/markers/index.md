@@ -24,7 +24,7 @@ Markers 组件大部分属性是静态属性；对坐标点的增加和删除会
 
 | 属性       | 类型 | 默认取值 | 说明 |
 |------------|-----------|---------|---------------------|
-| useCluster | `Boolean` | `false` | 是否启用标记点聚合插件 |
+| useCluster | `Boolean` 或者 [MarkerClustererOptions](http://lbs.amap.com/api/javascript-api/reference/plugin#AMap.MarkerClusterer) | `false` | 是否启用标记点聚合插件；如果是MarkerClustererOptions对象，表明启用 |
 | markers  | [MarkerOption\[\]](#MarkerOption-配置) | `[]` | 数组每一项都是都应标记点的属性或者其他自定义数据配置 |
 
 > 对 markers 属性的更新必须是引用更新才能引起标记点的刷新；不过如果标记点过多，会影响性能。
@@ -69,12 +69,12 @@ Markers 组件大部分属性是静态属性；对坐标点的增加和删除会
 
 ```jsx
 const events = {
-  click: (originalMapsEvents, originalMarkerData) => { /* do something */}
+  click: (originalMapsEvents, originalMarkerInstance) => { /* do something */}
 }
 ```
 
 其中，originalMapsEvents 就是高德提供的，用于表示地图、覆盖物、叠加层上的各种鼠标事件返回，参考[MapsEvent 对象规范](http://lbs.amap.com/api/javascript-api/reference/event#MapsEvent);
-而 originalMarkerData 就是高德原生的 Marker 实例；
+而 originalMarkerInstance 就是高德原生的 Marker 实例；
 
 
 在启用了聚合插件(`useCluster = true`)后，用户如果点击的是弹窗中的标记点，这时候第一个参数是 `null`。弹窗中的标记点目前只支持触发少量的几个事件，包括：
