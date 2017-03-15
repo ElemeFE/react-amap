@@ -4,6 +4,9 @@ title: 快速开始
 order: 1
 ---
 
+> react-amap 是一个基于 React 封装的高德地图组件；使你在 React 应用中，轻松到令人发指的接入地图。同时，如果你有更高级复杂的需求，我们在各个组件的接口中，会完全暴露高德的原生实例给你，方便你亲自对实例进行操作。
+
+
 
 本节介绍如何在项目中接入 react-amap;
 
@@ -27,7 +30,6 @@ order: 1
     }
     
 最简单的使用场景下这样就可以了；会在 div 中展示一个地图；需要注意的是：Map 的父元素必须要高度和宽度。
-
 
 ### CDN 使用
 
@@ -56,8 +58,8 @@ order: 1
 ```
 
 ##### CDN 地址
-+ https://unpkg.com/react-amap@0.2.0/dist/react-amap.js
-+ https://unpkg.com/react-amap@0.2.0/dist/react-amap.min.js
++ https://unpkg.com/react-amap@VERSION/dist/react-amap.js
++ https://unpkg.com/react-amap@VERSION/dist/react-amap.min.js
 
 ### 关于 key
 
@@ -68,7 +70,5 @@ order: 1
 + 定义为 Map 组件的属性，就像上文例子中一样；这样缺点是如果多个地方使用就要每次都要传入；
 + 直接把你的 key 定义在全局变量 `window.AMAP_KEY` 上，react-amap 在调用高德接口时会尝试从这里读取。
 
-    
+
 组件的使用请查看[组件文档](/components/about)
-
-
