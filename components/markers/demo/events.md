@@ -5,7 +5,7 @@ order: 4
 
 Markers 组件的事件绑定方式与 Marker 类似，都是定义 events 属性；但是调用的参数不一样；
 
-首先是扩展的 created 事件，参数是创建的所有高德标记点的实例（即[高德的 Marker](http://lbs.amap.com/api/javascript-api/reference/overlay#Marker) 实例）；
+首先是扩展的 created 事件，参数是创建的所有高德标记点的实例（即[高德的 Marker](http://lbs.amap.com/api/javascript-api/reference/overlay#Marker) 实例）数组；
 
 尝试点击例子中的坐标点，以及弹窗中的坐标点，在控制台查看输出。
 
