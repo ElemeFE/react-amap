@@ -54,8 +54,8 @@
 ```
 
 ##### CDN 地址
-+ https://unpkg.com/react-amap@0.2.0/dist/react-amap.js
-+ https://unpkg.com/react-amap@0.2.0/dist/react-amap.min.js
++ https://unpkg.com/react-amap@VERSION/dist/react-amap.js
++ https://unpkg.com/react-amap@VERSION/dist/react-amap.min.js
 
 ### 关于 key
 
