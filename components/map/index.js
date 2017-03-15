@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { render } from 'react-dom';
 import APILoader from '../../lib/utils/APILoader';
@@ -14,14 +15,6 @@ import Circle from '../circle';
 import GroundImage from '../groundimage';
 // import CircleEditor from '../circleeditor';
 // import PolyEditor from '../polyeditor';
-
-/*
- * props
- * {
- *  center,
- *  zoom
- * }
- */
 
 const Component = React.Component;
 const Children = React.Children;

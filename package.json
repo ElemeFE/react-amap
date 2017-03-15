@@ -8,7 +8,8 @@
     "site": "bisheng build",
     "deploy": "bisheng gh-pages",
     "start": "bisheng start",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
   "author": "",
   "license": "ISC",
@@ -30,6 +31,7 @@
     "dora-plugin-proxy": "^0.8.5",
     "extract-text-webpack-plugin": "^2.0.0",
     "file-loader": "^0.10.0",
+    "flow-bin": "^0.41.0",
     "html-webpack-plugin": "^2.28.0",
     "isomorphic-style-loader": "^1.1.0",
     "jsonml-to-react-component": "^0.2.6",
