@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col } from 'antd';
+import CodePreview from './CodePreview';
 
 export default class DemoItem extends React.Component {
   render() {
@@ -9,7 +10,7 @@ export default class DemoItem extends React.Component {
       <div className="demo-desc">{props.content}</div>
       <Row>
         <Col span={this.props.isWide ? 12 : 24 } className="demo-item-code">
-          {props.code}
+          <CodePreview title={props.title}>{props.code}</CodePreview>
         </Col>
         {
           this.props.isWide ? <Col span={12} className="demo-item-preview">
