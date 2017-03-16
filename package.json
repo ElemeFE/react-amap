@@ -12,11 +12,9 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2"
-  },
   "devDependencies": {
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
     "antd": "^2.7.4",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.0",
