@@ -108,7 +108,7 @@ class Map extends Component {
     this.pluginMap = {};
     this.prevCenter = undefined;
     this.prevZoom = undefined;
-    this.loader = new APILoader(props.key).load();
+    this.loader = new APILoader(props.amapkey).load();
   }
   
   componentWillReceiveProps(nextProps: MapProps) {
