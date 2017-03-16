@@ -33,6 +33,8 @@ order: 1
 
 ### CDN 使用
 
+> jsfiddle 快速体验： https://jsfiddle.net/h4u8mdng/
+
 在 HTML 页面中加入 react-amap 库的 CDN 地址，插件会暴露在 window.ReactAMAP 变量下；然后即可使用。如：
 
 ```html
