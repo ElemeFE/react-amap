@@ -10,7 +10,7 @@ import { Map } from 'react-amap';
 class App extends React.Component{
   render(){
     return <div style={{width: '100%', height: '400px'}}>
-      <Map />
+      <Map amapkey={'788e08def03f95c670944fe2c78fa76f'}/>
     </div>
   }
 }

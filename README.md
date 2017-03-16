@@ -20,7 +20,7 @@
         // ... Your other methods
         render() {
             return <div style={{width: '600px',height: '500px'}}>
-                <Map key={YOUR_AMAP_KEY}/>
+                <Map amapkey={YOUR_AMAP_KEY}/>
             </div>
         }
     }
@@ -54,17 +54,22 @@
 ```
 
 ##### CDN 地址
+
+实际应用中你可以使用下面的 CDN 地址，也可以把脚本下载下来本地部署。
+
+** 记得将其中的 `VERSION` 替换为真实版本号，查看最新版本号点击[更新日志](https://elemefe.github.io/react-amap/articles/changelog)。**
+
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.js
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.min.js
 
 ### 关于 key
 
-在上面的例子中需要在 Map 传入 key 变量，这个是高德地图给开发者分配的开发者 key；你可以在[高德开放平台](http://lbs.amap.com/faq/account/key/67)申请你自己的key；
+在上面的例子中需要在 Map 传入 `amapkey` 变量，这个是高德地图给开发者分配的开发者 Key；你可以在[高德开放平台](http://lbs.amap.com/faq/account/key/67)申请你自己的 Key；
 
-在 react-amap 中 key 的传入方式有两种；
+在 react-amap 中 Key 的传入方式有两种；
 
-+ 定义为 Map 组件的属性，就像上文例子中一样；这样缺点是如果多个地方使用就要每次都要传入；
-+ 直接把你的 key 定义在全局变量 `window.AMAP_KEY` 上，react-amap 在调用高德接口时会尝试从这里读取。
++ 定义为 Map 组件的 `amapkey` 属性（因为 React 框架本身对 `key` 属性有其他作用，所以不能用 `key`，所以我们用 `amapkey`），就像上文例子中一样；这样缺点是如果多个地方使用就要每次都要传入；
++ 直接把你的 Key 定义在全局变量 `window.AMAP_KEY` 上，react-amap 在调用高德接口时会尝试从这里读取。
 
 
 组件的使用请查看[组件文档](https://elemefe.github.io/react-amap/components/about)
