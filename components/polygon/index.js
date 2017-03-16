@@ -1,3 +1,4 @@
+// @flow
 import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
@@ -28,8 +29,27 @@ const allProps = configurableProps.concat([
   'bubble',
 ]);
 
+type PolyProps = {
+  path: PolygonPath,
+  draggable: boolean,
+  extData: any,
+  style?: Object,
+  visible?: boolean,
+  zIndex?: number,
+  bubble?: boolean,
+  events?: boolean,
+  children?: any,
+  __map__: Object,
+  __ele__: HTMLElement,
+}
+
 class Polygon extends Component {
-  constructor(props) {
+  
+  map: Object;
+  element: HTMLElement;
+  polygon: Object;
+  
+  constructor(props: PolyProps) {
     super(props);
     if (!props.__map__) {
       log.warning('MAP_INSTANCE_REQUIRED');
@@ -40,13 +60,13 @@ class Polygon extends Component {
     }
   }
   
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: PolyProps) {
     if (this.map) {
       this.refreshPolygonLayout(nextProps);
     }
   }
   
-  initMapPolygon(props) {
+  initMapPolygon(props: PolyProps) {
     const options = this.buildCreateOptions(props);
     options.map = this.map;
     this.polygon = new window.AMap.Polygon(options);
@@ -63,13 +83,14 @@ class Polygon extends Component {
     }
   }
   
-  buildCreateOptions(props) {
+  buildCreateOptions(props: PolyProps) {
     const options = {};
     allProps.forEach((key) => {
       if (key in props) {
         if (key === 'style') {
           const styleItem = Object.keys(props.style);
           styleItem.forEach((item) => {
+            // $FlowFixMe
             options[item] = props.style[item];
           });
           // visible 做特殊处理
@@ -81,7 +102,7 @@ class Polygon extends Component {
     return options;
   }
   
-  refreshPolygonLayout(nextProps) {
+  refreshPolygonLayout(nextProps: PolyProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
         if (this.detectPropChanged(key, nextProps)) {
@@ -103,18 +124,18 @@ class Polygon extends Component {
     });
   }
   
-  detectPropChanged(key, nextProps) {
+  detectPropChanged(key: string, nextProps: PolyProps) {
     return this.props[key] !== nextProps[key];
   }
   
-  getSetterValue(key, value) {
+  getSetterValue(key: string, value: any) {
     if (key === 'path') {
       return this.buildPathValue(value);
     }
     return value;
   }
   
-  buildPathValue(path) {
+  buildPathValue(path: PolygonPath) {
     if (path.length) {
       if ('getLng' in path[0]) {
         return path;
@@ -133,7 +154,7 @@ class Polygon extends Component {
   }
   
   exposeInstance(){
-    if ('events' in this.props) {
+    if ('events' in this.props && this.props.events) {
       const events = this.props.events;
       if (isFun(events.created)) {
         events.created(this.polygon);
@@ -144,14 +165,14 @@ class Polygon extends Component {
     return false;
   }
   
-  bindOriginEvents(events){
+  bindOriginEvents(events: Object){
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.polygon.on(evName, events[evName]);
     });
   }
   
-  renderEditor(children) {
+  renderEditor(children: any) {
     if (!children) {
       return null;
     }

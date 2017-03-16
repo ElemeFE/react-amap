@@ -1,3 +1,4 @@
+// @flow
 import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
@@ -38,8 +39,29 @@ const allProps = configurableProps.concat([
   'bubble',
 ]);
 
+type CircleProps = {
+  __map__: Object,
+  __ele__: HTMLElement,
+  center?: LngLat,
+  radius: number,
+  draggable?: boolean,
+  extData: any,
+  visible?:boolean,
+  style?:Object,
+  zIndex?:number,
+  bubble: boolean,
+  events?:Object,
+  children: any,
+}
+
 class Circle extends Component {
-  constructor(props) {
+  
+  props: CircleProps;
+  map: Object;
+  element: HTMLElement;
+  mapCircle: Object;
+  
+  constructor(props: CircleProps) {
     super(props);
     if (!props.__map__) {
       log.warning('MAP_INSTANCE_REQUIRED');
@@ -50,13 +72,13 @@ class Circle extends Component {
     }
   }
   
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: CircleProps) {
     if (this.map) {
       this.refreshCircleLayout(nextProps);
     }
   }
   
-  initMapCircle(props) {
+  initMapCircle(props: CircleProps) {
     const options = this.buildCreateOptions(props);
     options.map = this.map;
     this.mapCircle = new window.AMap.Circle(options);
@@ -70,13 +92,14 @@ class Circle extends Component {
     }
   }
   
-  buildCreateOptions(props) {
+  buildCreateOptions(props: CircleProps) {
     const options = {};
     allProps.forEach((key) => {
       if (key in props) {
-        if (key === 'style') {
+        if (key === 'style' && (props.style !== undefined)) {
           const styleItem = Object.keys(props.style);
           styleItem.forEach((item) => {
+            // $FlowFixMe
             options[item] = props.style[item];
           });
         } else {
@@ -89,7 +112,7 @@ class Circle extends Component {
     return options;
   }
   
-  refreshCircleLayout(nextProps) {
+  refreshCircleLayout(nextProps: CircleProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
         if (this.checkPropChanged(key, nextProps)) {
@@ -111,18 +134,18 @@ class Circle extends Component {
     });
   }
   
-  checkPropChanged(key, nextProps) {
+  checkPropChanged(key: string, nextProps: CircleProps) {
     return this.props[key] !== nextProps[key];
   }
   
-  getSetterValue(key, props) {
+  getSetterValue(key: string, props: CircleProps) {
     if (key === 'center') {
       return getAMapPosition(props.center);
     }
     return props[key];
   }
    
-  exposeCircleInstance(props) {
+  exposeCircleInstance(props: CircleProps) {
     if ('events' in props) {
       const events = props.events || {};
       if (isFun(events.created)) {
@@ -134,14 +157,14 @@ class Circle extends Component {
     return false;
   }
   
-  bindCircleEvents(events) {
+  bindCircleEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.mapCircle.on(evName, events[evName]);
     });
   }
   
-  renderEditor(children) {
+  renderEditor(children: any) {
     if (!children) {
       return null;
     }

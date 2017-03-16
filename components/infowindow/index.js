@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { findDOMNode, render } from 'react-dom';
 import isFun from '../../lib/utils/isFun';
@@ -41,8 +42,33 @@ const allProps = configurableProps.concat([
   'showShadow',
 ]);
 
+type IWProps = {
+  content?: any,
+  position: LngLat,
+  size?: Size,
+  visible?: boolean,
+  offset?: Pixel,
+  isCustom?: boolean,
+  autoMove?: boolean,
+  closeWhenClickMap?: boolean,
+  showShadow?: boolean,
+  events?: Object,
+  children?: any,
+  className?: string,
+  __map__: Object,
+  __ele__: HTMLElement,
+};
+
 class InfoWindow extends Component {
-  constructor(props) {
+  
+  map: Object;
+  element: HTMLElement;
+  isCustom: boolean;
+  infoWindow: Object;
+  infoDOM: HTMLElement;
+  
+  
+  constructor(props: IWProps) {
     super(props);
     if (!props.__map__) {
       log.warning('MAP_INSTANCE_REQUIRED');
@@ -73,20 +99,20 @@ class InfoWindow extends Component {
     return false;
   }
   
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: IWProps) {
     if (this.map) {
       this.refreshWindowLayout(nextProps);
     }
   }
   
-  createInfoWindow(props) {
+  createInfoWindow(props: IWProps) {
     const options = this.buildCreateOptions(props);
     this.infoWindow = new window.AMap.InfoWindow(options);
     const events = this.exposeWindowInstance(props);
     events && this.bindWindowEvents(events);
   }
   
-  refreshWindowLayout(nextProps) {
+  refreshWindowLayout(nextProps: IWProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
         if (this.checkPropChanged(key, nextProps)) {
@@ -108,7 +134,7 @@ class InfoWindow extends Component {
     this.setClassName(nextProps);
   }
   
-  checkPropChanged(key, nextProps) {
+  checkPropChanged(key: string, nextProps: IWProps) {
     return this.props[key] !== nextProps[key];
   }
   
@@ -120,7 +146,7 @@ class InfoWindow extends Component {
     this.infoWindow.close();
   }
   
-  buildCreateOptions(props) {
+  buildCreateOptions(props: IWProps) {
     const options = {};
   
     // 如果开发者没有设置 isCustom 属性，默认设置为 false
@@ -163,7 +189,7 @@ class InfoWindow extends Component {
     return options;
   }
   
-  getSetterValue(key, value) {
+  getSetterValue(key: string, value: any) {
     if (key === 'size') {
       return getAMapSize(value);
     }
@@ -176,7 +202,7 @@ class InfoWindow extends Component {
     return value;
   }
   
-  exposeWindowInstance(props) {
+  exposeWindowInstance(props: IWProps) {
     if ('events' in props) {
       const events = props.events || {};
       if (isFun(events.created)) {
@@ -188,14 +214,14 @@ class InfoWindow extends Component {
     return false;
   }
   
-  bindWindowEvents(events) {
+  bindWindowEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.infoWindow.on(evName, events[evName]);
     });
   }
   
-  setChild(props) {
+  setChild(props: IWProps) {
     const child = props.children;
     if (this.infoDOM && child) {
       if (Children.count(child) === 1) {
@@ -210,14 +236,14 @@ class InfoWindow extends Component {
     }
   }
   
-  setClassName(props) {
+  setClassName(props: IWProps) {
     let baseClsValue = '';
     if (props.isCustom === true) {
       baseClsValue = 'amap_markers_pop_window ';
     }
     if (this.infoDOM) {
       // 刷新 className
-      if ('className' in props) {
+      if ('className' in props && props.className) {
         baseClsValue += props.className;
       }
       this.infoDOM.className = baseClsValue;

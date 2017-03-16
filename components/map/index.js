@@ -77,8 +77,30 @@ const defaultOpts = {
   OverView: {},
 };
 
+type MapProps = {
+  key?: String,
+  children: any,
+  events?: Object,
+  center?: LngLat,
+  zoom?: number,
+  plugins?: Object;
+}
+
 class Map extends Component {
-  constructor(props) {
+  
+  props: MapProps;
+  state: {
+    mapLoaded: boolean,
+  };
+  pluginMap: Object;
+  prevCenter: ?LngLat;
+  prevZoom: ?number;
+  loader: Object;
+  map: Object;
+  mapWrapper: HTMLElement;
+  
+  
+  constructor(props: MapProps) {
     super(props);
     this.state = {
       mapLoaded: false,
@@ -89,7 +111,7 @@ class Map extends Component {
     this.loader = new APILoader(props.key).load();
   }
   
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: MapProps) {
     const prevProps = this.props;
     this.loader.then(() => {
       if (this.map) {
@@ -185,14 +207,14 @@ class Map extends Component {
     return options;
   }
   
-  bindAMapEvents(events){
+  bindAMapEvents(events: Object){
     const list = Object.keys( events );
     list.length && list.forEach((evName) => {
       this.map.on(evName,events[evName]);
     });
   }
   
-  refreshMapLayout(prevProps, nextProps) {
+  refreshMapLayout(prevProps: MapProps, nextProps: MapProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
         if (this.detectPropChanged(key, prevProps, nextProps)) {
@@ -204,14 +226,14 @@ class Map extends Component {
     });
   }
   
-  getSetterParam(key, props) {
+  getSetterParam(key: string, props: MapProps) {
     if (key === 'center') {
       return getAMapPosition(props.center);
     }
     return props[key];
   }
   
-  getSetterName(key) {
+  getSetterName(key: string) {
     if (key === 'labelzIndex') {
       return 'setlabelzIndex';
     } else if( key === 'cursor') {
@@ -222,11 +244,11 @@ class Map extends Component {
     return `set${toCapitalString(key)}`
   }
   
-  detectPropChanged(key, prevProps, nextProps) {
+  detectPropChanged(key: string, prevProps: MapProps, nextProps: MapProps) {
     return prevProps[key] !== nextProps[key];
   }
   
-  setZoomAndCenter(props) {
+  setZoomAndCenter(props: MapProps) {
     if ((this.prevCenter === props.center) && (this.prevZoom === props.zoom)) {
       // do nothing
     } else {
@@ -241,7 +263,7 @@ class Map extends Component {
         }
       }
       
-      if ('center' in props) {
+      if (('center' in props) && props.center) {
         newCenter = new window.AMap.LngLat(props.center.longitude, props.center.latitude);
         if (props.center !== this.props.center) {
           centerChange = true;
@@ -261,7 +283,7 @@ class Map extends Component {
     }
   }
   
-  setPlugins(props) {
+  setPlugins(props: MapProps) {
     const pluginList = ['Scale', 'ToolBar', 'MapType', 'OverView'];
     if ('plugins' in props) {
       const plugins = props.plugins;
@@ -293,7 +315,7 @@ class Map extends Component {
     this.removeOrDisablePlugins(pluginList);
   }
   
-  removeOrDisablePlugins(plugins) {
+  removeOrDisablePlugins(plugins: any[]) {
     if (plugins && plugins.length) {
       plugins.forEach((p) => {
         if (p in this.pluginMap) {
@@ -303,7 +325,7 @@ class Map extends Component {
     }
   }
   
-  installPlugin(name, opts) {
+  installPlugin(name: string, opts: ?Object) {
     opts = opts || {};
     switch(name) {
       case 'Scale':
@@ -323,7 +345,7 @@ class Map extends Component {
     }
   }
   
-  setMapTypePlugin(opts) {
+  setMapTypePlugin(opts: Object) {
     if (this.pluginMap['MapType']) {
       this.pluginMap.MapType.show();
     } else {
@@ -339,7 +361,7 @@ class Map extends Component {
     }
   }
   
-  setOverviewPlugin(opts) {
+  setOverviewPlugin(opts: Object) {
     if (this.pluginMap['OverView']) {
       this.pluginMap.OverView.show();
     } else {
@@ -355,7 +377,7 @@ class Map extends Component {
     }
   }
   
-  setScalePlugin(opts) {
+  setScalePlugin(opts: Object) {
     if (this.pluginMap['Scale']) {
       this.pluginMap.Scale.show();
     } else {
@@ -369,7 +391,7 @@ class Map extends Component {
     }
   }
   
-  setToolbarPlugin(opts) {
+  setToolbarPlugin(opts: Object) {
     if (this.pluginMap['ToolBar']) {
       this.pluginMap.ToolBar.show();
     } else {

@@ -1,9 +1,25 @@
+// @flow
 import React from 'react';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
 
+type EditorProps = {
+  __map__: Object,
+  __ele__: HTMLElement;
+  __poly__: Object,
+  active: boolean,
+  events?: Object,
+};
+
 class PolyEditor extends React.Component {
-  constructor(props) {
+  
+  map: Object;
+  element: HTMLElement;
+  poly: Object;
+  editorActive: boolean;
+  polyEditor: Object;
+  
+  constructor(props: EditorProps) {
     super(props);
     if (!(props.__map__ && props.__poly__ )) {
       log.warning('MAP_INSTANCE_REQUIRED');
@@ -16,21 +32,21 @@ class PolyEditor extends React.Component {
     }
   }
   
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: EditorProps) {
     if (this.map) {
       this.onPropsUpdate(nextProps);
     }
   }
   
-  onPropsUpdate(props) {
+  onPropsUpdate(props: EditorProps) {
     if ('active' in props && props.active === false) {
-      this.toggleActive(false);
+      this.toggleActive(false, props);
     } else {
       this.toggleActive(true, props);
     }
   }
   
-  toggleActive(active, props) {
+  toggleActive(active: boolean, props: EditorProps) {
     if (active) {
       if (!this.editorActive) {
         this.activeEditor(props);
@@ -42,7 +58,7 @@ class PolyEditor extends React.Component {
     }
   }
   
-  activeEditor(props) {
+  activeEditor(props: EditorProps) {
     this.loadPolyEditor(props).then((editor) => {
       this.editorActive = true;
       editor.open();
@@ -56,7 +72,7 @@ class PolyEditor extends React.Component {
     }
   }
   
-  loadPolyEditor(props) {
+  loadPolyEditor(props: EditorProps) {
     if (this.polyEditor) {
       return new Promise((resolve) => {
         resolve(this.polyEditor);
@@ -69,7 +85,7 @@ class PolyEditor extends React.Component {
     });
   }
   
-  createEditorInstance(props) {
+  createEditorInstance(props: EditorProps) {
     this.polyEditor = new window.AMap.PolyEditor(
       this.map, this.poly
     );
@@ -78,7 +94,7 @@ class PolyEditor extends React.Component {
     return this.polyEditor;
   }
   
-  exposeEditorInstance(props) {
+  exposeEditorInstance(props: EditorProps) {
     if ('events' in props) {
       const events = props.events || {};
       if (isFun(events.created)) {
@@ -90,7 +106,7 @@ class PolyEditor extends React.Component {
     return false;
   }
   
-  bindEditorEvents(events) {
+  bindEditorEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.polyEditor.on(evName, events[evName]);

@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
@@ -27,8 +28,24 @@ const allProps = configurableProps.concat([
   'clickable',
 ]);
 
+type GIProps = {
+  __map__: Object,
+  __ele__: HTMLElement,
+  opacity?: number,
+  src?: string,
+  bounds: Object,
+  visible?: boolean,
+  clickable?: boolean,
+  events?: Object
+};
+
 class GroundImage extends Component {
-  constructor(props) {
+  
+  map: Object;
+  element: HTMLElement;
+  image: Object;
+  
+  constructor(props: GIProps) {
     super(props);
     if (!props.__map__) {
       log.warning('MAP_INSTANCE_REQUIRED');
@@ -43,13 +60,13 @@ class GroundImage extends Component {
     return false;
   }
   
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: GIProps) {
     if (this.map) {
       this.refreshGroundImage(nextProps);
     }
   }
   
-  refreshGroundImage(nextProps) {
+  refreshGroundImage(nextProps: GIProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
         if (this.checkPropsChanged(nextProps, key)) {
@@ -67,21 +84,21 @@ class GroundImage extends Component {
     });
   }
   
-  setBounds(nextProps) {
+  setBounds(nextProps: GIProps) {
     // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
     if ('setBounds' in this.image) {
       this.image.setBounds(this.buildBounds(nextProps));
     }
   }
   
-  setImageUrl(nextProps) {
+  setImageUrl(nextProps: GIProps) {
     // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
     if ('setImageUrl' in this.image) {
       this.image.setImageUrl(nextProps.src);
     }
   }
   
-  setVisible(nextProps) {
+  setVisible(nextProps: GIProps) {
     // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
     if ('show' in this.image) {
       if (nextProps.visible) {
@@ -92,18 +109,18 @@ class GroundImage extends Component {
     }
   }
   
-  setOpacity(nextProps) {
+  setOpacity(nextProps: GIProps) {
     this.image.setOpacity(nextProps.opacity);
   }
   
-  checkPropsChanged(nextProps, key) {
+  checkPropsChanged(nextProps: GIProps, key: string) {
     // if (key === 'bounds') {
     //   return this.checkBoundsChange(nextProps);
     // }
     return this.props[key] !== nextProps[key];
   }
   
-  createGroundImage(props) {
+  createGroundImage(props: GIProps) {
     let src, bounds, opacity, clickable;
     if ('src' in props) {
       src = props.src;
@@ -135,7 +152,7 @@ class GroundImage extends Component {
     events && this.bindEvents(events);
   }
   
-  exopseImageInstance(props) {
+  exopseImageInstance(props: GIProps) {
     if ('events' in props) {
       const events = props.events || {};
       if (isFun(events.created)) {
@@ -146,7 +163,7 @@ class GroundImage extends Component {
     return false;
   }
   
-  bindEvents(events) {
+  bindEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       if (evName !== 'created') {
@@ -169,7 +186,7 @@ class GroundImage extends Component {
   // }
   
   
-  buildBounds(props) {
+  buildBounds(props: GIProps) {
     const rawBounds = props.bounds;
     if (!rawBounds) {
       return rawBounds;
