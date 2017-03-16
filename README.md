@@ -69,7 +69,7 @@
 在 react-amap 中 Key 的传入方式有两种；
 
 + 定义为 Map 组件的 `amapkey` 属性（因为 React 框架本身对 `key` 属性有其他作用，所以不能用 `key`，所以我们用 `amapkey`），就像上文例子中一样；这样缺点是如果多个地方使用就要每次都要传入；
-+ 直接把你的 Key 定义在全局变量 `window.AMAP_KEY` 上，react-amap 在调用高德接口时会尝试从这里读取。
++ 直接把你的 Key 定义在全局变量 `window.amapkey` 上，react-amap 在调用高德接口时会尝试从这里读取。
 
 
 组件的使用请查看[组件文档](https://elemefe.github.io/react-amap/components/about)
