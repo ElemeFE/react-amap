@@ -66,18 +66,18 @@ class App extends React.Component{
     })
   }
   
-  renderMouseoverLayout(raw, idx){
-    if (idx === 3){
+  renderMouseoverLayout(extData){
+    if (extData.myIndex === 3){
       return false;
     }
-    return <div style={mouseoverStyle}>{raw.myIndex}</div>
+    return <div style={mouseoverStyle}>{extData.myLabel}</div>
   }
   
-  renderMarkerLayout(raw, idx){
-    if (idx === 3){
+  renderMarkerLayout(extData){
+    if (extData.myIndex === 3){
       return false;
     }
-    return <div style={style}>{raw.myLabel}</div>
+    return <div style={style}>{extData.myLabel}</div>
   }
   
   render(){   

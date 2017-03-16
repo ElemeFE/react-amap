@@ -5,7 +5,9 @@ import isFun from '../../lib/utils/isFun';
 import toCapitalString from '../../lib/utils/toCapitalString';
 import {
   MarkerConfigurableProps,
-  MarkerAllProps } from '../../lib/utils/markerUtils';
+  MarkerAllProps,
+  renderMarkerComponent
+} from '../../lib/utils/markerUtils';
 import {
   getAMapPosition,
   getAMapPixel
@@ -44,6 +46,13 @@ class Marker extends Component {
     this.marker = new window.AMap.Marker(options);
     const events = this.exposeMarkerInstance(props);
     events && this.bindMarkerEvents(events);
+    
+    this.marker.render = (function(marker){
+      return function(component){
+        renderMarkerComponent(component, marker);
+      }
+    })(this.marker);
+  
     this.setMarkerLayout(props);
   }
   
@@ -59,11 +68,10 @@ class Marker extends Component {
     return opts;
   }
   
+  // 初始化标记的外观
   setMarkerLayout(props) {
-    if (props.children) {
+    if (('render' in props) || ('children' in props)) {
       this.createContentWrapper(props);
-    } else {
-      //
     }
   }
   
@@ -73,15 +81,21 @@ class Marker extends Component {
   }
   
   setChildComponent(props) {
-    const child = props.children;
-    const childType = typeof child;
-    if (childType !== 'undefined' && this.contentWrapper) {
-      if (childType === 'string') {
-        render(<div>{child}</div>, this.contentWrapper);
-      } else if (Children.count(child) === 1) {
-        render(child, this.contentWrapper);
-      } else {
-        render(<div>{child}</div>, this.contentWrapper);
+    if (this.contentWrapper) {
+      if ('render' in props) {
+        renderMarkerComponent(props.render, this.marker);
+      } else if ('children' in props) {
+        const child = props.children;
+        const childType = typeof child;
+        if (childType !== 'undefined' && this.contentWrapper) {
+          if (childType === 'string') {
+            render(<div>{child}</div>, this.contentWrapper);
+          } else if (Children.count(child) === 1) {
+            render(child, this.contentWrapper);
+          } else {
+            render(<div>{child}</div>, this.contentWrapper);
+          }
+        }
       }
     }
   }
@@ -140,7 +154,9 @@ class Marker extends Component {
   bindMarkerEvents(events) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
-      this.marker.on(evName, events[evName]);
+      this.marker.on(evName, (e)=>{
+        events[evName](e, e.target);
+      });
     });
   }
   

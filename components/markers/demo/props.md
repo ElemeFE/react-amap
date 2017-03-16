@@ -30,8 +30,8 @@ class App extends React.Component{
   }
 
   
-  randomAngle(rawData, index){
-    if (rawData.someProperty % 3 === 0){
+  randomAngle(extData, index){
+    if (extData.someProperty % 3 === 0){
       return 45;
     }
     return 0;
@@ -39,12 +39,12 @@ class App extends React.Component{
   
   render(){   
     return <div>
-      <div style={{width: '100%', height: 370}}>
+      <div style={{width: '100%', height: 400}}>
         <Map plugins={['ToolBar']} center={this.mapCenter} zoom={5}>
           <Markers 
             markers={this.markers}
             bubble={false}
-            angle={(rawData, index) => { return this.randomAngle(rawData, index)}}
+            angle={(extData, index) => { return this.randomAngle(extData, index)}}
             useCluster={false}
           />
         </Map>

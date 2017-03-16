@@ -37,18 +37,21 @@ title: Marker 组件
 
 ### 静态属性
 
-Marker 的静态属性有如下 6 个；，属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/overlay#Marker)
+Marker 的静态属性有 6 个，其属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/overlay#Marker)
 
-+ `topWhenClick`
-+ `bubble`
-+ `raiseOnDrag`
-+ `cursor`
-+ `autoRotation`
-+ `shape`
+1. `topWhenClick`
+2. `bubble`
+3. `raiseOnDrag`
+4. `cursor`
+5. `autoRotation`
+6. `shape`
 
 ### 扩展属性
 
 有一些属性是高德本身没有直接提供的，但是根据高德的实例方法可以实现。我们把它封装了一层，可以更方便的使用；
+
+1. `events`
+2. `render`；【**0.2.2 更新**】render 属性接受一个 React 组件，或者一个方法返回一个 React 组件，会在初始化时渲染为组件的外观。并且会覆盖`children`，`content` 等的设置。
 
 #### events 配置
 
