@@ -63,10 +63,16 @@ order: 1
 
 实际应用中你可以使用下面的 CDN 地址，也可以把脚本下载下来本地部署。
 
-** 记得将其中的 `VERSION` 替换为真实版本号，查看最新版本号点击[更新日志](/articles/changelog)。**
+** 记得将其中的 `VERSION` 替换为真实版本号，查看版本历史点击[更新日志](/articles/changelog)。**
 
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.js
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.min.js
+
+当前最新版本 `0.2.3-0`：
+
+> https://unpkg.com/react-amap@0.2.3-0/dist/react-amap.js
+
+> https://unpkg.com/react-amap@0.2.3-0/dist/react-amap.min.js
 
 ### 关于 key
 
