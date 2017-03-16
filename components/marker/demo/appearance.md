@@ -5,6 +5,8 @@ title: 自定义 Marker 的外观
 
 高德地图的图标 `content` 可以设置成一个 DOM，利用这个特性我们可以用 JSX 语法非常方便的定义图标的外观；当然，在 Marker 组件里不写子组件，默认就会用高德原生的图标外观；或者你自己配置 content 属性，定制图标的外观。
 
+除此之外，还可以使用 render 属性和 render 方法来定义 Marker 外观（0.2.2更新），参考下一个示例。
+
 ```jsx
 import { Map, Marker } from 'react-amap';
 

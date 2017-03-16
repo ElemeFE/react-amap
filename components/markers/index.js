@@ -6,6 +6,7 @@ import clusterIcon from '../../lib/assets/map_cluster.png';
 import {
   MarkerAllProps,
   getPropValue,
+  renderMarkerComponent
 } from '../../lib/utils/markerUtils';
 
 require('../../lib/assets/marker.css');
@@ -83,7 +84,7 @@ class Markers extends Component {
       
       let markerContent = null;
       if (isFun(props.render)) {
-        let markerChild = props.render(raw, idx);
+        let markerChild = props.render(raw);
         if (markerChild !== false) {
           const div = document.createElement('div');
           div.setAttribute(IdKey, '1');
@@ -105,21 +106,11 @@ class Markers extends Component {
       marker.on('mouseover', (e) => { this.onMarkerHover(e); });
       marker.on('mouseout', (e) => { this.onMarkerHoverOut(e); });
       
-      marker.render = function(marker, idx){
+      marker.render = function(marker){
         return function(component){
-          let child;
-          if (isFun(component)) {
-            child = component(marker.getExtData(), idx);
-            if (child === false) {
-              child = <img src="//webapi.amap.com/theme/v1.3/markers/n/mark_bs.png" />
-            }
-          } else {
-            child = component;
-          }
-          const con = marker.getContent();
-          render(<div>{child}</div>, con);
+          return renderMarkerComponent(component, marker);
         }
-      }(marker, idx);
+      }(marker);
   
       this.bindMarkerEvents(marker);
       mapMarkers.push(marker);
