@@ -1,5 +1,4 @@
 var path = require('path');
-var webpack = require('webpack');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 var webpackConfig = {
@@ -8,7 +7,7 @@ var webpackConfig = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'react-amap.js',
     library: 'ReactAMAP',
-    libraryTarget: 'umd',
+    libraryTarget: 'umd'
   },
   module: {
     loaders: [
@@ -23,7 +22,7 @@ var webpackConfig = {
       {
         test: /\.png$/,
         loader: 'url-loader',
-        exclude:/node_modules/,
+        exclude: /node_modules/,
         query: {
           limit: 10000,
           name: '[name].[ext]'
@@ -40,14 +39,14 @@ var webpackConfig = {
       root: 'React',
       commonjs2: 'react',
       commonjs: 'react',
-      amd: 'react',
+      amd: 'react'
     },
     'react-dom': {
       root: 'ReactDOM',
       commonjs2: 'react-dom',
       commonjs: 'react-dom',
-      amd: 'react-dom',
-    },
+      amd: 'react-dom'
+    }
   },
   plugins: []
 };

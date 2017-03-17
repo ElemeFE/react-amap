@@ -1,7 +1,5 @@
 'use strict';
 
-var path = require('path');
-
 module.exports = {
   lazyLoad: false,
   home: '/',
@@ -17,5 +15,5 @@ module.exports = {
   }, {
     path: '/404',
     component: './template/NotFound'
-  }],
+  }]
 };

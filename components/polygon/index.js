@@ -1,4 +1,4 @@
-import React, { Component, Children } from 'react';
+import React, { Component } from 'react';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
 import PolyEditor from '../../components/polyeditor';
@@ -12,20 +12,19 @@ import { getAMapPosition } from '../../lib/utils/utils';
  * }
  */
 
-
 const configurableProps = [
   'path',
   'draggable',
   'extData',
-  
+
   /* 本插件扩展的属性*/
   'style',
-  'visible',
+  'visible'
 ];
 
 const allProps = configurableProps.concat([
   'zIndex',
-  'bubble',
+  'bubble'
 ]);
 
 class Polygon extends Component {
@@ -39,21 +38,21 @@ class Polygon extends Component {
       this.initMapPolygon(props);
     }
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.map) {
       this.refreshPolygonLayout(nextProps);
     }
   }
-  
+
   initMapPolygon(props) {
     const options = this.buildCreateOptions(props);
     options.map = this.map;
     this.polygon = new window.AMap.Polygon(options);
-  
+
     const events = this.exposeInstance();
     events && this.bindOriginEvents(events);
-    
+
     if ('visible' in props) {
       if (props.visible) {
         this.polygon.show();
@@ -62,7 +61,7 @@ class Polygon extends Component {
       }
     }
   }
-  
+
   buildCreateOptions(props) {
     const options = {};
     allProps.forEach((key) => {
@@ -73,14 +72,14 @@ class Polygon extends Component {
             options[item] = props.style[item];
           });
           // visible 做特殊处理
-        } else if(key !== 'visible') {
+        } else if (key !== 'visible') {
           options[key] = this.getSetterValue(key, props[key]);
         }
       }
     });
     return options;
   }
-  
+
   refreshPolygonLayout(nextProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
@@ -91,7 +90,7 @@ class Polygon extends Component {
             } else {
               this.polygon.hide();
             }
-          } else if(key === 'style') {
+          } else if (key === 'style') {
             this.polygon.setOptions(nextProps.style);
           } else {
             const setterName = `set${toCapitalString(key)}`;
@@ -102,25 +101,25 @@ class Polygon extends Component {
       }
     });
   }
-  
+
   detectPropChanged(key, nextProps) {
     return this.props[key] !== nextProps[key];
   }
-  
+
   getSetterValue(key, value) {
     if (key === 'path') {
       return this.buildPathValue(value);
     }
     return value;
   }
-  
+
   buildPathValue(path) {
     if (path.length) {
       if ('getLng' in path[0]) {
         return path;
-      } else if('longitude' in path[0]) {
+      } else if ('longitude' in path[0]) {
         return path.map((p) => (getAMapPosition(p)));
-      } else if(path.length === 2){
+      } else if (path.length === 2) {
         // Ring
         const out = this.buildPathValue(path[0]);
         const inner = this.buildPathValue(path[1]);
@@ -131,8 +130,8 @@ class Polygon extends Component {
     }
     return [];
   }
-  
-  exposeInstance(){
+
+  exposeInstance() {
     if ('events' in this.props) {
       const events = this.props.events;
       if (isFun(events.created)) {
@@ -143,14 +142,14 @@ class Polygon extends Component {
     }
     return false;
   }
-  
-  bindOriginEvents(events){
+
+  bindOriginEvents(events) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.polygon.on(evName, events[evName]);
     });
   }
-  
+
   renderEditor(children) {
     if (!children) {
       return null;
@@ -163,12 +162,12 @@ class Polygon extends Component {
       return React.cloneElement(child, {
         __poly__: this.polygon,
         __map__: this.map,
-        __ele__: this.element,
+        __ele__: this.element
       });
     }
     return null;
   }
-  
+
   render() {
     return (this.renderEditor(this.props.children));
   }

@@ -4,7 +4,6 @@ import Footer from './Footer';
 require('../static/style');
 require('antd/dist/antd.css');
 
-
 function isExternalLink(link) {
   const host = document.location.host;
   return (link.indexOf('http') !== -1) && (link.indexOf(host) === -1);
@@ -21,12 +20,12 @@ function handleContentClick(e) {
   }
 }
 
-export default function Layout(props){
+export default function Layout(props) {
   return <div className="wrapper" onClick={handleContentClick}>
     <Header route={props.route}/>
     <div className="layout">
       {props.children}
     </div>
     <Footer/>
-  </div>
+  </div>;
 }

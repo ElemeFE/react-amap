@@ -24,38 +24,38 @@ class Marker extends Component {
       this.createMarker(props);
     }
   }
-  
-  shouldComponentUpdate(){
+
+  shouldComponentUpdate() {
     return false;
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.map) {
       this.refreshMarkerLayout(nextProps);
     }
   }
-  
+
   componentDidMount() {
     if (this.map) {
       this.setChildComponent(this.props);
     }
   }
-  
+
   createMarker(props) {
     const options = this.buildCreateOptions(props);
     this.marker = new window.AMap.Marker(options);
     const events = this.exposeMarkerInstance(props);
     events && this.bindMarkerEvents(events);
-    
-    this.marker.render = (function(marker){
-      return function(component){
+
+    this.marker.render = (function(marker) {
+      return function(component) {
         renderMarkerComponent(component, marker);
-      }
+      };
     })(this.marker);
-  
+
     this.setMarkerLayout(props);
   }
-  
+
   // 在创建实例时根据传入配置，设置初始化选项
   buildCreateOptions(props) {
     let opts = {};
@@ -67,19 +67,19 @@ class Marker extends Component {
     opts.map = this.map;
     return opts;
   }
-  
+
   // 初始化标记的外观
   setMarkerLayout(props) {
     if (('render' in props) || ('children' in props)) {
       this.createContentWrapper(props);
     }
   }
-  
+
   createContentWrapper(props) {
     this.contentWrapper = document.createElement('div');
     this.marker.setContent(this.contentWrapper);
   }
-  
+
   setChildComponent(props) {
     if (this.contentWrapper) {
       if ('render' in props) {
@@ -99,7 +99,7 @@ class Marker extends Component {
       }
     }
   }
-  
+
   refreshMarkerLayout(nextProps) {
     MarkerConfigurableProps.forEach((key) => {
       // 必须确定属性改变才进行刷新
@@ -119,26 +119,26 @@ class Marker extends Component {
     });
     this.setChildComponent(nextProps);
   }
-  
+
   getSetterParam(key, val) {
     if (key === 'position') {
       return getAMapPosition(val);
     } else if (key === 'offset') {
-      return getAMapPixel(val)
+      return getAMapPixel(val);
     }
     return val;
   }
-  
+
   // 获取设置属性的方法
   getSetterName(key) {
-    switch(key) {
+    switch (key) {
       case 'zIndex':
         return 'setzIndex';
       default:
         return `set${toCapitalString(key)}`;
     }
   }
-  
+
   exposeMarkerInstance(props) {
     if ('events' in props) {
       const events = props.events;
@@ -150,7 +150,7 @@ class Marker extends Component {
     }
     return false;
   }
-  
+
   bindMarkerEvents(events) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
@@ -159,8 +159,8 @@ class Marker extends Component {
       });
     });
   }
-  
-  render(){
+
+  render() {
     return null;
   }
 }

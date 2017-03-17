@@ -17,7 +17,7 @@ const configurableProps = [
   'path',
   'extData',
   'draggable',
-  
+
   /* 扩展属性*/
   'visible',
   'style'
@@ -26,9 +26,8 @@ const configurableProps = [
 const allProps = configurableProps.concat([
   'zIndex',
   'bubble',
-  'showDir',
+  'showDir'
 ]);
-
 
 class Polyline extends Component {
   constructor(props) {
@@ -41,21 +40,21 @@ class Polyline extends Component {
       this.createMapPolyline(props);
     }
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.map) {
       this.refreshPolylineLayout(nextProps);
     }
   }
-  
+
   createMapPolyline(props) {
     const options = this.buildCreateOptions(props);
     options.map = this.map;
     this.polyline = new window.AMap.Polyline(options);
-    
+
     const events = this.exposeLineInstance(props);
     events && this.bingLineEvents(events);
-  
+
     if ('visible' in props) {
       if (props.visible) {
         this.polyline.show();
@@ -64,7 +63,7 @@ class Polyline extends Component {
       }
     }
   }
-  
+
   buildCreateOptions(props) {
     const options = {};
     allProps.forEach((key) => {
@@ -75,14 +74,14 @@ class Polyline extends Component {
             options[item] = props.style[item];
           });
           // visible 做特殊处理
-        } else if(key !== 'visible') {
+        } else if (key !== 'visible') {
           options[key] = this.getSetterValue(key, props[key]);
         }
       }
     });
     return options;
   }
-  
+
   refreshPolylineLayout(nextProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
@@ -93,7 +92,7 @@ class Polyline extends Component {
             } else {
               this.polyline.hide();
             }
-          } else if(key === 'style') {
+          } else if (key === 'style') {
             this.polyline.setOptions(nextProps.style);
           } else {
             const setterName = `set${toCapitalString(key)}`;
@@ -104,18 +103,18 @@ class Polyline extends Component {
       }
     });
   }
-  
+
   detectPropChanged(key, nextProps) {
     return this.props[key] !== nextProps[key];
   }
-  
+
   getSetterValue(key, value) {
     if (key === 'path') {
       return this.buildPathValue(value);
     }
     return value;
   }
-  
+
   buildPathValue(path) {
     if (path.length) {
       if ('getLng' in path[0]) {
@@ -125,7 +124,7 @@ class Polyline extends Component {
     }
     return path;
   }
-  
+
   exposeLineInstance(props) {
     if ('events' in props) {
       const events = props.events;
@@ -137,14 +136,14 @@ class Polyline extends Component {
     }
     return false;
   }
-  
+
   bingLineEvents(events) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.polyline.on(evName, events[evName]);
-    })
+    });
   }
-  
+
   renderEditor(children) {
     if (!children) {
       return null;
@@ -157,12 +156,12 @@ class Polyline extends Component {
       return React.cloneElement(child, {
         __poly__: this.polyline,
         __map__: this.map,
-        __ele__: this.element,
+        __ele__: this.element
       });
     }
     return null;
   }
-  
+
   render() {
     return (this.renderEditor(this.props.children));
   }

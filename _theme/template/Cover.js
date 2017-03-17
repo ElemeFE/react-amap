@@ -2,7 +2,7 @@ import React from 'react';
 import { Map } from 'react-amap';
 import { Link } from 'react-router';
 
-export default function Cover(props) {
+export default function Cover() {
   const elemeAdd = {
     longitude: 121.3807354258945,
     latitude: 31.231765630889992
@@ -11,7 +11,7 @@ export default function Cover(props) {
     <div className="cover-map">
       <Map
         zoom={18}
-        features={['bg','road','building']}
+        features={['bg', 'road', 'building']}
         mapStyle={'fresh'}
         center={elemeAdd}
       />
@@ -29,5 +29,5 @@ export default function Cover(props) {
         Make AMap Great Again
       </div>
     </div>
-  </div>
+  </div>;
 }

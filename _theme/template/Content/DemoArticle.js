@@ -2,37 +2,37 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import DemoItem from './DemoItem';
 
-export default class DemoArticle extends React.Component{
-  constructor(){
+export default class DemoArticle extends React.Component {
+  constructor() {
     super();
     this.state = {
-      isWide: true,
+      isWide: true
     };
     this.changeLayout = this.changeLayout.bind(this);
   }
-  
-  componentWillMount(){
+
+  componentWillMount() {
     this.changeLayout();
     window.addEventListener('resize', this.changeLayout);
   }
-  
-  shouldComponentUpdate(nextProps, nextState){
-    return ((this.state.isWide !== nextState.isWide)
-      || (this.props.routeParams.doc !== nextProps.routeParams.doc));
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return ((this.state.isWide !== nextState.isWide) ||
+      (this.props.routeParams.doc !== nextProps.routeParams.doc));
   }
-  
-  changeLayout(){
+
+  changeLayout() {
     const width = document.body.clientWidth;
     const isWide = width > 800;
     this.setState({
-      isWide,
+      isWide
     });
   }
-  
-  componentWillUnmount(){
+
+  componentWillUnmount() {
     window.removeEventListener('resize', this.changeLayout);
   }
-  render(){
+  render() {
     const props = this.props;
     const pageData = props.pageData;
     const demoComponent = Object.keys(pageData.demo).map(key => pageData.demo[key])
@@ -47,7 +47,7 @@ export default class DemoArticle extends React.Component{
           code={props.utils.toReactComponent(item.highlightedCode)}
           isWide={this.state.isWide}
         >
-          { this.state.isWide ? item.preview(React, ReactDOM): null}
+          { this.state.isWide ? item.preview(React, ReactDOM) : null}
         </DemoItem>);
       });
     const pageContent = pageData.index.content;
@@ -64,6 +64,6 @@ export default class DemoArticle extends React.Component{
       <div className="page-api">
         {props.utils.toReactComponent(pageAPI)}
       </div>
-    </div>
+    </div>;
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { findDOMNode, render } from 'react-dom';
+import { render } from 'react-dom';
 import isFun from '../../lib/utils/isFun';
 import toCapitalString from '../../lib/utils/toCapitalString';
 import log from '../../lib/utils/log';
@@ -20,7 +20,7 @@ const Children = React.Children;
 
 const defaultOpts = {
   offset: [0, -30],
-  closeWhenClickMap: false,
+  closeWhenClickMap: false
 };
 
 const configurableProps = [
@@ -29,16 +29,16 @@ const configurableProps = [
   'size',
   /* 以下属性是本插件的扩展 */
   'visible',
-  
+
   /* 这个 setOffset  方法高德并没有明确在文档中列出来，不确定会不会撤销 */
-  'offset',
+  'offset'
 ];
 
 const allProps = configurableProps.concat([
   'isCustom',
   'autoMove',
   'closeWhenClickMap',
-  'showShadow',
+  'showShadow'
 ]);
 
 class InfoWindow extends Component {
@@ -53,12 +53,12 @@ class InfoWindow extends Component {
       this.createInfoWindow(props);
     }
   }
-  
+
   componentDidMount() {
     if (this.map) {
       const props = this.props;
       if ('visible' in props) {
-        if (!!props.visible) {
+        if (props.visible) {
           this.showWindow();
           this.setClassName(props);
           this.setChild(props);
@@ -68,24 +68,24 @@ class InfoWindow extends Component {
       }
     }
   }
-  
-  shouldComponentUpdate(){
+
+  shouldComponentUpdate() {
     return false;
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.map) {
       this.refreshWindowLayout(nextProps);
     }
   }
-  
+
   createInfoWindow(props) {
     const options = this.buildCreateOptions(props);
     this.infoWindow = new window.AMap.InfoWindow(options);
     const events = this.exposeWindowInstance(props);
     events && this.bindWindowEvents(events);
   }
-  
+
   refreshWindowLayout(nextProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
@@ -107,36 +107,36 @@ class InfoWindow extends Component {
     this.setChild(nextProps);
     this.setClassName(nextProps);
   }
-  
+
   checkPropChanged(key, nextProps) {
     return this.props[key] !== nextProps[key];
   }
-  
+
   showWindow() {
     this.infoWindow.open(this.map, this.infoWindow.getPosition());
   }
-  
+
   closeWindow() {
     this.infoWindow.close();
   }
-  
+
   buildCreateOptions(props) {
     const options = {};
-  
+
     // 如果开发者没有设置 isCustom 属性，默认设置为 false
     if ('isCustom' in props) {
       options.isCustom = !!props.isCustom;
     } else {
       options.isCustom = false;
     }
-  
+
     if ('content' in props) {
       options.content = props.content;
     } else {
       this.infoDOM = document.createElement('div');
       options.content = this.infoDOM;
     }
-  
+
     // if (options.isCustom) {
     //   if ('content' in props) {
     //     options.content = props.content;
@@ -162,7 +162,7 @@ class InfoWindow extends Component {
     });
     return options;
   }
-  
+
   getSetterValue(key, value) {
     if (key === 'size') {
       return getAMapSize(value);
@@ -175,7 +175,7 @@ class InfoWindow extends Component {
     }
     return value;
   }
-  
+
   exposeWindowInstance(props) {
     if ('events' in props) {
       const events = props.events || {};
@@ -187,14 +187,14 @@ class InfoWindow extends Component {
     }
     return false;
   }
-  
+
   bindWindowEvents(events) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.infoWindow.on(evName, events[evName]);
     });
   }
-  
+
   setChild(props) {
     const child = props.children;
     if (this.infoDOM && child) {
@@ -209,7 +209,7 @@ class InfoWindow extends Component {
       }
     }
   }
-  
+
   setClassName(props) {
     let baseClsValue = '';
     if (props.isCustom === true) {
@@ -223,7 +223,7 @@ class InfoWindow extends Component {
       this.infoDOM.className = baseClsValue;
     }
   }
-  
+
   render() {
     return (null);
   }

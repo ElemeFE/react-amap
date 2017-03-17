@@ -1,7 +1,6 @@
-import React, { Component, Children } from 'react';
+import React, { Component } from 'react';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
-import CircleEditor from '../../components/circleeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
 import { getAMapPosition } from '../../lib/utils/utils';
 /*
@@ -18,8 +17,8 @@ const defaultOpts = {
     strokeWeight: 4,
     fillColor: '#ee2200',
     fillOpacity: 0.35,
-    strokeStyle: 'solid',
-  },
+    strokeStyle: 'solid'
+  }
 };
 
 const configurableProps = [
@@ -27,15 +26,15 @@ const configurableProps = [
   'radius',
   'draggable',
   'extData',
-  
+
   /* 原生的接口中并没有这些对象，这是本组件的扩展 */
   'visible',
-  'style',
+  'style'
 ];
 
 const allProps = configurableProps.concat([
   'zIndex',
-  'bubble',
+  'bubble'
 ]);
 
 class Circle extends Component {
@@ -49,27 +48,27 @@ class Circle extends Component {
       this.initMapCircle(props);
     }
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.map) {
       this.refreshCircleLayout(nextProps);
     }
   }
-  
+
   initMapCircle(props) {
     const options = this.buildCreateOptions(props);
     options.map = this.map;
     this.mapCircle = new window.AMap.Circle(options);
     const events = this.exposeCircleInstance(props);
     events && this.bindCircleEvents(events);
-    
+
     if ('visible' in props) {
       if (!props.visible) {
         this.mapCircle.hide();
       }
     }
   }
-  
+
   buildCreateOptions(props) {
     const options = {};
     allProps.forEach((key) => {
@@ -88,7 +87,7 @@ class Circle extends Component {
     });
     return options;
   }
-  
+
   refreshCircleLayout(nextProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
@@ -110,18 +109,18 @@ class Circle extends Component {
       }
     });
   }
-  
+
   checkPropChanged(key, nextProps) {
     return this.props[key] !== nextProps[key];
   }
-  
+
   getSetterValue(key, props) {
     if (key === 'center') {
       return getAMapPosition(props.center);
     }
     return props[key];
   }
-   
+
   exposeCircleInstance(props) {
     if ('events' in props) {
       const events = props.events || {};
@@ -133,14 +132,14 @@ class Circle extends Component {
     }
     return false;
   }
-  
+
   bindCircleEvents(events) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.mapCircle.on(evName, events[evName]);
     });
   }
-  
+
   renderEditor(children) {
     if (!children) {
       return null;
@@ -151,10 +150,10 @@ class Circle extends Component {
     return React.cloneElement(React.Children.only(children), {
       __circle__: this.mapCircle,
       __map__: this.map,
-      __ele__: this.element,
+      __ele__: this.element
     });
   }
-  
+
   render() {
     return (this.renderEditor(this.props.children));
   }
