@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/react-amap.js",
   "scripts": {
+    "lint": "eslint . --quiet",
     "build": "webpack && NODE_ENV=production webpack",
     "site": "bisheng build",
     "deploy": "bisheng gh-pages",
@@ -28,6 +29,9 @@
     "bisheng-plugin-react": "0.2.2",
     "css-loader": "^0.26.1",
     "dora-plugin-proxy": "^0.8.5",
+    "eslint": "^3.17.1",
+    "eslint-config-elemefe": "^0.2.0",
+    "eslint-plugin-react": "^6.10.0",
     "extract-text-webpack-plugin": "^2.0.0",
     "file-loader": "^0.10.0",
     "html-webpack-plugin": "^2.28.0",
