@@ -18,6 +18,6 @@ export default class DemoItem extends React.Component {
             </Col> : null
         }
       </Row>
-    </div>
+    </div>;
   }
 };

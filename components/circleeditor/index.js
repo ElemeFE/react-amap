@@ -5,7 +5,7 @@ import isFun from '../../lib/utils/isFun';
 class CircleEditor extends React.Component {
   constructor(props) {
     super(props);
-    if (!(props.__map__ && props.__circle__ )) {
+    if (!(props.__map__ && props.__circle__)) {
       log.warning('CIRCLE_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
@@ -15,13 +15,13 @@ class CircleEditor extends React.Component {
       this.onPropsUpdate(props);
     }
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.map) {
       this.onPropsUpdate(nextProps);
     }
   }
-  
+
   onPropsUpdate(props) {
     if ('active' in props && props.active === false) {
       this.toggleActive(false);
@@ -29,7 +29,7 @@ class CircleEditor extends React.Component {
       this.toggleActive(true, props);
     }
   }
-  
+
   toggleActive(active, props) {
     if (active) {
       if (!this.editorActive) {
@@ -41,34 +41,34 @@ class CircleEditor extends React.Component {
       }
     }
   }
-  
+
   activeEditor(props) {
     this.loadCircleEditor(props).then((editor) => {
       this.editorActive = true;
       editor.open();
     });
   }
-  
+
   inactiveEditor() {
     this.editorActive = false;
     if (this.circleEditor) {
       this.circleEditor.close();
     }
   }
-  
+
   loadCircleEditor(props) {
     if (this.circleEditor) {
       return new Promise((resolve) => {
         resolve(this.circleEditor);
       });
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.map.plugin(['AMap.CircleEditor'], () => {
         resolve(this.createEditorInstance(props));
       });
     });
   }
-  
+
   createEditorInstance(props) {
     this.circleEditor = new window.AMap.CircleEditor(
       this.map, this.circle
@@ -77,7 +77,7 @@ class CircleEditor extends React.Component {
     events && this.bindEditorEvents(events);
     return this.circleEditor;
   }
-  
+
   exposeEditorInstance(props) {
     if ('events' in props) {
       const events = props.events || {};
@@ -89,14 +89,14 @@ class CircleEditor extends React.Component {
     }
     return false;
   }
-  
+
   bindEditorEvents(events) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.circleEditor.on(evName, events[evName]);
     });
   }
-  
+
   render() {
     return null;
   }

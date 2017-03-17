@@ -6,20 +6,20 @@ module.exports = {
   entry: {
     index: {
       theme: './_theme',
-      htmlTemplate: './_theme/static/template.html',
+      htmlTemplate: './_theme/static/template.html'
     }
   },
   plugins: [
     'bisheng-plugin-react?lang=__react',
-    'bisheng-plugin-antd',
+    'bisheng-plugin-antd'
   ],
   // htmlTemplate: './_theme/static/template.html',
   port: 9001,
   webpackConfig(config) {
     config.resolve.alias = {
       'react-amap': path.join(process.cwd(), 'lib'),
-      'react-router': 'react-router/umd/ReactRouter',
-  
+      'react-router': 'react-router/umd/ReactRouter'
+
     };
     return config;
   },

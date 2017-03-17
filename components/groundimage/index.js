@@ -11,20 +11,20 @@ const Component = React.Component;
 const defaultOpts = {
   clickable: false,
   opacity: 1,
-  visible: true,
+  visible: true
 };
 
 const configurableProps = [
   'opacity',
   'src',
   'bounds',
-  
+
   /* 扩展属性 */
-  'visible',
+  'visible'
 ];
 
 const allProps = configurableProps.concat([
-  'clickable',
+  'clickable'
 ]);
 
 class GroundImage extends Component {
@@ -38,26 +38,26 @@ class GroundImage extends Component {
       this.createGroundImage(props);
     }
   }
-  
-  shouldComponentUpdate(){
+
+  shouldComponentUpdate() {
     return false;
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.map) {
       this.refreshGroundImage(nextProps);
     }
   }
-  
+
   refreshGroundImage(nextProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
         if (this.checkPropsChanged(nextProps, key)) {
           if (key === 'visible') {
             this.setVisible(nextProps);
-          } else if(key === 'opacity') {
+          } else if (key === 'opacity') {
             this.setOpacity(nextProps);
-          } else if(key === 'src') {
+          } else if (key === 'src') {
             this.setImageUrl(nextProps);
           } else if (key === 'bounds') {
             this.setBounds(nextProps);
@@ -66,21 +66,21 @@ class GroundImage extends Component {
       }
     });
   }
-  
+
   setBounds(nextProps) {
     // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
     if ('setBounds' in this.image) {
       this.image.setBounds(this.buildBounds(nextProps));
     }
   }
-  
+
   setImageUrl(nextProps) {
     // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
     if ('setImageUrl' in this.image) {
       this.image.setImageUrl(nextProps.src);
     }
   }
-  
+
   setVisible(nextProps) {
     // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
     if ('show' in this.image) {
@@ -91,18 +91,18 @@ class GroundImage extends Component {
       }
     }
   }
-  
+
   setOpacity(nextProps) {
     this.image.setOpacity(nextProps.opacity);
   }
-  
+
   checkPropsChanged(nextProps, key) {
     // if (key === 'bounds') {
     //   return this.checkBoundsChange(nextProps);
     // }
     return this.props[key] !== nextProps[key];
   }
-  
+
   createGroundImage(props) {
     let src, bounds, opacity, clickable;
     if ('src' in props) {
@@ -115,7 +115,7 @@ class GroundImage extends Component {
     } else {
       log.warning('BOUNDS_REQUIRED', true);
     }
-    
+
     if ('clickable' in props) {
       clickable = props.clickable;
     } else {
@@ -129,12 +129,12 @@ class GroundImage extends Component {
     this.image = new window.AMap.GroundImage(src, bounds, {
       map: this.map,
       clickable,
-      opacity,
+      opacity
     });
     const events = this.exopseImageInstance(props);
     events && this.bindEvents(events);
   }
-  
+
   exopseImageInstance(props) {
     if ('events' in props) {
       const events = props.events || {};
@@ -145,16 +145,16 @@ class GroundImage extends Component {
     }
     return false;
   }
-  
+
   bindEvents(events) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       if (evName !== 'created') {
         this.image.on(evName, events[evName]);
       }
-    })
+    });
   }
-  
+
   // checkBoundsChange(nextProps) {
   //   let changed = true;
   //   const nextBounds = this.buildBounds(nextProps);
@@ -167,8 +167,7 @@ class GroundImage extends Component {
   //   }
   //   return changed;
   // }
-  
-  
+
   buildBounds(props) {
     const rawBounds = props.bounds;
     if (!rawBounds) {
@@ -183,7 +182,7 @@ class GroundImage extends Component {
     );
     return bounds;
   }
-  
+
   render() {
     return (null);
   }

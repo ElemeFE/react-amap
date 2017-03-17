@@ -3,15 +3,15 @@ import ComponentsMenu from './ComponentsMenu';
 import ArticlesMenu from './ArticlesMenu';
 
 export default class SideMenu extends React.Component {
-  constructor(){
+  constructor() {
     super();
     this.changeMenuLayout = this.changeMenuLayout.bind(this);
     this.state = {
-      mode: 'inline',
+      mode: 'inline'
     };
   }
-  
-  changeMenuLayout(){
+
+  changeMenuLayout() {
     const width = document.body.clientWidth;
     let mode;
     if (width < 800) {
@@ -20,26 +20,26 @@ export default class SideMenu extends React.Component {
       mode = 'inline';
     }
     this.setState({
-      mode,
+      mode
     });
   }
-  componentWillMount(){
+  componentWillMount() {
     this.changeMenuLayout();
     window.addEventListener('resize', this.changeMenuLayout);
   }
-  
-  componentDidMount(){
+
+  componentDidMount() {
   }
-  
-  componentWillUnmount(){
+
+  componentWillUnmount() {
     window.removeEventListener('resize', this.changeMenuLayout);
   }
-  render(){
+  render() {
     const { data, defaultSelectedKey, type} = this.props;
     if (type === 'components') {
-      return <ComponentsMenu mode={this.state.mode} data={data.components} defaultSelectedKey={defaultSelectedKey}/>
-    } else if(type === 'articles') {
-      return <ArticlesMenu mode={this.state.mode} data={data.articles}  defaultSelectedKey={defaultSelectedKey} />
+      return <ComponentsMenu mode={this.state.mode} data={data.components} defaultSelectedKey={defaultSelectedKey}/>;
+    } else if (type === 'articles') {
+      return <ArticlesMenu mode={this.state.mode} data={data.articles} defaultSelectedKey={defaultSelectedKey} />;
     }
   }
 }

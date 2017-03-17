@@ -1,5 +1,4 @@
 import React from 'react';
-import { render } from 'react-dom';
 import APILoader from '../../lib/utils/APILoader';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
@@ -32,7 +31,7 @@ const ComponentList = [
   Markers,
   Marker,
   Polyline,
-  Polygon,
+  Polygon
 ];
 
 const configurableProps = [
@@ -45,7 +44,7 @@ const configurableProps = [
   'mapStyle',
   'features',
   'cursor',
-  'defaultLayer',
+  'defaultLayer'
 ];
 
 const allProps = configurableProps.concat([
@@ -72,30 +71,30 @@ const defaultOpts = {
   MapType: {
     showRoad: false,
     showTraffic: false,
-    defaultType: 0,
+    defaultType: 0
   },
   ToolBar: {
     position: 'RB',
     noIpLocate: true,
     locate: true,
     liteStyle: true,
-    autoPosition: false,
+    autoPosition: false
   },
-  OverView: {},
+  OverView: {}
 };
 
 class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapLoaded: false,
+      mapLoaded: false
     };
     this.pluginMap = {};
     this.prevCenter = undefined;
     this.prevZoom = undefined;
     this.loader = new APILoader(props.amapkey).load();
   }
-  
+
   componentWillReceiveProps(nextProps) {
     const prevProps = this.props;
     this.loader.then(() => {
@@ -106,26 +105,26 @@ class Map extends Component {
       }
     });
   }
-  
+
   componentDidMount() {
     this.loadMap();
   }
-  
+
   componentDidUpdate() {
     this.loadMap();
   }
-  
+
   loadMap() {
     this.loader.then(() => {
       this.initMapInstance();
       if (!this.state.mapLoaded) {
         this.setState({
-          mapLoaded: true,
+          mapLoaded: true
         });
       }
     });
   }
-  
+
   renderChildren() {
     return Children.map(this.props.children, (child) => {
       if (child) {
@@ -134,13 +133,13 @@ class Map extends Component {
         }
         return React.cloneElement(child, {
           __map__: this.map,
-          __ele__: this.mapWrapper,
-        })
+          __ele__: this.mapWrapper
+        });
       }
       return child;
     });
   }
-  
+
   initMapInstance() {
     if (!this.map) {
       // let opts = {};
@@ -164,7 +163,7 @@ class Map extends Component {
       const events = this.exposeMapInstance();
       events && this.bindAMapEvents(events);
       this.setPlugins(this.props);
-      
+
       if ('rotateEnable' in this.props) {
         if (typeof this.props.rotateEnable === 'number') {
           this.map.setRotation(this.props.rotateEnable);
@@ -172,7 +171,7 @@ class Map extends Component {
       }
     }
   }
-  
+
   buildCreateOptions() {
     const props = this.props;
     const options = {};
@@ -191,14 +190,14 @@ class Map extends Component {
     });
     return options;
   }
-  
-  bindAMapEvents(events){
-    const list = Object.keys( events );
+
+  bindAMapEvents(events) {
+    const list = Object.keys(events);
     list.length && list.forEach((evName) => {
-      this.map.on(evName,events[evName]);
+      this.map.on(evName, events[evName]);
     });
   }
-  
+
   refreshMapLayout(prevProps, nextProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
@@ -210,44 +209,44 @@ class Map extends Component {
       }
     });
   }
-  
+
   getSetterParam(key, props) {
     if (key === 'center') {
       return getAMapPosition(props.center);
     }
     return props[key];
   }
-  
+
   getSetterName(key) {
     if (key === 'labelzIndex') {
       return 'setlabelzIndex';
-    } else if( key === 'cursor') {
+    } else if (key === 'cursor') {
       return 'setDefaultCursor';
     } else if (key === 'rotateEnable') {
       return 'setRotation';
     }
-    return `set${toCapitalString(key)}`
+    return `set${toCapitalString(key)}`;
   }
-  
+
   detectPropChanged(key, prevProps, nextProps) {
     return prevProps[key] !== nextProps[key];
   }
-  
+
   setZoomAndCenter(props) {
     if ((this.prevCenter === props.center) && (this.prevZoom === props.zoom)) {
       // do nothing
     } else {
       this.prevCenter = props.center;
       this.prevZoom = props.zoom;
-      let zoomChange = false,
-        centerChange = false,
-        newCenter;
+      let zoomChange = false;
+      let centerChange = false;
+      let newCenter;
       if ('zoom' in props) {
         if (props.zoom !== this.map.getZoom()) {
           zoomChange = true;
         }
       }
-      
+
       if ('center' in props) {
         newCenter = new window.AMap.LngLat(props.center.longitude, props.center.latitude);
         if (props.center !== this.props.center) {
@@ -267,7 +266,7 @@ class Map extends Component {
       }
     }
   }
-  
+
   setPlugins(props) {
     const pluginList = ['Scale', 'ToolBar', 'MapType', 'OverView'];
     if ('plugins' in props) {
@@ -282,7 +281,7 @@ class Map extends Component {
           } else {
             name = p.name;
             config = p.options;
-            visible = (('visible' in config) && (typeof config.visible === 'boolean')) ? config.visible: true;
+            visible = (('visible' in config) && (typeof config.visible === 'boolean')) ? config.visible : true;
             delete config.visible;
           }
           const idx = pluginList.indexOf(name);
@@ -299,20 +298,20 @@ class Map extends Component {
     }
     this.removeOrDisablePlugins(pluginList);
   }
-  
+
   removeOrDisablePlugins(plugins) {
     if (plugins && plugins.length) {
       plugins.forEach((p) => {
         if (p in this.pluginMap) {
           this.pluginMap[p].hide();
         }
-      })
+      });
     }
   }
-  
+
   installPlugin(name, opts) {
     opts = opts || {};
-    switch(name) {
+    switch (name) {
       case 'Scale':
         this.setScalePlugin(opts);
         break;
@@ -329,7 +328,7 @@ class Map extends Component {
       // do nothing
     }
   }
-  
+
   setMapTypePlugin(opts) {
     if (this.pluginMap['MapType']) {
       this.pluginMap.MapType.show();
@@ -345,7 +344,7 @@ class Map extends Component {
       });
     }
   }
-  
+
   setOverviewPlugin(opts) {
     if (this.pluginMap['OverView']) {
       this.pluginMap.OverView.show();
@@ -361,7 +360,7 @@ class Map extends Component {
       });
     }
   }
-  
+
   setScalePlugin(opts) {
     if (this.pluginMap['Scale']) {
       this.pluginMap.Scale.show();
@@ -375,7 +374,7 @@ class Map extends Component {
       });
     }
   }
-  
+
   setToolbarPlugin(opts) {
     if (this.pluginMap['ToolBar']) {
       this.pluginMap.ToolBar.show();
@@ -391,7 +390,7 @@ class Map extends Component {
       });
     }
   }
-  
+
   // 用户可以通过 onCreated 事件获取 map 实例
   exposeMapInstance() {
     if ('events' in this.props) {
@@ -404,10 +403,10 @@ class Map extends Component {
     }
     return false;
   }
-  
+
   render() {
     return (<div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      <div ref={(div)=>{this.mapWrapper = div }} style={{ width: '100%', height: '100%' }}>
+      <div ref={(div)=>{this.mapWrapper = div; }} style={{ width: '100%', height: '100%' }}>
         <div style={{ background: '#eee', width: '100%', height: '100%' }}></div>
       </div>
       <div>
