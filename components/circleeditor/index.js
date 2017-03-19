@@ -21,7 +21,7 @@ class CircleEditor extends React.Component {
   
   constructor(props: EditorProps) {
     super(props);
-    if (!(props.__map__ && props.__circle__ )) {
+    if (!(props.__map__ && props.__circle__)) {
       log.warning('CIRCLE_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
@@ -64,7 +64,7 @@ class CircleEditor extends React.Component {
       editor.open();
     });
   }
-  
+
   inactiveEditor() {
     this.editorActive = false;
     if (this.circleEditor) {
@@ -78,7 +78,7 @@ class CircleEditor extends React.Component {
         resolve(this.circleEditor);
       });
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.map.plugin(['AMap.CircleEditor'], () => {
         resolve(this.createEditorInstance(props));
       });
@@ -112,7 +112,7 @@ class CircleEditor extends React.Component {
       this.circleEditor.on(evName, events[evName]);
     });
   }
-  
+
   render() {
     return null;
   }

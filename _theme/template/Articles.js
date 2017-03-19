@@ -3,7 +3,7 @@ import Layout from './Layout';
 import SideMenu from './Menu/SideMenu';
 import PureArticle from './Content/PureArticle';
 
-export default function Article (props){
+export default function Article(props) {
   const pageData = props.pageData;
   return <Layout route={props.route}>
     <div id="doc">
@@ -18,5 +18,5 @@ export default function Article (props){
         <PureArticle pageData={pageData} utils={props.utils}/>
       </article>
     </div>
-  </Layout>
+  </Layout>;
 }

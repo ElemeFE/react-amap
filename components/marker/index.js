@@ -61,8 +61,8 @@ class Marker extends Component {
       this.createMarker(props);
     }
   }
-  
-  shouldComponentUpdate(){
+
+  shouldComponentUpdate() {
     return false;
   }
   
@@ -71,7 +71,7 @@ class Marker extends Component {
       this.refreshMarkerLayout(nextProps);
     }
   }
-  
+
   componentDidMount() {
     if (this.map) {
       this.setChildComponent(this.props);
@@ -83,16 +83,16 @@ class Marker extends Component {
     this.marker = new window.AMap.Marker(options);
     const events = this.exposeMarkerInstance(props);
     events && this.bindMarkerEvents(events);
-    
-    this.marker.render = (function(marker){
-      return function(component){
+
+    this.marker.render = (function(marker) {
+      return function(component) {
         renderMarkerComponent(component, marker);
-      }
+      };
     })(this.marker);
-  
+
     this.setMarkerLayout(props);
   }
-  
+
   // 在创建实例时根据传入配置，设置初始化选项
   buildCreateOptions(props: MarkerProps) {
     let opts = {};
@@ -104,7 +104,7 @@ class Marker extends Component {
     opts.map = this.map;
     return opts;
   }
-  
+
   // 初始化标记的外观
   setMarkerLayout(props: MarkerProps) {
     if (('render' in props) || ('children' in props)) {
@@ -155,11 +155,11 @@ class Marker extends Component {
     if (key === 'position') {
       return getAMapPosition(val);
     } else if (key === 'offset') {
-      return getAMapPixel(val)
+      return getAMapPixel(val);
     }
     return val;
   }
-  
+
   // 获取设置属性的方法
   getSetterName(key: string) {
     switch(key) {
@@ -190,8 +190,8 @@ class Marker extends Component {
       });
     });
   }
-  
-  render(){
+
+  render() {
     return null;
   }
 }

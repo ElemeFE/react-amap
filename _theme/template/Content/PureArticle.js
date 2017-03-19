@@ -9,5 +9,5 @@ export default function PureArticle(props) {
     <div className="page-content">
       {props.utils.toReactComponent(pageContent)}
     </div>
-  </div>
+  </div>;
 };

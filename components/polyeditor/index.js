@@ -21,7 +21,7 @@ class PolyEditor extends React.Component {
   
   constructor(props: EditorProps) {
     super(props);
-    if (!(props.__map__ && props.__poly__ )) {
+    if (!(props.__map__ && props.__poly__)) {
       log.warning('MAP_INSTANCE_REQUIRED');
     } else {
       this.map = props.__map__;
@@ -64,7 +64,7 @@ class PolyEditor extends React.Component {
       editor.open();
     });
   }
-  
+
   inactiveEditor() {
     this.editorActive = false;
     if (this.polyEditor) {
@@ -78,7 +78,7 @@ class PolyEditor extends React.Component {
         resolve(this.polyEditor);
       });
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.map.plugin(['AMap.PolyEditor'], () => {
         resolve(this.createEditorInstance(props));
       });
@@ -112,7 +112,7 @@ class PolyEditor extends React.Component {
       this.polyEditor.on(evName, events[evName]);
     });
   }
-  
+
   render() {
     return null;
   }

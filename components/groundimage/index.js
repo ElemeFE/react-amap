@@ -12,20 +12,20 @@ const Component = React.Component;
 const defaultOpts = {
   clickable: false,
   opacity: 1,
-  visible: true,
+  visible: true
 };
 
 const configurableProps = [
   'opacity',
   'src',
   'bounds',
-  
+
   /* 扩展属性 */
-  'visible',
+  'visible'
 ];
 
 const allProps = configurableProps.concat([
-  'clickable',
+  'clickable'
 ]);
 
 type GIProps = {
@@ -55,8 +55,8 @@ class GroundImage extends Component {
       this.createGroundImage(props);
     }
   }
-  
-  shouldComponentUpdate(){
+
+  shouldComponentUpdate() {
     return false;
   }
   
@@ -72,9 +72,9 @@ class GroundImage extends Component {
         if (this.checkPropsChanged(nextProps, key)) {
           if (key === 'visible') {
             this.setVisible(nextProps);
-          } else if(key === 'opacity') {
+          } else if (key === 'opacity') {
             this.setOpacity(nextProps);
-          } else if(key === 'src') {
+          } else if (key === 'src') {
             this.setImageUrl(nextProps);
           } else if (key === 'bounds') {
             this.setBounds(nextProps);
@@ -132,7 +132,7 @@ class GroundImage extends Component {
     } else {
       log.warning('BOUNDS_REQUIRED', true);
     }
-    
+
     if ('clickable' in props) {
       clickable = props.clickable;
     } else {
@@ -146,7 +146,7 @@ class GroundImage extends Component {
     this.image = new window.AMap.GroundImage(src, bounds, {
       map: this.map,
       clickable,
-      opacity,
+      opacity
     });
     const events = this.exopseImageInstance(props);
     events && this.bindEvents(events);
@@ -169,9 +169,9 @@ class GroundImage extends Component {
       if (evName !== 'created') {
         this.image.on(evName, events[evName]);
       }
-    })
+    });
   }
-  
+
   // checkBoundsChange(nextProps) {
   //   let changed = true;
   //   const nextBounds = this.buildBounds(nextProps);
@@ -184,7 +184,6 @@ class GroundImage extends Component {
   //   }
   //   return changed;
   // }
-  
   
   buildBounds(props: GIProps) {
     const rawBounds = props.bounds;
@@ -200,7 +199,7 @@ class GroundImage extends Component {
     );
     return bounds;
   }
-  
+
   render() {
     return (null);
   }

@@ -2,7 +2,6 @@
 import React, { Component, Children } from 'react';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
-import CircleEditor from '../../components/circleeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
 import { getAMapPosition } from '../../lib/utils/utils';
 /*
@@ -19,8 +18,8 @@ const defaultOpts = {
     strokeWeight: 4,
     fillColor: '#ee2200',
     fillOpacity: 0.35,
-    strokeStyle: 'solid',
-  },
+    strokeStyle: 'solid'
+  }
 };
 
 const configurableProps = [
@@ -28,15 +27,15 @@ const configurableProps = [
   'radius',
   'draggable',
   'extData',
-  
+
   /* 原生的接口中并没有这些对象，这是本组件的扩展 */
   'visible',
-  'style',
+  'style'
 ];
 
 const allProps = configurableProps.concat([
   'zIndex',
-  'bubble',
+  'bubble'
 ]);
 
 type CircleProps = {
@@ -84,7 +83,7 @@ class Circle extends Component {
     this.mapCircle = new window.AMap.Circle(options);
     const events = this.exposeCircleInstance(props);
     events && this.bindCircleEvents(events);
-    
+
     if ('visible' in props) {
       if (!props.visible) {
         this.mapCircle.hide();
@@ -174,10 +173,10 @@ class Circle extends Component {
     return React.cloneElement(React.Children.only(children), {
       __circle__: this.mapCircle,
       __map__: this.map,
-      __ele__: this.element,
+      __ele__: this.element
     });
   }
-  
+
   render() {
     return (this.renderEditor(this.props.children));
   }
