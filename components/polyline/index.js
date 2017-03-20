@@ -1,15 +1,10 @@
+// @flow
 import React from 'react';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
 import PolyEditor from '../../components/polyeditor';
 import toCapitalString from '../../lib/utils/toCapitalString';
 import { getAMapPosition } from '../../lib/utils/utils';
-/*
- * props
- * {
- *  __map__ 父级组件传过来的地图实例
- * }
- */
 
 const Component = React.Component;
 
@@ -29,8 +24,27 @@ const allProps = configurableProps.concat([
   'showDir'
 ]);
 
+type LineProps = {
+  path: PolylinePath,
+  extData?: any,
+  draggable?: boolean,
+  visible?: boolean,
+  style?: Object,
+  zIndex?: number,
+  bubble?: boolean,
+  showDir?: boolean,
+  __ele__: HTMLElement,
+  __map__: Object,
+  events: Object
+};
+
 class Polyline extends Component {
-  constructor(props) {
+
+  map : Object;
+  polyline: Object;
+  element: HTMLElement;
+
+  constructor(props: LineProps) {
     super(props);
     if (!props.__map__) {
       log.warning('MAP_INSTANCE_REQUIRED');
@@ -41,13 +55,13 @@ class Polyline extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: LineProps) {
     if (this.map) {
       this.refreshPolylineLayout(nextProps);
     }
   }
 
-  createMapPolyline(props) {
+  createMapPolyline(props: LineProps) {
     const options = this.buildCreateOptions(props);
     options.map = this.map;
     this.polyline = new window.AMap.Polyline(options);
@@ -64,13 +78,14 @@ class Polyline extends Component {
     }
   }
 
-  buildCreateOptions(props) {
+  buildCreateOptions(props: LineProps) {
     const options = {};
     allProps.forEach((key) => {
       if (key in props) {
-        if (key === 'style') {
+        if ((key === 'style') && props.style) {
           const styleItem = Object.keys(props.style);
           styleItem.forEach((item) => {
+            // $FlowFixMe
             options[item] = props.style[item];
           });
           // visible 做特殊处理
@@ -82,7 +97,7 @@ class Polyline extends Component {
     return options;
   }
 
-  refreshPolylineLayout(nextProps) {
+  refreshPolylineLayout(nextProps: LineProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
         if (this.detectPropChanged(key, nextProps)) {
@@ -104,18 +119,18 @@ class Polyline extends Component {
     });
   }
 
-  detectPropChanged(key, nextProps) {
+  detectPropChanged(key: string, nextProps: LineProps) {
     return this.props[key] !== nextProps[key];
   }
 
-  getSetterValue(key, value) {
+  getSetterValue(key: string, value: any) {
     if (key === 'path') {
       return this.buildPathValue(value);
     }
     return value;
   }
 
-  buildPathValue(path) {
+  buildPathValue(path: PolylinePath) {
     if (path.length) {
       if ('getLng' in path[0]) {
         return path;
@@ -125,7 +140,7 @@ class Polyline extends Component {
     return path;
   }
 
-  exposeLineInstance(props) {
+  exposeLineInstance(props: LineProps) {
     if ('events' in props) {
       const events = props.events;
       if (isFun(events.created)) {
@@ -137,14 +152,14 @@ class Polyline extends Component {
     return false;
   }
 
-  bingLineEvents(events) {
+  bingLineEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.polyline.on(evName, events[evName]);
     });
   }
 
-  renderEditor(children) {
+  renderEditor(children: any) {
     if (!children) {
       return null;
     }

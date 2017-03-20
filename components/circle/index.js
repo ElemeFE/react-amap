@@ -45,21 +45,21 @@ type CircleProps = {
   radius: number,
   draggable?: boolean,
   extData: any,
-  visible?:boolean,
-  style?:Object,
-  zIndex?:number,
+  visible?: boolean,
+  style?: Object,
+  zIndex?: number,
   bubble: boolean,
-  events?:Object,
+  events?: Object,
   children: any,
 }
 
 class Circle extends Component {
-  
+
   props: CircleProps;
   map: Object;
   element: HTMLElement;
   mapCircle: Object;
-  
+
   constructor(props: CircleProps) {
     super(props);
     if (!props.__map__) {
@@ -70,13 +70,13 @@ class Circle extends Component {
       this.initMapCircle(props);
     }
   }
-  
+
   componentWillReceiveProps(nextProps: CircleProps) {
     if (this.map) {
       this.refreshCircleLayout(nextProps);
     }
   }
-  
+
   initMapCircle(props: CircleProps) {
     const options = this.buildCreateOptions(props);
     options.map = this.map;
@@ -90,7 +90,7 @@ class Circle extends Component {
       }
     }
   }
-  
+
   buildCreateOptions(props: CircleProps) {
     const options = {};
     allProps.forEach((key) => {
@@ -110,7 +110,7 @@ class Circle extends Component {
     });
     return options;
   }
-  
+
   refreshCircleLayout(nextProps: CircleProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
@@ -132,18 +132,18 @@ class Circle extends Component {
       }
     });
   }
-  
+
   checkPropChanged(key: string, nextProps: CircleProps) {
     return this.props[key] !== nextProps[key];
   }
-  
+
   getSetterValue(key: string, props: CircleProps) {
     if (key === 'center') {
       return getAMapPosition(props.center);
     }
     return props[key];
   }
-   
+
   exposeCircleInstance(props: CircleProps) {
     if ('events' in props) {
       const events = props.events || {};
@@ -155,14 +155,14 @@ class Circle extends Component {
     }
     return false;
   }
-  
+
   bindCircleEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.mapCircle.on(evName, events[evName]);
     });
   }
-  
+
   renderEditor(children: any) {
     if (!children) {
       return null;

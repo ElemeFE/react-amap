@@ -1,4 +1,5 @@
-declare type AMapLngLat= {
+/* eslint-disable */
+declare type AMapLngLat = {
   getLng: Function,
   getLat: Function,
 };
@@ -8,7 +9,6 @@ declare type PureLngLat = {
 };
 
 declare type LngLat = PureLngLat & AMapLngLat;
-
 
 declare type AMapSize = {
   getWidth: Function,
@@ -22,7 +22,6 @@ declare type PureSize = {
 
 declare type Size = AMapSize & PureSize;
 
-
 declare type AMapPixel = {
   getX: Function,
   getY: Function,
@@ -35,6 +34,8 @@ declare type Pixel = AMapPixel & PurePixel;
 declare type MarkerContent = string | HTMLElement;
 
 // TODO 如何区分 & 和 |
-declare type PolylinePath = PureLngLat[] & AMapLngLat[];
+// declare type PolylinePath = PureLngLat[] & AMapLngLat[];
+
+declare type PolylinePath = Array<PureLngLat> | Array<AMapLngLat>;
 
 declare type PolygonPath = PolylinePath | [ PolylinePath, PolylinePath ];

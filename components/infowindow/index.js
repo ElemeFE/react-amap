@@ -60,14 +60,13 @@ type IWProps = {
 };
 
 class InfoWindow extends Component {
-  
+
   map: Object;
   element: HTMLElement;
   isCustom: boolean;
   infoWindow: Object;
   infoDOM: HTMLElement;
-  
-  
+
   constructor(props: IWProps) {
     super(props);
     if (!props.__map__) {
@@ -98,20 +97,20 @@ class InfoWindow extends Component {
   shouldComponentUpdate() {
     return false;
   }
-  
+
   componentWillReceiveProps(nextProps: IWProps) {
     if (this.map) {
       this.refreshWindowLayout(nextProps);
     }
   }
-  
+
   createInfoWindow(props: IWProps) {
     const options = this.buildCreateOptions(props);
     this.infoWindow = new window.AMap.InfoWindow(options);
     const events = this.exposeWindowInstance(props);
     events && this.bindWindowEvents(events);
   }
-  
+
   refreshWindowLayout(nextProps: IWProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
@@ -133,7 +132,7 @@ class InfoWindow extends Component {
     this.setChild(nextProps);
     this.setClassName(nextProps);
   }
-  
+
   checkPropChanged(key: string, nextProps: IWProps) {
     return this.props[key] !== nextProps[key];
   }
@@ -145,7 +144,7 @@ class InfoWindow extends Component {
   closeWindow() {
     this.infoWindow.close();
   }
-  
+
   buildCreateOptions(props: IWProps) {
     const options = {};
 
@@ -188,7 +187,7 @@ class InfoWindow extends Component {
     });
     return options;
   }
-  
+
   getSetterValue(key: string, value: any) {
     if (key === 'size') {
       return getAMapSize(value);
@@ -201,7 +200,7 @@ class InfoWindow extends Component {
     }
     return value;
   }
-  
+
   exposeWindowInstance(props: IWProps) {
     if ('events' in props) {
       const events = props.events || {};
@@ -213,14 +212,14 @@ class InfoWindow extends Component {
     }
     return false;
   }
-  
+
   bindWindowEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.infoWindow.on(evName, events[evName]);
     });
   }
-  
+
   setChild(props: IWProps) {
     const child = props.children;
     if (this.infoDOM && child) {
@@ -235,7 +234,7 @@ class InfoWindow extends Component {
       }
     }
   }
-  
+
   setClassName(props: IWProps) {
     let baseClsValue = '';
     if (props.isCustom === true) {

@@ -77,7 +77,7 @@ const defaultOpts = {
 };
 
 type MapProps = {
-  key?: String,
+  amapkey?: String,
   children: any,
   events?: Object,
   center?: LngLat,
@@ -86,7 +86,7 @@ type MapProps = {
 }
 
 class Map extends Component {
-  
+
   props: MapProps;
   state: {
     mapLoaded: boolean,
@@ -97,8 +97,7 @@ class Map extends Component {
   loader: Object;
   map: Object;
   mapWrapper: HTMLElement;
-  
-  
+
   constructor(props: MapProps) {
     super(props);
     this.state = {
@@ -109,7 +108,7 @@ class Map extends Component {
     this.prevZoom = undefined;
     this.loader = new APILoader(props.amapkey).load();
   }
-  
+
   componentWillReceiveProps(nextProps: MapProps) {
     const prevProps = this.props;
     this.loader.then(() => {
@@ -205,14 +204,14 @@ class Map extends Component {
     });
     return options;
   }
-  
-  bindAMapEvents(events: Object){
+
+  bindAMapEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
       this.map.on(evName, events[evName]);
     });
   }
-  
+
   refreshMapLayout(prevProps: MapProps, nextProps: MapProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
@@ -224,14 +223,14 @@ class Map extends Component {
       }
     });
   }
-  
+
   getSetterParam(key: string, props: MapProps) {
     if (key === 'center') {
       return getAMapPosition(props.center);
     }
     return props[key];
   }
-  
+
   getSetterName(key: string) {
     if (key === 'labelzIndex') {
       return 'setlabelzIndex';
@@ -242,11 +241,11 @@ class Map extends Component {
     }
     return `set${toCapitalString(key)}`;
   }
-  
+
   detectPropChanged(key: string, prevProps: MapProps, nextProps: MapProps) {
     return prevProps[key] !== nextProps[key];
   }
-  
+
   setZoomAndCenter(props: MapProps) {
     if ((this.prevCenter === props.center) && (this.prevZoom === props.zoom)) {
       // do nothing
@@ -261,7 +260,7 @@ class Map extends Component {
           zoomChange = true;
         }
       }
-      
+
       if (('center' in props) && props.center) {
         newCenter = new window.AMap.LngLat(props.center.longitude, props.center.latitude);
         if (props.center !== this.props.center) {
@@ -281,7 +280,7 @@ class Map extends Component {
       }
     }
   }
-  
+
   setPlugins(props: MapProps) {
     const pluginList = ['Scale', 'ToolBar', 'MapType', 'OverView'];
     if ('plugins' in props) {
@@ -313,7 +312,7 @@ class Map extends Component {
     }
     this.removeOrDisablePlugins(pluginList);
   }
-  
+
   removeOrDisablePlugins(plugins: any[]) {
     if (plugins && plugins.length) {
       plugins.forEach((p) => {
@@ -323,7 +322,7 @@ class Map extends Component {
       });
     }
   }
-  
+
   installPlugin(name: string, opts: ?Object) {
     opts = opts || {};
     switch (name) {
@@ -343,7 +342,7 @@ class Map extends Component {
       // do nothing
     }
   }
-  
+
   setMapTypePlugin(opts: Object) {
     if (this.pluginMap['MapType']) {
       this.pluginMap.MapType.show();
@@ -359,7 +358,7 @@ class Map extends Component {
       });
     }
   }
-  
+
   setOverviewPlugin(opts: Object) {
     if (this.pluginMap['OverView']) {
       this.pluginMap.OverView.show();
@@ -375,7 +374,7 @@ class Map extends Component {
       });
     }
   }
-  
+
   setScalePlugin(opts: Object) {
     if (this.pluginMap['Scale']) {
       this.pluginMap.Scale.show();
@@ -389,7 +388,7 @@ class Map extends Component {
       });
     }
   }
-  
+
   setToolbarPlugin(opts: Object) {
     if (this.pluginMap['ToolBar']) {
       this.pluginMap.ToolBar.show();

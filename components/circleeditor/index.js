@@ -12,13 +12,13 @@ type EditorProps = {
 };
 
 class CircleEditor extends React.Component {
-  
+
   map: Object;
   element: HTMLElement;
   circle: Object;
   editorActive: boolean;
   circleEditor: Object;
-  
+
   constructor(props: EditorProps) {
     super(props);
     if (!(props.__map__ && props.__circle__)) {
@@ -31,13 +31,13 @@ class CircleEditor extends React.Component {
       this.onPropsUpdate(props);
     }
   }
-  
+
   componentWillReceiveProps(nextProps: EditorProps) {
     if (this.map) {
       this.onPropsUpdate(nextProps);
     }
   }
-  
+
   onPropsUpdate(props: EditorProps) {
     if ('active' in props && props.active === false) {
       this.toggleActive(false, props);
@@ -45,7 +45,7 @@ class CircleEditor extends React.Component {
       this.toggleActive(true, props);
     }
   }
-  
+
   toggleActive(active: boolean, props: EditorProps) {
     if (active) {
       if (!this.editorActive) {
@@ -57,7 +57,7 @@ class CircleEditor extends React.Component {
       }
     }
   }
-  
+
   activeEditor(props: EditorProps) {
     this.loadCircleEditor(props).then((editor) => {
       this.editorActive = true;
@@ -71,7 +71,7 @@ class CircleEditor extends React.Component {
       this.circleEditor.close();
     }
   }
-  
+
   loadCircleEditor(props: EditorProps) {
     if (this.circleEditor) {
       return new Promise((resolve) => {
@@ -84,7 +84,7 @@ class CircleEditor extends React.Component {
       });
     });
   }
-  
+
   createEditorInstance(props: EditorProps) {
     this.circleEditor = new window.AMap.CircleEditor(
       this.map, this.circle
@@ -93,7 +93,7 @@ class CircleEditor extends React.Component {
     events && this.bindEditorEvents(events);
     return this.circleEditor;
   }
-  
+
   exposeEditorInstance(props: EditorProps) {
     if ('events' in props) {
       const events = props.events || {};
@@ -105,7 +105,7 @@ class CircleEditor extends React.Component {
     }
     return false;
   }
-  
+
   bindEditorEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {

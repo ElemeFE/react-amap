@@ -12,13 +12,13 @@ type EditorProps = {
 };
 
 class PolyEditor extends React.Component {
-  
+
   map: Object;
   element: HTMLElement;
   poly: Object;
   editorActive: boolean;
   polyEditor: Object;
-  
+
   constructor(props: EditorProps) {
     super(props);
     if (!(props.__map__ && props.__poly__)) {
@@ -31,13 +31,13 @@ class PolyEditor extends React.Component {
       this.onPropsUpdate(props);
     }
   }
-  
+
   componentWillReceiveProps(nextProps: EditorProps) {
     if (this.map) {
       this.onPropsUpdate(nextProps);
     }
   }
-  
+
   onPropsUpdate(props: EditorProps) {
     if ('active' in props && props.active === false) {
       this.toggleActive(false, props);
@@ -45,7 +45,7 @@ class PolyEditor extends React.Component {
       this.toggleActive(true, props);
     }
   }
-  
+
   toggleActive(active: boolean, props: EditorProps) {
     if (active) {
       if (!this.editorActive) {
@@ -57,7 +57,7 @@ class PolyEditor extends React.Component {
       }
     }
   }
-  
+
   activeEditor(props: EditorProps) {
     this.loadPolyEditor(props).then((editor) => {
       this.editorActive = true;
@@ -71,7 +71,7 @@ class PolyEditor extends React.Component {
       this.polyEditor.close();
     }
   }
-  
+
   loadPolyEditor(props: EditorProps) {
     if (this.polyEditor) {
       return new Promise((resolve) => {
@@ -84,7 +84,7 @@ class PolyEditor extends React.Component {
       });
     });
   }
-  
+
   createEditorInstance(props: EditorProps) {
     this.polyEditor = new window.AMap.PolyEditor(
       this.map, this.poly
@@ -93,7 +93,7 @@ class PolyEditor extends React.Component {
     events && this.bindEditorEvents(events);
     return this.polyEditor;
   }
-  
+
   exposeEditorInstance(props: EditorProps) {
     if ('events' in props) {
       const events = props.events || {};
@@ -105,7 +105,7 @@ class PolyEditor extends React.Component {
     }
     return false;
   }
-  
+
   bindEditorEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {

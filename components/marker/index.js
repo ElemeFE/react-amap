@@ -14,7 +14,6 @@ import {
   getAMapPixel
 } from '../../lib/utils/utils';
 
-
 type MarkerProps = {
   position?: LngLat,
   offset?: Pixel,
@@ -44,13 +43,12 @@ type MarkerProps = {
 };
 
 class Marker extends Component {
-  
+
   map: Object;
   element: HTMLElement;
   marker: Object;
   contentWrapper: HTMLElement;
-  
-  
+
   constructor(props: MarkerProps) {
     super(props);
     if (!props.__map__) {
@@ -65,7 +63,7 @@ class Marker extends Component {
   shouldComponentUpdate() {
     return false;
   }
-  
+
   componentWillReceiveProps(nextProps: MarkerProps) {
     if (this.map) {
       this.refreshMarkerLayout(nextProps);
@@ -77,7 +75,7 @@ class Marker extends Component {
       this.setChildComponent(this.props);
     }
   }
-  
+
   createMarker(props: MarkerProps) {
     const options = this.buildCreateOptions(props);
     this.marker = new window.AMap.Marker(options);
@@ -111,12 +109,12 @@ class Marker extends Component {
       this.createContentWrapper(props);
     }
   }
-  
+
   createContentWrapper(props: MarkerProps) {
     this.contentWrapper = document.createElement('div');
     this.marker.setContent(this.contentWrapper);
   }
-  
+
   setChildComponent(props: MarkerProps) {
     if (this.contentWrapper) {
       if ('render' in props) {
@@ -130,7 +128,7 @@ class Marker extends Component {
       }
     }
   }
-  
+
   refreshMarkerLayout(nextProps: MarkerProps) {
     MarkerConfigurableProps.forEach((key) => {
       // 必须确定属性改变才进行刷新
@@ -150,7 +148,7 @@ class Marker extends Component {
     });
     this.setChildComponent(nextProps);
   }
-  
+
   getSetterParam(key: string, val: any) {
     if (key === 'position') {
       return getAMapPosition(val);
@@ -162,14 +160,14 @@ class Marker extends Component {
 
   // 获取设置属性的方法
   getSetterName(key: string) {
-    switch(key) {
+    switch (key) {
       case 'zIndex':
         return 'setzIndex';
       default:
         return `set${toCapitalString(key)}`;
     }
   }
-  
+
   exposeMarkerInstance(props: MarkerProps) {
     if ('events' in props && props.events) {
       const events = props.events;
@@ -181,7 +179,7 @@ class Marker extends Component {
     }
     return false;
   }
-  
+
   bindMarkerEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {

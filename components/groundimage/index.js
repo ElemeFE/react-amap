@@ -40,11 +40,11 @@ type GIProps = {
 };
 
 class GroundImage extends Component {
-  
+
   map: Object;
   element: HTMLElement;
   image: Object;
-  
+
   constructor(props: GIProps) {
     super(props);
     if (!props.__map__) {
@@ -59,13 +59,13 @@ class GroundImage extends Component {
   shouldComponentUpdate() {
     return false;
   }
-  
+
   componentWillReceiveProps(nextProps: GIProps) {
     if (this.map) {
       this.refreshGroundImage(nextProps);
     }
   }
-  
+
   refreshGroundImage(nextProps: GIProps) {
     configurableProps.forEach((key) => {
       if (key in nextProps) {
@@ -83,21 +83,21 @@ class GroundImage extends Component {
       }
     });
   }
-  
+
   setBounds(nextProps: GIProps) {
     // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
     if ('setBounds' in this.image) {
       this.image.setBounds(this.buildBounds(nextProps));
     }
   }
-  
+
   setImageUrl(nextProps: GIProps) {
     // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
     if ('setImageUrl' in this.image) {
       this.image.setImageUrl(nextProps.src);
     }
   }
-  
+
   setVisible(nextProps: GIProps) {
     // 这个接口高德并未在文档中明确写出来，不确定后面会不会取消
     if ('show' in this.image) {
@@ -108,18 +108,18 @@ class GroundImage extends Component {
       }
     }
   }
-  
+
   setOpacity(nextProps: GIProps) {
     this.image.setOpacity(nextProps.opacity);
   }
-  
+
   checkPropsChanged(nextProps: GIProps, key: string) {
     // if (key === 'bounds') {
     //   return this.checkBoundsChange(nextProps);
     // }
     return this.props[key] !== nextProps[key];
   }
-  
+
   createGroundImage(props: GIProps) {
     let src, bounds, opacity, clickable;
     if ('src' in props) {
@@ -151,7 +151,7 @@ class GroundImage extends Component {
     const events = this.exopseImageInstance(props);
     events && this.bindEvents(events);
   }
-  
+
   exopseImageInstance(props: GIProps) {
     if ('events' in props) {
       const events = props.events || {};
@@ -162,7 +162,7 @@ class GroundImage extends Component {
     }
     return false;
   }
-  
+
   bindEvents(events: Object) {
     const list = Object.keys(events);
     list.length && list.forEach((evName) => {
@@ -184,7 +184,7 @@ class GroundImage extends Component {
   //   }
   //   return changed;
   // }
-  
+
   buildBounds(props: GIProps) {
     const rawBounds = props.bounds;
     if (!rawBounds) {
