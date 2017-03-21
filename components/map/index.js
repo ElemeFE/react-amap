@@ -11,6 +11,7 @@ import Polyline from '../polyline';
 import InfoWindow from '../infowindow';
 import Circle from '../circle';
 import GroundImage from '../groundimage';
+import MouseTool from '../mousetool';
 // import CircleEditor from '../circleeditor';
 // import PolyEditor from '../polyeditor';
 
@@ -31,7 +32,8 @@ const ComponentList = [
   Markers,
   Marker,
   Polyline,
-  Polygon
+  Polygon,
+  MouseTool
 ];
 
 const configurableProps = [
