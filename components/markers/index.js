@@ -188,6 +188,11 @@ class Markers extends Component {
     const markerChanged = (nextProps.markers !== this.props.markers);
     const clusterChanged = ((!!this.props.useCluster) !== (!!nextProps.useCluster));
     if (markerChanged) {
+      this.markersCache.length && this.markersCache.forEach((marker) => {
+        marker.setMap(null);
+        marker = null;
+      });
+      this.markersCache = defaultOpts.markersCache;
       this.createMarkers(nextProps);
       this.setMarkerChild(this.props);
     }
