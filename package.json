@@ -11,8 +11,8 @@
     "start": "bisheng start",
     "prepublish": "npm run build"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "ohislh@gmail.com",
+  "license": "MIT",
   "devDependencies": {
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
