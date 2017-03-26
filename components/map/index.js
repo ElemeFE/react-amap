@@ -12,6 +12,7 @@ import Polyline from '../polyline';
 import InfoWindow from '../infowindow';
 import Circle from '../circle';
 import GroundImage from '../groundimage';
+import MouseTool from '../mousetool';
 // import CircleEditor from '../circleeditor';
 // import PolyEditor from '../polyeditor';
 
@@ -24,7 +25,8 @@ const ComponentList = [
   Markers,
   Marker,
   Polyline,
-  Polygon
+  Polygon,
+  MouseTool
 ];
 
 const configurableProps = [
@@ -429,15 +431,5 @@ class Map extends Component {
     </div>);
   }
 }
-
-// Map.Marker = Marker;
-// Map.Markers = Markers;
-// Map.Polygon = Polygon;
-// Map.Polyline = Polyline;
-// Map.InfoWindow = InfoWindow;
-// Map.Circle = Circle;
-// Map.GroundImage = GroundImage;
-// Map.CircleEditor = CircleEditor;
-// Map.PolyEditor = PolyEditor;
 
 export default Map;

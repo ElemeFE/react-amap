@@ -1,6 +1,6 @@
 {
   "name": "react-amap",
-  "version": "0.2.3-0",
+  "version": "0.2.4-0",
   "description": "",
   "main": "dist/react-amap.js",
   "scripts": {
@@ -12,8 +12,8 @@
     "prepublish": "npm run build",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "ohislh@gmail.com",
+  "license": "MIT",
   "devDependencies": {
     "antd": "^2.7.4",
     "babel-core": "^6.23.1",

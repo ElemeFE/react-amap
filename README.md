@@ -1,5 +1,10 @@
 # react-amap
 
+[![Build Status](https://travis-ci.org/ElemeFE/react-amap.svg?branch=master)](https://travis-ci.org/ElemeFE/react-amap)
+[![npm version](https://badge.fury.io/js/react-amap.svg)](https://www.npmjs.com/package/react-amap)
+[![npm downloads](https://img.shields.io/npm/dm/react-amap.svg)](https://www.npmjs.com/package/react-amap)
+
+
 > react-amap 是一个基于 React 封装的高德地图组件；使你在 React 应用中，轻松到令人发指的接入地图。同时，如果你有更高级复杂的需求，我们在各个组件的接口中，会完全暴露高德的原生实例给你，方便你亲自对实例进行操作。
 
 
@@ -62,10 +67,11 @@
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.js
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.min.js
 
-当前最新版本 `0.2.3-0`：
+当前最新版本 `0.2.4-0`：
 
-> https://unpkg.com/react-amap@0.2.3-0/dist/react-amap.js
-> https://unpkg.com/react-amap@0.2.3-0/dist/react-amap.min.js
+> https://unpkg.com/react-amap@0.2.4-0/dist/react-amap.js
+
+> https://unpkg.com/react-amap@0.2.4-0/dist/react-amap.min.js
 
 ### 关于 key
 
