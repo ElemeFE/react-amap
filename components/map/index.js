@@ -418,14 +418,4 @@ class Map extends Component {
   }
 }
 
-// Map.Marker = Marker;
-// Map.Markers = Markers;
-// Map.Polygon = Polygon;
-// Map.Polyline = Polyline;
-// Map.InfoWindow = InfoWindow;
-// Map.Circle = Circle;
-// Map.GroundImage = GroundImage;
-// Map.CircleEditor = CircleEditor;
-// Map.PolyEditor = PolyEditor;
-
 export default Map;
