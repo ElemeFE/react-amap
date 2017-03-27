@@ -49,7 +49,20 @@ const IdKey = '__react_amap__';
  */
 
 class Markers extends Component {
-  constructor(props) {
+
+  map: Object;
+  element: HTMLElement | {markerRef: Object};
+  markersCache: Array<Object>;
+  markerIDCache: Array<number>;
+  useCluster: ?boolean;
+  resetOffset: Object;
+  hoverOffset: Object;
+  markersWindow: Object;
+  mapCluster: Object;
+  markersDOM: HTMLElement;
+  markerReactChildDOM: any;
+
+  constructor(props: MarkerProps) {
     super(props);
     if (!props.__map__) {
       log.warning('MAP_INSTANCE_REQUIRED');
@@ -69,7 +82,7 @@ class Markers extends Component {
     return false;
   }
 
-  createMarkers(props) {
+  createMarkers(props: MarkerProps) {
     const markers = props.markers || [];
     let renderFn;
     if (isFun(props.render)) {
@@ -83,6 +96,7 @@ class Markers extends Component {
 
       let markerContent = null;
       if (isFun(props.render)) {
+        // $FlowFixMe
         let markerChild = props.render(raw);
         if (markerChild !== false) {
           const div = document.createElement('div');
@@ -121,7 +135,7 @@ class Markers extends Component {
     this.checkClusterSettings(props);
   }
 
-  checkClusterSettings(props) {
+  checkClusterSettings(props: MarkerProps) {
     const useCluster = !!props.useCluster;
     if (useCluster) {
       this.loadClusterPlugin(props.useCluster).then((cluster) => {
@@ -144,7 +158,7 @@ class Markers extends Component {
     }
   }
 
-  setMarkerChild(props) {
+  setMarkerChild(props: MarkerProps) {
     Object.keys(this.markerReactChildDOM).forEach((idx) => {
       const dom = this.markersCache[idx].getContent();
       const child = this.markerReactChildDOM[idx];
@@ -152,11 +166,11 @@ class Markers extends Component {
     });
   }
 
-  renderMarkerChild(dom, child) {
+  renderMarkerChild(dom: HTMLElement, child: any) {
     render(<div>{child}</div>, dom);
   }
 
-  buildCreateOptions(props, raw, idx) {
+  buildCreateOptions(props: MarkerProps, raw: any, idx: number) {
     const result = {};
     // 强制用户通过 render 函数来定义外观
     // const disabledKeys = ['label', 'icon', 'content'];
@@ -178,13 +192,13 @@ class Markers extends Component {
     return result;
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: MarkerProps) {
     if (this.map) {
       this.refreshMarkersLayout(nextProps);
     }
   }
 
-  refreshMarkersLayout(nextProps) {
+  refreshMarkersLayout(nextProps: MarkerProps) {
     const markerChanged = (nextProps.markers !== this.props.markers);
     const clusterChanged = ((!!this.props.useCluster) !== (!!nextProps.useCluster));
     if (markerChanged) {
@@ -206,7 +220,7 @@ class Markers extends Component {
     }
   }
 
-  loadClusterPlugin(clusterConfig) {
+  loadClusterPlugin(clusterConfig: Object & boolean) {
     if (this.mapCluster) {
       return new Promise((resolve) => {
         resolve(this.mapCluster);
@@ -220,7 +234,7 @@ class Markers extends Component {
     });
   }
 
-  createClusterPlugin(config) {
+  createClusterPlugin(config: Object) {
     let options = {};
     const style = {
       url: clusterIcon,
@@ -230,6 +244,7 @@ class Markers extends Component {
     const defalutOptions = {
       minClusterSize: 2,
       zoomOnClick: false,
+      maxZoom: 18,
       gridSize: 60,
       styles: [style, style, style],
       averageCenter: true
@@ -256,45 +271,45 @@ class Markers extends Component {
     return this.mapCluster;
   }
 
-  onMarkerClick(e) {
+  onMarkerClick(e: MapEvent) {
     const marker = e.target;
     this.triggerMarkerClick(e, marker);
   }
 
-  onMarkerHover(e) {
+  onMarkerHover(e: MapEvent) {
     e.target.setTop(true);
     this.setMarkerHovered(e, e.target);
   }
 
-  onMarkerHoverOut(e) {
+  onMarkerHoverOut(e: MapEvent) {
     e.target.setTop(false);
     this.setMarkerHoverOut(e, e.target);
   }
 
-  onWindowMarkerClick(element) {
+  onWindowMarkerClick(element: HTMLElement) {
     const marker = element.markerRef;
     this.triggerMarkerClick(null, marker);
   }
 
-  onWindowMarkerHover(element) {
+  onWindowMarkerHover(element: HTMLElement) {
     const marker = element.markerRef;
     this.setMarkerHovered(null, marker);
   }
 
-  onWindowMarkerHoverOut(element) {
+  onWindowMarkerHoverOut(element: HTMLElement) {
     const marker = element.markerRef;
     this.setMarkerHoverOut(null, marker);
   }
 
-  setMarkerHovered(e, marker) {
+  setMarkerHovered(e: MapEvent, marker: Object) {
     this.triggerMarkerHover(e, marker);
   }
 
-  setMarkerHoverOut(e, marker) {
+  setMarkerHoverOut(e: MapEvent, marker: Object) {
     this.triggerMarkerHoverOut(e, marker);
   }
 
-  triggerMarkerClick(e, marker) {
+  triggerMarkerClick(e: MapEvent, marker: Object) {
     // const raw = marker.getExtData();
     const events = this.props.events || {};
     if (isFun(events.click)) {
@@ -302,7 +317,7 @@ class Markers extends Component {
     }
   }
 
-  triggerMarkerHover(e, marker) {
+  triggerMarkerHover(e: MapEvent, marker: Object) {
     // const raw = marker.getExtData();
     const events = this.props.events || {};
     if (isFun(events.mouseover)) {
@@ -310,7 +325,7 @@ class Markers extends Component {
     }
   }
 
-  triggerMarkerHoverOut(e, marker) {
+  triggerMarkerHoverOut(e: MapEvent, marker: Object) {
     // const raw = marker.getExtData();
     const events = this.props.events || {};
     if (isFun(events.mouseout)) {
@@ -332,7 +347,7 @@ class Markers extends Component {
     this.markersWindow.setContent(this.markersDOM);
   }
 
-  bindClusterEvent(events) {
+  bindClusterEvent(events: Object) {
     this.mapCluster.on('click', (e) => {
       let returnValue = true;
       if (isFun(events.click)) {
@@ -344,7 +359,7 @@ class Markers extends Component {
     });
   }
 
-  showMarkersInfoWindow(e) {
+  showMarkersInfoWindow(e: MapEvent) {
     const pos = e.lnglat;
     let markers = e.markers;
     this.markersDOM.innerHTML = '';
@@ -386,7 +401,7 @@ class Markers extends Component {
     }
   }
 
-  bindMarkerEvents(marker) {
+  bindMarkerEvents(marker: Object) {
     const events = this.props.events || {};
     const list = Object.keys(events);
     const preserveEv = ['click', 'mouseover', 'mouseout', 'created'];

@@ -2,7 +2,7 @@
   "name": "react-amap",
   "version": "0.2.4-0",
   "description": "",
-  "main": "dist/react-amap.js",
+  "main": "dist/react-amap.min.js",
   "scripts": {
     "lint": "eslint . --quiet",
     "build": "webpack && NODE_ENV=production webpack",

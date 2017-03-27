@@ -14,34 +14,6 @@ import {
   getAMapPixel
 } from '../../lib/utils/utils';
 
-type MarkerProps = {
-  position?: LngLat,
-  offset?: Pixel,
-  icon?: any,
-  content?: MarkerContent,
-  draggable?: boolean,
-  visible?: boolean,
-  cursor?: string,
-  zIndex?: number,
-  angle?: number,
-  animation?: string,
-  shadow?: Object,
-  title?: string,
-  clickable?: boolean,
-  extData?: any,
-  label?: Object,
-  topWhenClick?: boolean,
-  bubble?: boolean,
-  raiseOnDrag?: boolean,
-  autoRotation?: boolean,
-  shape?: Object,
-  events?: Object,
-  render?: Function,
-  children?: any,
-  __map__: Object,
-  __ele__: HTMLElement,
-};
-
 class Marker extends Component {
 
   map: Object;

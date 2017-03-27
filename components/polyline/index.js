@@ -40,7 +40,7 @@ type LineProps = {
 
 class Polyline extends Component {
 
-  map : Object;
+  map: Object;
   polyline: Object;
   element: HTMLElement;
 

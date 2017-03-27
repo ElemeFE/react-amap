@@ -142,7 +142,10 @@ class Polygon extends Component {
         return path.map((p) => (getAMapPosition(p)));
       } else if (path.length === 2) {
         // Ring
+        // TODO(slh) Awkward Flow Issues
+        // $FlowFixMe
         const out = this.buildPathValue(path[0]);
+        // $FlowFixMe
         const inner = this.buildPathValue(path[1]);
         return [out, inner];
       } else {

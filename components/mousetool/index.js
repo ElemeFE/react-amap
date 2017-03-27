@@ -1,9 +1,19 @@
+// @flow
 import React from 'react';
 import isFun from '../../lib/utils/isFun';
 import log from '../../lib/utils/log';
 
+type MTProps = {
+  __map__: Object,
+  events: Object,
+};
+
 class MouseTool extends React.Component {
-  constructor(props) {
+
+  map: Object;
+  tool: Object;
+
+  constructor(props: MTProps) {
     super(props);
     if (!props.__map__) {
       log.warning('MAP_INSTANCE_REQUIRED');
@@ -17,13 +27,13 @@ class MouseTool extends React.Component {
     return false;
   }
 
-  loadToolInstance(props) {
+  loadToolInstance(props: MTProps) {
     this.map.plugin(['AMap.MouseTool'], () => {
       this.createToolInstance(props);
     });
   }
 
-  createToolInstance(props) {
+  createToolInstance(props: MTProps) {
     this.tool = new window.AMap.MouseTool(this.map);
     const events = props.events || {};
     if (isFun(events.created)) {
