@@ -13,7 +13,6 @@ module.exports = {
     'bisheng-plugin-react?lang=__react',
     'bisheng-plugin-antd'
   ],
-  // htmlTemplate: './_theme/static/template.html',
   port: 9001,
   webpackConfig(config) {
     config.resolve.alias = {
