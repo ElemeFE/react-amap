@@ -1,7 +1,7 @@
 # react-amap
 
 [![Build Status](https://travis-ci.org/ElemeFE/react-amap.svg?branch=master)](https://travis-ci.org/ElemeFE/react-amap)
-[![npm version](https://badge.fury.io/js/react-amap.svg)](https://www.npmjs.com/package/react-amap?_t=20170411)
+[![npm version](https://badge.fury.io/js/react-amap.svg?_t=20170411)](https://www.npmjs.com/package/react-amap)
 [![npm downloads](https://img.shields.io/npm/dm/react-amap.svg)](https://www.npmjs.com/package/react-amap)
 
 
