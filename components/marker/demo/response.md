@@ -16,7 +16,13 @@ class App extends React.Component{
       position: {longitude: 120, latitude: 35 },
       clickable: true,
       draggable: true,
-    };  
+    };
+    this.mapPlugins = ['ToolBar'];
+    this.markerEvents = {
+      click: () => {
+        console.log('marker clicked!')
+      }
+    }
   }
   
   toggleVisible() {
@@ -49,12 +55,12 @@ class App extends React.Component{
   render(){   
     return <div>
       <div style={{width: '100%', height: 360}}>
-        <Map plugins={['ToolBar']} center={this.state.position} zoom={6}>
-          <Marker 
-            events={{click:() => {console.log('marker clicked!')}}}
+        <Map plugins={this.mapPlugins} center={this.state.position} zoom={6}>
+          <Marker
+            events={this.markerEvents}
             position={this.state.position} 
-            visible={this.state.visible} 
-            clickable={this.state.clickable}  
+            visible={this.state.visible}
+            clickable={this.state.clickable}
             draggable={this.state.draggable}
           />
         </Map>

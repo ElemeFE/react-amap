@@ -25,11 +25,12 @@ class App extends React.Component{
         console.log(markerInstance.getPosition());
       }
     }
+    this.markerPosition = {longitude: 120, latitude: 30};
   }
   render(){
     return <div style={{width: '100%', height: '400px'}}>
       <Map events={this.amapEvents}>
-        <Marker position={{longitude: 120, latitude: 30}} events={this.markerEvents}/>
+        <Marker position={this.markerPosition} events={this.markerEvents}/>
       </Map>
     </div>
   }

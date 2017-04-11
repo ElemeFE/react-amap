@@ -15,6 +15,8 @@ class App extends React.Component{
         this.tool = tool;
       }
     }
+    this.mapPlugins = ['ToolBar'];
+    this.mapCenter = {longitude: 120, latitude: 35};
   }
   
   drawCircle(){
@@ -45,8 +47,8 @@ class App extends React.Component{
     return <div>
       <div style={{width: '100%', height: 370}}>
         <Map 
-          plugins={['ToolBar']} 
-          center={{longitude: 120, latitude: 35}} 
+          plugins={this.mapPlugins}
+          center={this.mapCenter}
         >
           <MouseTool events={this.toolEvents}/>
         </Map>

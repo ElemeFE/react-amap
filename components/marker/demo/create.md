@@ -8,14 +8,27 @@ title: 基本用法
 ```jsx
 import { Map, Marker } from 'react-amap';
 class App extends React.Component{
-  render(){   
+  constructor(){
+    super();
+    this.toolEvents = {
+      created: (tool) => {
+        this.tool = tool;
+      }
+    }
+    this.mapPlugins = ['ToolBar'];
+    this.mapCenter = {longitude: 120, latitude: 35};
+    this.markerPosition = {longitude: 121, latitude: 36};
+  }
+
+  render(){
     return <div>
       <div style={{width: '100%', height: 400}}>
         <Map 
-          plugins={['ToolBar']} 
-          center={{longitude: 120, latitude: 35}} 
+          plugins={this.mapPlugins}
+          center={this.mapCenter}
+          zoom={6}
         >
-          <Marker position={{longitude: 120, latitude: 35 }} />
+          <Marker position={this.markerPosition} />
         </Map>
       </div>
     </div>
