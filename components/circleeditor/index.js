@@ -21,7 +21,7 @@ class CircleEditor extends React.Component {
 
   constructor(props: EditorProps) {
     super(props);
-    if(typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
       if (!(props.__map__ && props.__circle__)) {
         log.warning('CIRCLE_INSTANCE_REQUIRED');
       } else {

@@ -62,7 +62,7 @@ class Circle extends Component {
 
   constructor(props: CircleProps) {
     super(props);
-    if (typeof window !== 'undefined'){
+    if (typeof window !== 'undefined') {
       if (!props.__map__) {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
