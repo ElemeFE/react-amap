@@ -105,10 +105,12 @@ class Map extends Component {
     this.state = {
       mapLoaded: false
     };
-    this.pluginMap = {};
-    this.prevCenter = undefined;
-    this.prevZoom = undefined;
-    this.loader = new APILoader(props.amapkey).load();
+    if (typeof window !== 'undefined') {
+      this.pluginMap = {};
+      this.prevCenter = undefined;
+      this.prevZoom = undefined;
+      this.loader = new APILoader(props.amapkey).load();
+    }
   }
 
   componentWillReceiveProps(nextProps: MapProps) {

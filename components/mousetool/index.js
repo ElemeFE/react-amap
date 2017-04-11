@@ -15,11 +15,13 @@ class MouseTool extends React.Component {
 
   constructor(props: MTProps) {
     super(props);
-    if (!props.__map__) {
-      log.warning('MAP_INSTANCE_REQUIRED');
-    } else {
-      this.map = props.__map__;
-      this.loadToolInstance(props);
+    if (typeof window !== 'undefined') {
+      if (!props.__map__) {
+        log.warning('MAP_INSTANCE_REQUIRED');
+      } else {
+        this.map = props.__map__;
+        this.loadToolInstance(props);
+      }
     }
   }
 

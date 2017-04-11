@@ -21,14 +21,16 @@ class PolyEditor extends React.Component {
 
   constructor(props: EditorProps) {
     super(props);
-    if (!(props.__map__ && props.__poly__)) {
-      log.warning('MAP_INSTANCE_REQUIRED');
-    } else {
-      this.map = props.__map__;
-      this.element = props.__ele__;
-      this.poly = props.__poly__;
-      this.editorActive = false;
-      this.onPropsUpdate(props);
+    if (typeof window !== 'undefined') {
+      if (!(props.__map__ && props.__poly__)) {
+        log.warning('MAP_INSTANCE_REQUIRED');
+      } else {
+        this.map = props.__map__;
+        this.element = props.__ele__;
+        this.poly = props.__poly__;
+        this.editorActive = false;
+        this.onPropsUpdate(props);
+      }
     }
   }
 

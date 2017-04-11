@@ -46,12 +46,14 @@ class Polyline extends Component {
 
   constructor(props: LineProps) {
     super(props);
-    if (!props.__map__) {
-      log.warning('MAP_INSTANCE_REQUIRED');
-    } else {
-      this.map = props.__map__;
-      this.element = props.__ele__;
-      this.createMapPolyline(props);
+    if (typeof window !== 'undefined') {
+      if (!props.__map__) {
+        log.warning('MAP_INSTANCE_REQUIRED');
+      } else {
+        this.map = props.__map__;
+        this.element = props.__ele__;
+        this.createMapPolyline(props);
+      }
     }
   }
 

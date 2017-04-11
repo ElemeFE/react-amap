@@ -69,13 +69,15 @@ class InfoWindow extends Component {
 
   constructor(props: IWProps) {
     super(props);
-    if (!props.__map__) {
-      log.warning('MAP_INSTANCE_REQUIRED');
-    } else {
-      this.map = props.__map__;
-      this.element = props.__ele__;
-      this.isCustom = true;
-      this.createInfoWindow(props);
+    if (typeof window !== 'undefined') {
+      if (!props.__map__) {
+        log.warning('MAP_INSTANCE_REQUIRED');
+      } else {
+        this.map = props.__map__;
+        this.element = props.__ele__;
+        this.isCustom = true;
+        this.createInfoWindow(props);
+      }
     }
   }
 

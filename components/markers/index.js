@@ -9,7 +9,9 @@ import {
   renderMarkerComponent
 } from '../../lib/utils/markerUtils';
 
-require('../../lib/assets/marker.css');
+if (typeof window !== 'undefined') {
+  require('../../lib/assets/marker.css');
+}
 
 const Component = React.Component;
 
@@ -64,17 +66,19 @@ class Markers extends Component {
 
   constructor(props: MarkerProps) {
     super(props);
-    if (!props.__map__) {
-      log.warning('MAP_INSTANCE_REQUIRED');
-    } else {
-      this.map = props.__map__;
-      this.element = props.__ele__;
-      this.markersCache = defaultOpts.markersCache;
-      this.useCluster = null;
-      this.markerIDCache = defaultOpts.markerIDCache;
-      this.resetOffset = new window.AMap.Pixel(-SIZE_WIDTH / 2, -SIZE_HEIGHT);
-      this.hoverOffset = new window.AMap.Pixel(-SIZE_HOVER_WIDTH / 2, -SIZE_HOVER_HEIGHT);
-      this.createMarkers(props);
+    if (typeof window !== 'undefined') {
+      if (!props.__map__) {
+        log.warning('MAP_INSTANCE_REQUIRED');
+      } else {
+        this.map = props.__map__;
+        this.element = props.__ele__;
+        this.markersCache = defaultOpts.markersCache;
+        this.useCluster = null;
+        this.markerIDCache = defaultOpts.markerIDCache;
+        this.resetOffset = new window.AMap.Pixel(-SIZE_WIDTH / 2, -SIZE_HEIGHT);
+        this.hoverOffset = new window.AMap.Pixel(-SIZE_HOVER_WIDTH / 2, -SIZE_HOVER_HEIGHT);
+        this.createMarkers(props);
+      }
     }
   }
 
