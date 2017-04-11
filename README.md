@@ -67,11 +67,11 @@
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.js
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.min.js
 
-当前最新版本 `0.2.4-0`：
+当前最新版本 `0.2.5`：
 
-> https://unpkg.com/react-amap@0.2.4-0/dist/react-amap.js
+> https://unpkg.com/react-amap@0.2.5/dist/react-amap.js
 
-> https://unpkg.com/react-amap@0.2.4-0/dist/react-amap.min.js
+> https://unpkg.com/react-amap@0.2.5/dist/react-amap.min.js
 
 ### 关于 key
 
