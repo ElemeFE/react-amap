@@ -1,6 +1,6 @@
 {
   "name": "react-amap",
-  "version": "0.2.4-0",
+  "version": "0.2.5-0",
   "description": "",
   "main": "dist/react-amap.min.js",
   "scripts": {
