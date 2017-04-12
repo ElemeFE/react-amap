@@ -18,7 +18,6 @@ module.exports = {
     config.resolve.alias = {
       'react-amap': path.join(process.cwd(), 'lib'),
       'react-router': 'react-router/umd/ReactRouter'
-
     };
     return config;
   },

@@ -1,7 +1,7 @@
 {
   "name": "react-amap",
   "version": "0.2.5",
-  "description": "",
+  "description": "AMap Component Based On React",
   "main": "dist/react-amap.min.js",
   "scripts": {
     "lint": "eslint . --quiet",

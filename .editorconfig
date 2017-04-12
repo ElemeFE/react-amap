@@ -1,0 +1,31 @@
+# EditorConfig helps developers define and maintain consistent
+# coding styles between different editors and IDEs
+# http://editorconfig.org
+
+root = true
+
+[**]
+# 文件结尾符
+end_of_line = lf
+insert_final_newline = true
+
+# 去除行尾空白字符
+trim_trailing_whitespace = true
+
+# 编码格式
+charset = utf-8
+
+# 项目中采用tab作为代码缩进样式
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[{package.json,.babelrc,.eslintrc}]
+indent_style = space
+indent_size = 2
+
+[*.yml]
+indent_style = space
+indent_size = 2

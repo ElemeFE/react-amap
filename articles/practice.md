@@ -8,20 +8,20 @@ order: 9
 
 ---
 
-react-amap 的组件接收的属性中，有的是基本类型值，有的是引用类型值；如 Map 组件的 `zoom` 属性是数字类型，`center` 属性需要是一个对象；
+react-amap 的组件接收的属性中，有的是基本类型值，有的是引用类型值；如 Map 组件的 `zoom` 属性是数字类型，`center` 属性需要是一个对象。
 
 如果是一个引用类型的属性，最好在 `constructor` 和 `componentWillMount` 阶段声明；然后在组件里引用这个变量。举例说明如下：
 
 ```jsx
-class MapApp extends React.Component{
-  constructor(){
+class MapApp extends React.Component {
+  constructor() {
     super();
     // Good Practice
-    this.mapCenter = {longitude: 120, latitude: 30};
+    this.mapCenter = { longitude: 120, latitude: 30 };
   }
 
-  render(){
-    return <div style={{width: 600, height: 400}}>
+  render() {
+    return <div style={{ width: 600, height: 400 }}>
       <Map zoom={5} center={this.mapCenter}/>
     </div>
   }
@@ -50,17 +50,17 @@ Unmounting
 |- componentWillUnmount()
 ```
 
-React 组件状态有任何改变时，Updating 阶段的方法都会全部重新执行一遍；在此阶段声明的属性都会重新声明；在 react-amap 内部，就会发现属性是不同的引用，会强制修改；这样会造成地图组件没必要的刷新；
+React 组件状态有任何改变时，Updating 阶段的方法都会全部重新执行一遍；在此阶段声明的属性都会重新声明；在 react-amap 内部，就会发现属性是不同的引用，会强制修改；这样会造成地图组件没必要的刷新。
 
 比如下面这种情况：
 
 ```jsx
 
-class MapApp extends React.Component{
-  render(){
-    return <div style={{width: 600, height: 400}}>
+class MapApp extends React.Component {
+  render() {
+    return <div style={{ width: 600, height: 400 }}>
       { /* Bad Practice */ }
-      <Map zoom={5} center={{longitude: 120, latitude: 30}}/>
+      <Map zoom={5} center={{ longitude: 120, latitude: 30 }}/>
     </div>
   }
 }
@@ -78,23 +78,23 @@ const randomPosition = () => ({
   latitude: 30 + Math.random() * 10,
 });
 
-class MapApp extends React.Component{
-  constructor(){
+class MapApp extends React.Component {
+  constructor() {
     super();
     this.state = {
       mapCenter: randomPosition()
     }
   }
 
-  changeCenter(){
+  changeCenter() {
     this.setState({
       mapCenter: randomPosition()
     })
   }
 
-  render(){
+  render() {
     return <div>
-      <div style={{width: 600, height: 400}}>
+      <div style={{ width: 600, height: 400 }}>
         <Map zoom={5} center={this.state.mapCenter}/>
       </div>
       <button onClick={() => { this.changeCenter() }}>Move Map To A Random Center</button>
@@ -103,8 +103,7 @@ class MapApp extends React.Component{
 }
 ```
 
-
-> 在本站的组件文档中，有一些例子并没有按照严格按照上述的方式来写，因为例子比较简单，且没有涉及到属性的变化。比如 `<Map plugins={['ToolBar']} />`;
+> 在本站的组件文档中，有一些例子并没有按照严格按照上述的方式来写，因为例子比较简单，且没有涉及到属性的变化。比如 `<Map plugins={['ToolBar']} />`。
 
 
 
