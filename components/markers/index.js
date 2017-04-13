@@ -1,16 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
-import isFun from '../../lib/utils/isFun';
-import log from '../../lib/utils/log';
-import clusterIcon from '../../lib/assets/map_cluster.png';
+import isFun from '../_utils/isFun';
+import log from '../_utils/log';
+import clusterIcon from '../_assets/map_cluster.png';
 import {
   MarkerAllProps,
   getPropValue,
   renderMarkerComponent
-} from '../../lib/utils/markerUtils';
+} from '../_utils/markerUtils';
 
 if (typeof window !== 'undefined') {
-  require('../../lib/assets/marker.css');
+  require('../_assets/marker.css');
 }
 
 const Component = React.Component;

@@ -1,9 +1,9 @@
 // @flow
 import React, { Component, Children } from 'react';
-import isFun from '../../lib/utils/isFun';
-import log from '../../lib/utils/log';
-import toCapitalString from '../../lib/utils/toCapitalString';
-import { getAMapPosition } from '../../lib/utils/utils';
+import isFun from '../_utils/isFun';
+import log from '../_utils/log';
+import toCapitalString from '../_utils/toCapitalString';
+import { getAMapPosition } from '../_utils/utils';
 /*
  * props
  * {

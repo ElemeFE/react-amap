@@ -2,7 +2,7 @@ var path = require('path');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 var webpackConfig = {
-  entry: './lib/',
+  entry: './components/',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'react-amap.js',

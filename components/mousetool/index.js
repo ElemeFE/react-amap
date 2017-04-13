@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import isFun from '../../lib/utils/isFun';
-import log from '../../lib/utils/log';
+import isFun from '../_utils/isFun';
+import log from '../_utils/log';
 
 type MTProps = {
   __map__: Object,

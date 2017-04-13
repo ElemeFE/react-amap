@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import isFun from '../../lib/utils/isFun';
-import log from '../../lib/utils/log';
+import isFun from '../_utils/isFun';
+import log from '../_utils/log';
 import PolyEditor from '../../components/polyeditor';
-import toCapitalString from '../../lib/utils/toCapitalString';
-import { getAMapPosition } from '../../lib/utils/utils';
+import toCapitalString from '../_utils/toCapitalString';
+import { getAMapPosition } from '../_utils/utils';
 
 const Component = React.Component;
 

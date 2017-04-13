@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import APILoader from '../../lib/utils/APILoader';
-import isFun from '../../lib/utils/isFun';
-import log from '../../lib/utils/log';
-import toCapitalString from '../../lib/utils/toCapitalString';
-import { getAMapPosition } from '../../lib/utils/utils';
+import APILoader from '../_utils/APILoader';
+import isFun from '../_utils/isFun';
+import log from '../_utils/log';
+import toCapitalString from '../_utils/toCapitalString';
+import { getAMapPosition } from '../_utils/utils';
 import Marker from '../marker';
 import Markers from '../markers';
 import Polygon from '../polygon';
