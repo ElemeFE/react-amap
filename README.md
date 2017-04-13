@@ -21,17 +21,26 @@ import React from 'react';
 import { Map } from 'react-amap';
 
 class MapApp extends React.Component {
-    // ... Your other methods
-    render() {
-        return <div style={{ width: '600px', height: '500px' }}>
-            <Map amapkey={YOUR_AMAP_KEY} />
-        </div>
-    }
+  // ... Your other methods
+  render() {
+    return <div style={{ width: '600px', height: '500px' }}>
+      <Map amapkey={YOUR_AMAP_KEY} />
+    </div>
+  }
 }
+```
+
+也可以手工引入你需要的组件：
+
+ ```jsx   
+import Map from 'react-amap/lib/map';
+import Marker from 'react-amap/lib/marker';
+// ... your other code
 ```
     
 以上为简单场景的应用。
-tips: Map 组件的父元素须设置高度和宽度。
+tips: Map 组件的父元素须设置高度和宽度；关于代码中的 `Map` 组件的 `amapkey` 属性见下方的说明。
+
 
 ### CDN 用法
 
@@ -40,7 +49,7 @@ tips: Map 组件的父元素须设置高度和宽度。
 ```html
 <script src="path/to/react.js"></script>
 <script src="path/to/react-dom.js"></script>
-<script src="path/to/react-amap.js"></script>
+<script src="path/to/dist/react-amap.js"></script>
 <script>
   var Map = ReactAMAP.Map;
   var Marker = ReactAMAP.Marker;

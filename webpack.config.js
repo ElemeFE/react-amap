@@ -20,15 +20,6 @@ var webpackConfig = {
         }
       },
       {
-        test: /\.png$/,
-        loader: 'url-loader',
-        exclude: /node_modules/,
-        query: {
-          limit: 10000,
-          name: '[name].[ext]'
-        }
-      },
-      {
         test: /\.css$/,
         loader: ['style-loader', 'css-loader']
       }

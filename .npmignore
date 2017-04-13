@@ -9,6 +9,12 @@ logs
 # https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
 
+# Project Related
+components/
+articles/
+_theme/
+_site/
+
 # Users Environment Variables and others
 .idea/
 .DS_Store

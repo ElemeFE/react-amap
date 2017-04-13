@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import isFun from '../_utils/isFun';
 import log from '../_utils/log';
-import clusterIcon from '../_assets/map_cluster.png';
+// import clusterIcon from '../_assets/map_cluster.png';
 import {
   MarkerAllProps,
   getPropValue,
@@ -240,17 +240,17 @@ class Markers extends Component {
 
   createClusterPlugin(config: Object) {
     let options = {};
-    const style = {
-      url: clusterIcon,
-      size: new window.AMap.Size(56, 56),
-      offset: new window.AMap.Pixel(-28, -28)
-    };
+    // const style = {
+    //   url: clusterIcon,
+    //   size: new window.AMap.Size(56, 56),
+    //   offset: new window.AMap.Pixel(-28, -28)
+    // };
     const defalutOptions = {
       minClusterSize: 2,
       zoomOnClick: false,
       maxZoom: 18,
       gridSize: 60,
-      styles: [style, style, style],
+      // styles: [style, style, style],
       averageCenter: true
     };
 

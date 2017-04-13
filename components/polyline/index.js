@@ -2,7 +2,7 @@
 import React from 'react';
 import isFun from '../_utils/isFun';
 import log from '../_utils/log';
-import PolyEditor from '../../components/polyeditor';
+import PolyEditor from '../polyeditor';
 import toCapitalString from '../_utils/toCapitalString';
 import { getAMapPosition } from '../_utils/utils';
 

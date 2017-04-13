@@ -28,8 +28,6 @@ class MapApp extends React.Component {
 }
 ```
 
-
-
 React 组件的生命周期有三个阶段：
 
 ```

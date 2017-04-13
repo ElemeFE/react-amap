@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, Children } from 'react';
+import React, { Component } from 'react';
 import isFun from '../_utils/isFun';
 import log from '../_utils/log';
 import toCapitalString from '../_utils/toCapitalString';
@@ -10,17 +10,6 @@ import { getAMapPosition } from '../_utils/utils';
  *  __map__ 父级组件传过来的地图实例
  * }
  */
-
-const defaultOpts = {
-  style: {
-    strokeColor: '#f33',
-    strokeOpacity: 0.6,
-    strokeWeight: 4,
-    fillColor: '#ee2200',
-    fillOpacity: 0.35,
-    strokeStyle: 'solid'
-  }
-};
 
 const configurableProps = [
   'center',
