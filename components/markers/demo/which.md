@@ -1,6 +1,6 @@
 ---
 title: 确定点击的是哪个坐标？
-order: 10
+order: 12
 ---
 
 在使用 Markers 组件往地图上批量添加坐标点时，很常见的需求是：在事件触发时，比如点击事件，需要确定点击的是哪个坐标点。在提供原始数据来构造坐标点时（如下例中的 `this.markers`），我们可以在原始数据里注入自己的变量；当事件发生后，在回调里我们可以获得全部的原始数据，从而可以识别出点击的那个坐标点，及对应属性。
@@ -30,6 +30,7 @@ class App extends React.Component{
     });
     this.markersEvents = {
       click(e, marker){
+        // 通过高德原生提供的 getExtData 方法获取原始数据
         const extData = marker.getExtData();
         const index = extData.myIndex;
         alert(`点击的是第${index}号坐标点`);
