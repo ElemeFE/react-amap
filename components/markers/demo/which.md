@@ -48,15 +48,15 @@ class App extends React.Component{
 
   render() {
     return <div style={{width: '100%', height: 400}}>
-        <Map plugins={['ToolBar']} center={this.mapCenter} zoom={4}>
-          <Markers 
-            render={this.renderMarkerFn}
-            markers={this.markers}
-            events={this.markersEvents}
-            useCluster
-          />
-        </Map>
-      </div>
+      <Map plugins={['ToolBar']} center={this.mapCenter} zoom={4}>
+        <Markers 
+          render={this.renderMarkerFn}
+          markers={this.markers}
+          events={this.markersEvents}
+          useCluster
+        />
+      </Map>
+    </div>
   }
 }
 
