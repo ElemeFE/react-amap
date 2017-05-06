@@ -41,4 +41,7 @@ ReactDOM.render(
 );
 ```
 
-对于我们尚未提供的组件，你也完全可以在地图的实例创建成功后，亲自调用高德的实例化方法进行创建；或者在 [GitHub](https://github.com/ElemeFE/react-amap) 上给我们提交PR或者issue。
+对于我们尚未提供的组件，你也完全可以在地图的实例创建成功后，亲自调用高德的实例化方法进行创建；一个例子参考[如何使用AMap.Geocoder](https://github.com/ElemeFE/react-amap/issues/12)以及相应的 [jsfiddle 示例](https://jsfiddle.net/h4u8mdng/14/)。
+
+或者在 [GitHub](https://github.com/ElemeFE/react-amap) 上给我们提交PR或者issue。
+
