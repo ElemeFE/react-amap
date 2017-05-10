@@ -77,11 +77,6 @@ tips: 记得将其中的 `VERSION` 替换为真实版本号，查看历史版本
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.js
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.min.js
 
-当前最新版本 `0.2.6`：
-
-+ https://unpkg.com/react-amap@0.2.6/dist/react-amap.js
-+ https://unpkg.com/react-amap@0.2.6/dist/react-amap.min.js
-
 ### 关于 Key
 
 在上面的例子中需要给 Map 组件传入 `amapkey` 属性，这个是高德地图给开发者分配的开发者 Key；你可以在[高德开放平台](http://lbs.amap.com/faq/account/key/67)申请你自己的 Key。
