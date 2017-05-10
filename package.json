@@ -1,12 +1,12 @@
 {
   "name": "react-amap",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "AMap Component Based On React",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint . --quiet",
     "browser-build": "webpack && NODE_ENV=production webpack",
-    "npm-build": "babel components -d lib && cp -R components/_assets lib/",
+    "npm-build": "rm -rf lib && babel components -d lib && cp -R components/_assets lib/",
     "site": "npm run npm-build && bisheng build",
     "deploy": "npm run npm-build && bisheng gh-pages",
     "start": "npm run npm-build && bisheng start",

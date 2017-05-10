@@ -10,6 +10,12 @@
 
 如何在项目中接入 react-amap;
 
+
+### 在线演示
+
+https://jsfiddle.net/h4u8mdng/
+
+
 ### 安装
 ```sh
 npm install --save react-amap
@@ -76,11 +82,6 @@ tips: 记得将其中的 `VERSION` 替换为真实版本号，查看历史版本
 
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.js
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.min.js
-
-当前最新版本 `0.2.6`：
-
-+ https://unpkg.com/react-amap@0.2.6/dist/react-amap.js
-+ https://unpkg.com/react-amap@0.2.6/dist/react-amap.min.js
 
 ### 关于 Key
 
