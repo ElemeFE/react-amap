@@ -32,7 +32,7 @@ const MyMapComponent = (props) => {
 
 拥有访问这两个属性的能力后，你可以根据高德原生 API 做高德允许你做的一切事情。实际上，react-amap 中的其他组件就是这么做的。
 
-下面的例子中，我们写了一个自定义的 `ZoomCtrl` 组件，来定义一个自己的地图 zoom 控制器。在线的示例请访问[jsfiddle](https://jsfiddle.net/ioslh/h4u8mdng/25/)。
+下面的例子中，我们写了一个自定义的 `ZoomCtrl` 组件，来定义一个自己的地图 zoom 控制器。在线的示例请访问 [jsfiddle](https://jsfiddle.net/ioslh/h4u8mdng/25/)。
 
 ```jsx
 import { Map } from 'react-amap';
