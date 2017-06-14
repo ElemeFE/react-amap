@@ -7,7 +7,6 @@ body{
     /* background: linear-gradient(to right bottom, #ffdc79, #c4e4a2, #0090ff); */
 }
 
-
 ::-webkit-scrollbar {
     width: 8px;
     border-left: 1px solid #aaa;

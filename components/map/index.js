@@ -18,16 +18,6 @@ import MouseTool from '../mousetool';
 
 const Component = React.Component;
 const Children = React.Children;
-const ComponentList = [
-  Circle,
-  GroundImage,
-  InfoWindow,
-  Markers,
-  Marker,
-  Polyline,
-  Polygon,
-  MouseTool
-];
 
 const configurableProps = [
   'layers',
@@ -146,7 +136,12 @@ class Map extends Component {
   renderChildren() {
     return Children.map(this.props.children, (child) => {
       if (child) {
-        if (ComponentList.indexOf(child.type) === -1) {
+        const cType = child.type;
+        /* 针对下面两种组件不注入地图相关属性
+         * 1. 明确声明不需要注入的
+         * 2. DOM 元素
+         */
+        if (cType.preventAmap || (typeof cType === 'string')) {
           return child;
         }
         return React.cloneElement(child, {
@@ -160,22 +155,6 @@ class Map extends Component {
 
   initMapInstance() {
     if (!this.map) {
-      // let opts = {};
-      // if ('createOptions' in this.props) {
-      //   opts = this.props.createOptions;
-      // } else {
-      //   if ('zoom' in this.props) {
-      //     opts.zoom = this.props.zoom;
-      //     this.prevZoom = opts.zoom;
-      //   }
-      //   if ('center' in this.props) {
-      //     opts.center = new window.AMap.LngLat(
-      //       this.props.center.longitude,
-      //       this.props.center.latitude
-      //     );
-      //     this.prevCenter = opts.center;
-      //   }
-      // }
       const options = this.buildCreateOptions();
       this.map = new window.AMap.Map(this.mapWrapper, options);
       const events = this.exposeMapInstance();
