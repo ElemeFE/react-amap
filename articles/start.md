@@ -78,10 +78,10 @@ tips: 记得将其中的 `VERSION` 替换为真实版本号，查看历史版本
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.js
 + https://unpkg.com/react-amap@VERSION/dist/react-amap.min.js
 
-当前最新版本 `0.2.7`：
+当前最新版本 `1.0.0`：
 
-+ https://unpkg.com/react-amap@0.2.7/dist/react-amap.js
-+ https://unpkg.com/react-amap@0.2.7/dist/react-amap.min.js
++ https://unpkg.com/react-amap@1.0.0/dist/react-amap.js
++ https://unpkg.com/react-amap@1.0.0/dist/react-amap.min.js
 
 ### 关于 Key
 
