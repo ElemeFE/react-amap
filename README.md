@@ -8,9 +8,6 @@
 
 > react-amap 是一个基于 React 封装的高德地图组件；帮助你轻松的接入地图到 React 项目中。同时，如果你有更复杂的需求，我们在各个组件的接口中，会完全暴露高德的原生实例给你，方便你亲自对实例进行操作。
 
-如何在项目中接入 react-amap;
-
-
 ### 最近更新
 
 版本 [1.0.0](https://www.npmjs.com/package/react-amap) 中，react-amap 拥有了组件的扩展能力。如果 react-amap 中已有的组件不能满足你的业务需求，你可以使用自己写的地图组件；
@@ -21,6 +18,9 @@
 
 https://jsfiddle.net/ioslh/h4u8mdng/25/
 
+---
+
+如何在项目中接入 react-amap;
 
 ### 安装
 ```sh
