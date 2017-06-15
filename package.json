@@ -14,6 +14,10 @@
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
   "author": "ohislh@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elemefe/react-amap.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "antd": "^2.7.4",
