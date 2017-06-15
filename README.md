@@ -14,6 +14,12 @@
 
 在你的组件中，可以通过 props 访问到创建好的高德地图实例，以及地图的 div 容器；拥有访问这两个属性的能力后，你可以根据高德原生 API 做高德允许你做的一切事情。实际上，react-amap 中的其他组件就是这么做的。文档内容请参考[自定义地图组件](https://elemefe.github.io/react-amap/articles/extend)。
 
+目前已有的一些组件：
+
+1. [react-amap-plugin-heatmap](https://www.npmjs.com/package/react-amap-plugin-heatmap)，热力图组件。
+
+如果你有写好的组件愿意开源出来的，欢迎提一个 PR 扩展这个列表。
+
 ### 在线实时演示
 
 https://jsfiddle.net/ioslh/h4u8mdng/25/

@@ -6,6 +6,20 @@ order: 1
 
 > react-amap 是一个基于 React 封装的高德地图组件；帮助你轻松的接入地图到 React 项目中。同时，如果你有更复杂的需求，我们在各个组件的接口中，会完全暴露高德的原生实例给你，方便你亲自对实例进行操作。
 
+### 最近更新
+
+版本 [1.0.0](https://www.npmjs.com/package/react-amap) 中，react-amap 拥有了组件的扩展能力。如果 react-amap 中已有的组件不能满足你的业务需求，你可以使用自己写的地图组件；
+
+在你的组件中，可以通过 props 访问到创建好的高德地图实例，以及地图的 div 容器；拥有访问这两个属性的能力后，你可以根据高德原生 API 做高德允许你做的一切事情。实际上，react-amap 中的其他组件就是这么做的。文档内容请参考[自定义地图组件](https://elemefe.github.io/react-amap/articles/extend)。
+
+目前已有的一些组件：
+
+1. [react-amap-plugin-heatmap](https://www.npmjs.com/package/react-amap-plugin-heatmap)，热力图组件。
+
+如果你有写好的组件愿意开源出来的，欢迎在 [GitHub](https://github.com/ElemeFE/react-amap) 上提一个 PR 扩展这个列表。
+
+---
+
 本节介绍如何在项目中接入 react-amap;
 
 ### 安装
