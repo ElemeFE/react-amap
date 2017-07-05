@@ -5,6 +5,8 @@ order: 5
 
 地图的**动态属性**在地图创建成功后可以动态的改变；
 
+[JSFIDDLE 在线示例](https://jsfiddle.net/ioslh/mxc0h16p/9/)
+
 ```jsx
 import { Map } from 'react-amap';
 class App extends React.Component{

@@ -5,6 +5,8 @@ order: 1
 
 Map 的父组件必须具有宽度和高度；
 
+[JSFIDDLE 在线示例](https://jsfiddle.net/ioslh/mxc0h16p/5/)
+
 ```jsx
 import { Map } from 'react-amap';
 class App extends React.Component{

@@ -5,6 +5,8 @@ order: 3
 
 可以通过`events`属性给地图绑定事件；
 
+[JSFIDDLE 在线示例](https://jsfiddle.net/ioslh/mxc0h16p/6/)
+
 ```jsx
 import { Map } from 'react-amap';
 class App extends React.Component{

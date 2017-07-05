@@ -7,6 +7,8 @@ order: 6
 
 可以把这个理解成一个自定义图层（Custom Layer），不过我们并没有专门定义一个 `CustomLayer` 组件，因为你完全可以用其他方式（比如`className="customLayer"`）来向你代码的阅读者表明这是一个自定义图层。更少的限制，才有更多的灵活性。
 
+[JSFIDDLE 在线示例](https://jsfiddle.net/ioslh/mxc0h16p/7/)
+
 ```jsx
 import { Map, Marker } from 'react-amap';
 import { Button } from 'antd';
