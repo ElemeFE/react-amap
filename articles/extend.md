@@ -78,7 +78,7 @@ ReactDOM.render(
 
 
 
-默认情况下， react-amap 会给所有 Map 的子组件注入 `__ele__`, `__map__` 这两个属性，如果你明确不需要注入，可以设置组件的 `preventAmap` 属性为 `true`。
+默认情况下， react-amap 会给所有 Map 的子组件注入 `__ele__`, `__map__` 这两个属性，如果你明确不需要注入（比如跟你自己的属性名有冲突），可以设置组件的 `preventAmap` 属性为 `true`。不过即便注入了只要不使用并且也不存在属性名冲突的问题，也没有什么副作用。
 
 ```jsx
 const MyNormalComponent = (props) => {

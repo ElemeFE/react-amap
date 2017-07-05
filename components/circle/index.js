@@ -1,9 +1,9 @@
 // @flow
 import React, { Component } from 'react';
-import isFun from '../_utils/isFun';
-import log from '../_utils/log';
-import toCapitalString from '../_utils/toCapitalString';
-import { getAMapPosition } from '../_utils/utils';
+import isFun from '../utils/isFun';
+import log from '../utils/log';
+import toCapitalString from '../utils/toCapitalString';
+import { getAMapPosition } from '../utils/common';
 /*
  * props
  * {

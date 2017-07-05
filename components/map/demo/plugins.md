@@ -4,6 +4,7 @@ order: 2
 ---
 
 高德地图中有一些[地图控件](http://lbs.amap.com/api/javascript-api/reference/map-control)以插件的形式加载；
+注意：[react-amap 对插件的默认配置与高德官方的默认配置并不一致](https://github.com/ElemeFE/react-amap/issues/21)；
 
 ```jsx
 import { Map } from 'react-amap';

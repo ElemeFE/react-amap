@@ -113,4 +113,4 @@ const plugins = ['Scale', {
 ```
 
 
-这些控件的可配置属性参考[官方文档](http://lbs.amap.com/api/javascript-api/reference/map-control)。
+注意：[react-amap 对插件的默认配置与高德官方的默认配置并不一致](https://github.com/ElemeFE/react-amap/issues/21)；如果在使用 react-amap 的这些插件后，与官方的表现不一致，请参考[官方文档](http://lbs.amap.com/api/javascript-api/reference/map-control)进行配置。

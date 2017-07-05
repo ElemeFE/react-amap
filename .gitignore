@@ -3,6 +3,7 @@
 # project
 dist/
 _site/
+_draft/
 lib/
 .npmignore
 

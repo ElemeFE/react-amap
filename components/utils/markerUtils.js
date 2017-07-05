@@ -1,4 +1,4 @@
-import { getAMapPosition, getAMapPixel } from './utils';
+import { getAMapPosition, getAMapPixel } from './common';
 import React from 'react';
 import { render } from 'react-dom';
 import isFun from './isFun';

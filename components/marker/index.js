@@ -1,18 +1,18 @@
 // @flow
 import React, { Component, Children } from 'react';
 import { render } from 'react-dom';
-import log from '../_utils/log';
-import isFun from '../_utils/isFun';
-import toCapitalString from '../_utils/toCapitalString';
+import log from '../utils/log';
+import isFun from '../utils/isFun';
+import toCapitalString from '../utils/toCapitalString';
 import {
   MarkerConfigurableProps,
   MarkerAllProps,
   renderMarkerComponent
-} from '../_utils/markerUtils';
+} from '../utils/markerUtils';
 import {
   getAMapPosition,
   getAMapPixel
-} from '../_utils/utils';
+} from '../utils/common';
 
 class Marker extends Component {
 

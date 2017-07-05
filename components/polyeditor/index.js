@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import isFun from '../_utils/isFun';
-import log from '../_utils/log';
+import isFun from '../utils/isFun';
+import log from '../utils/log';
 
 type EditorProps = {
   __map__: Object,

@@ -7,6 +7,9 @@ export const getAMapPosition = (pos) => {
   if ('getLng' in pos) {
     return pos;
   }
+  if ((typeof pos[0] === 'number') && (typeof pos[1] === 'number')) {
+    return hasWindow ? new window.AMap.LngLat(pos[0], pos[1]) : null;
+  }
   return hasWindow ? new window.AMap.LngLat(pos.longitude, pos.latitude) : null;
 };
 
@@ -28,4 +31,10 @@ export const getAMapSize = (size) => {
     return size;
   }
   return hasWindow ? new window.AMap.Size(size.width, size.height) : null;
+};
+
+export default {
+  getAMapPosition,
+  getAMapPixel,
+  getAMapSize
 };

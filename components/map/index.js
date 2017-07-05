@@ -1,20 +1,10 @@
 // @flow
 import React from 'react';
-import APILoader from '../_utils/APILoader';
-import isFun from '../_utils/isFun';
-import log from '../_utils/log';
-import toCapitalString from '../_utils/toCapitalString';
-import { getAMapPosition } from '../_utils/utils';
-import Marker from '../marker';
-import Markers from '../markers';
-import Polygon from '../polygon';
-import Polyline from '../polyline';
-import InfoWindow from '../infowindow';
-import Circle from '../circle';
-import GroundImage from '../groundimage';
-import MouseTool from '../mousetool';
-// import CircleEditor from '../circleeditor';
-// import PolyEditor from '../polyeditor';
+import APILoader from '../utils/APILoader';
+import isFun from '../utils/isFun';
+import log from '../utils/log';
+import toCapitalString from '../utils/toCapitalString';
+import { getAMapPosition } from '../utils/common';
 
 const Component = React.Component;
 const Children = React.Children;

@@ -1,14 +1,13 @@
 // @flow
 import React from 'react';
 import { render } from 'react-dom';
-import isFun from '../_utils/isFun';
-import log from '../_utils/log';
-// import clusterIcon from '../_assets/map_cluster.png';
+import isFun from '../utils/isFun';
+import log from '../utils/log';
 import {
   MarkerAllProps,
   getPropValue,
   renderMarkerComponent
-} from '../_utils/markerUtils';
+} from '../utils/markerUtils';
 
 if (typeof window !== 'undefined') {
   const styleText = `.amap_markers_pop_window{

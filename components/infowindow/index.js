@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
 import { render } from 'react-dom';
-import isFun from '../_utils/isFun';
-import toCapitalString from '../_utils/toCapitalString';
-import log from '../_utils/log';
+import isFun from '../utils/isFun';
+import toCapitalString from '../utils/toCapitalString';
+import log from '../utils/log';
 import {
   getAMapPosition,
   getAMapPixel,
   getAMapSize
-} from '../_utils/utils';
+} from '../utils/common';
 /*
  * props
  * {
