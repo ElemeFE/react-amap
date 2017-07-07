@@ -4,14 +4,14 @@ import { Icon } from 'antd';
 
 const shareIt = () => {
   const curPage = window.encodeURIComponent(window.location.href);
-  let text = `react-amap 是一个基于 React 封装的高德地图组件；帮助你轻松的接入地图到 React 项目中。除了必须引用的 Map 组件外，我们目前提供了最常用的 10 个地图组件，能满足大部分简单的业务场景；如果你有更复杂的需求，或者觉得默认提供的组件功能不够，你完全可以自定义一个地图组件，然后根据高德原生 API 做高德允许你做的一切事情。`
+  let text = 'react-amap 是一个基于 React 封装的高德地图组件；帮助你轻松的接入地图到 React 项目中。除了必须引用的 Map 组件外，我们目前提供了最常用的 10 个地图组件，能满足大部分简单的业务场景；如果你有更复杂的需求，或者觉得默认提供的组件功能不够，你完全可以自定义一个地图组件，然后根据高德原生 API 做高德允许你做的一切事情';
   const article = document.querySelector('article');
   if (article) {
     text = article.innerText.slice(0, 140);
   }
-  const url = `http://service.weibo.com/share/share.php?url=${curPage}&appkey=3975764953&language=zh_cn&title=${window.encodeURIComponent(text)}&source=thisissourcetest&sourceUrl=https%3A%2F%2Felemefe.github.io%2Freact-amap%2F&ralateUid=oslh&message=&uids=&pic=https%3A%2F%2Fcloud.githubusercontent.com%2Fassets%2F3898898%2F23833571%2Fe5c7ae68-0782-11e7-8590-cecf4f3c969f.png&searchPic=true&content=`
+  const url = `http://service.weibo.com/share/share.php?url=${curPage}&appkey=3975764953&language=zh_cn&title=${window.encodeURIComponent(text)}&source=thisissourcetest&sourceUrl=https%3A%2F%2Felemefe.github.io%2Freact-amap%2F&ralateUid=oslh&message=&uids=&pic=https%3A%2F%2Fcloud.githubusercontent.com%2Fassets%2F3898898%2F23833571%2Fe5c7ae68-0782-11e7-8590-cecf4f3c969f.png&searchPic=true&content=`;
   window.open(url, '_blank');
-}
+};
 
 export default function Header(props) {
   const route = props.route;
