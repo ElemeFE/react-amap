@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:wb="http://open.weibo.com/wb">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,15 +10,25 @@
     <title>React AMap — 基于 React 的高德地图组件</title>
     <link rel="shortcut icon" href="https://cloud.githubusercontent.com/assets/3898898/23848054/41a34ffc-0810-11e7-8857-6e8726be5175.png">
     <link rel="stylesheet" type="text/css" href="/react-amap/index.css"/>
+    <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
     <!--[if lte IE 10]>
     <script
       src="https://as.alipayobjects.com/g/component/??console-polyfill/0.2.2/index.js,media-match/2.0.2/media.match.min.js"></script>
     <![endif]-->
+    <style>
+      #weibo {
+        position: absolute;
+        top: 31px;
+        right: 10px;
+      }
+    </style>
   </head>
   <body>
     <div id="react-content">
       
     </div>
+    <div id="weibo">
+      <wb:share-button appkey="3975764953" addition="simple" type="icon" ralateUid="1592469000" default_text="react-amap 是一个基于 React 封装的高德地图组件；帮助你轻松的接入地图到 React 项目中。除了必须引用的 Map 组件外，我们目前提供了最常用的 10 个地图组件，能满足大部分简单的业务场景；如果你有更复杂的需求，或者觉得默认提供的组件功能不够，你完全可以自定义一个地图组件，然后根据高德原生 API 做高德允许你做的一切事情。" pic="https%3A%2F%2Fcloud.githubusercontent.com%2Fassets%2F3898898%2F23833571%2Fe5c7ae68-0782-11e7-8590-cecf4f3c969f.png"></wb:share-button>    </div>
     <script src="/react-amap/common.js"></script>
     <script src="/react-amap/index.js"></script>
     <script>
