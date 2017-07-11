@@ -34,18 +34,27 @@ npm install --save react-amap
 ```
 
 ### npm 用法
+
+```html
+<div id="app"></div>
+```
+
+```css
+#app {
+  width: 600px;
+  height: 400px;
+}
+```
+
 ```jsx
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { Map } from 'react-amap';
 
-class MapApp extends React.Component {
-  // ... Your other methods
-  render() {
-    return <div style={{ width: '600px', height: '500px' }}>
-      <Map amapkey={YOUR_AMAP_KEY} />
-    </div>
-  }
-}
+ReactDOM.render(
+  <Map amapkey={YOUR_AMAP_KEY} />,
+  document.querySelector('#app')
+)
 ```
 
 也可以手工引入你需要的组件：
