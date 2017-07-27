@@ -15,6 +15,7 @@ order: 1
 目前已有的一些组件：
 
 1. [react-amap-plugin-heatmap](https://www.npmjs.com/package/react-amap-plugin-heatmap)，热力图组件。
+2. [react-amap-plugin-geolocation](https://www.npmjs.com/package/react-amap-plugin-geolocation)，定位组件。
 
 如果你有写好的组件愿意开源出来的，欢迎在 [GitHub](https://github.com/ElemeFE/react-amap) 上提一个 PR 扩展这个列表。
 
