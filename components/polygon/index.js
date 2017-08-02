@@ -138,7 +138,9 @@ class Polygon extends Component {
 
   buildPathValue(path: PolygonPath) {
     if (path.length) {
-      if ('getLng' in path[0]) {
+      if (typeof path[0] === 'number') {
+        return path.map((p) => (getAMapPosition(p)));
+      } else if ('getLng' in path[0]) {
         return path;
       } else if ('longitude' in path[0]) {
         return path.map((p) => (getAMapPosition(p)));

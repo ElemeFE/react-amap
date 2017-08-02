@@ -4,11 +4,11 @@ export const getAMapPosition = (pos) => {
   if (!pos) {
     return pos;
   }
-  if ('getLng' in pos) {
-    return pos;
-  }
   if ((typeof pos[0] === 'number') && (typeof pos[1] === 'number')) {
     return hasWindow ? new window.AMap.LngLat(pos[0], pos[1]) : null;
+  }
+  if ('getLng' in pos) {
+    return pos;
   }
   return hasWindow ? new window.AMap.LngLat(pos.longitude, pos.latitude) : null;
 };
