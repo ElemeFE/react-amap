@@ -1,4 +1,4 @@
-// 此处 APILoader 的实现参考了 vue-amap 中相应的实现 
+// 此处 APILoader 的实现参考了 vue-amap 中相应的实现
 // https://github.com/ElemeFE/vue-amap/blob/dev/src/lib/services/lazy-amap-api-loader.js
 const DEFAULT_CONFIG = {
   v: 1.3,

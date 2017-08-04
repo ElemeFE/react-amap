@@ -145,10 +145,7 @@ class Markers extends Component {
 
   createMarkers(props: MarkerProps) {
     const markers = props.markers || [];
-    let renderFn;
-    if (isFun(props.render)) {
-      renderFn = props.render;
-    }
+
     const mapMarkers = [];
     const markerReactChildDOM = {};
     markers.length && markers.forEach((raw, idx) => {
@@ -215,11 +212,11 @@ class Markers extends Component {
 
   componentDidMount() {
     if (this.map) {
-      this.setMarkerChild(this.props);
+      this.setMarkerChild();
     }
   }
 
-  setMarkerChild(props: MarkerProps) {
+  setMarkerChild() {
     Object.keys(this.markerReactChildDOM).forEach((idx) => {
       const dom = this.markersCache[idx].getContent();
       const child = this.markerReactChildDOM[idx];
@@ -269,7 +266,7 @@ class Markers extends Component {
       });
       this.markersCache = defaultOpts.markersCache;
       this.createMarkers(nextProps);
-      this.setMarkerChild(this.props);
+      this.setMarkerChild();
     }
     if (markerChanged || (clusterChanged)) {
       if (this.markersWindow) {
@@ -283,9 +280,7 @@ class Markers extends Component {
 
   loadClusterPlugin(clusterConfig: Object & boolean) {
     if (this.mapCluster) {
-      return new Promise((resolve) => {
-        resolve(this.mapCluster);
-      });
+      return Promise.resolve(this.mapCluster);
     }
     const config = (typeof clusterConfig === 'boolean') ? {} : clusterConfig;
     return new Promise((resolve) => {

@@ -19,11 +19,6 @@ import {
 const Component = React.Component;
 const Children = React.Children;
 
-const defaultOpts = {
-  offset: [0, -30],
-  closeWhenClickMap: false
-};
-
 const configurableProps = [
   'content',
   'position',
