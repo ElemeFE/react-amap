@@ -76,9 +76,7 @@ class PolyEditor extends React.Component {
 
   loadPolyEditor(props: EditorProps) {
     if (this.polyEditor) {
-      return new Promise((resolve) => {
-        resolve(this.polyEditor);
-      });
+      return Promise.resolve(this.polyEditor);
     }
     return new Promise((resolve) => {
       this.map.plugin(['AMap.PolyEditor'], () => {

@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, Children } from 'react';
+import React, { Component } from 'react';
 import { render } from 'react-dom';
 import log from '../utils/log';
 import isFun from '../utils/isFun';
@@ -80,11 +80,11 @@ class Marker extends Component {
   // 初始化标记的外观
   setMarkerLayout(props: MarkerProps) {
     if (('render' in props) || ('children' in props)) {
-      this.createContentWrapper(props);
+      this.createContentWrapper();
     }
   }
 
-  createContentWrapper(props: MarkerProps) {
+  createContentWrapper() {
     this.contentWrapper = document.createElement('div');
     this.marker.setContent(this.contentWrapper);
   }
