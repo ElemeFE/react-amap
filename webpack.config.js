@@ -5,19 +5,23 @@ var webpackConfig = {
   entry: './components/',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'react-amap.js',
+    filename: process.env.NODE_ENV === 'production' ? 'react-amap.min.js' : 'react-amap.js',
     library: 'ReactAMAP',
     libraryTarget: 'umd'
   },
   module: {
-    loaders: [
+    rules: [
       {
+        enforce: 'pre',
+        test: /\.jsx?$/,
+        include: path.resolve(__dirname, 'components'),
+        exclude: path.resolve(__dirname, 'node_modules'),
+        loader: 'eslint-loader'
+      }, {
         test: /\.jsx?$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          presets: ['es2015', 'stage-0', 'react']
-        }
+        include: path.resolve(__dirname, 'components'),
+        exclude: path.resolve(__dirname, 'node_modules')
       }
     ]
   },
@@ -34,13 +38,8 @@ var webpackConfig = {
       commonjs: 'react-dom',
       amd: 'react-dom'
     }
-  },
-  plugins: []
+  }
 };
 
-if (process.env.NODE_ENV === 'production') {
-  webpackConfig.output.filename = 'react-amap.min.js';
-  webpackConfig.plugins.push(new UglifyJSPlugin());
-}
 
 module.exports = webpackConfig;
