@@ -182,6 +182,12 @@ class Polyline extends Component {
   render() {
     return (this.renderEditor(this.props.children));
   }
+
+  componentWillUnmount() {
+    this.polyline.hide();
+    this.polyline.setMap(null);
+    delete this.polyline;
+  }
 }
 
 export default Polyline;

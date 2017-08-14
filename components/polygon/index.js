@@ -199,6 +199,12 @@ class Polygon extends Component {
   render() {
     return (this.renderEditor(this.props.children));
   }
+
+  componentWillUnmount() {
+    this.polygon.hide();
+    this.polygon.setMap(null);
+    delete this.polygon;
+  }
 }
 
 export default Polygon;

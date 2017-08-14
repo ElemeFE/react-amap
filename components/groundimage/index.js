@@ -205,6 +205,12 @@ class GroundImage extends Component {
   render() {
     return (null);
   }
+
+  componentWillUnmount() {
+    this.image.hide();
+    this.image.setMap(null);
+    delete this.image;
+  }
 }
 
 export default GroundImage;

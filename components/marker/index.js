@@ -166,6 +166,12 @@ class Marker extends Component {
   render() {
     return null;
   }
+
+  componentWillUnmount() {
+    this.marker.hide();
+    this.marker.setMap(null);
+    delete this.marker;
+  }
 }
 
 export default Marker;

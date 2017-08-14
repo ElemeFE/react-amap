@@ -171,6 +171,12 @@ class Circle extends Component {
   render() {
     return (this.renderEditor(this.props.children));
   }
+
+  componentWillUnmount() {
+    this.mapCircle.hide();
+    this.mapCircle.setMap(null);
+    delete this.mapCircle;
+  }
 }
 
 export default Circle;
