@@ -24,10 +24,6 @@ const configurableProps = [
   'visible'
 ];
 
-const allProps = configurableProps.concat([
-  'clickable'
-]);
-
 type GIProps = {
   __map__: Object,
   __ele__: HTMLElement,

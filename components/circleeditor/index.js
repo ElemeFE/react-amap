@@ -76,9 +76,7 @@ class CircleEditor extends React.Component {
 
   loadCircleEditor(props: EditorProps) {
     if (this.circleEditor) {
-      return new Promise((resolve) => {
-        resolve(this.circleEditor);
-      });
+      return Promise.resolve(this.circleEditor);
     }
     return new Promise((resolve) => {
       this.map.plugin(['AMap.CircleEditor'], () => {
