@@ -1,8 +1,11 @@
 /* eslint-disable */
+import * as React from 'react';
+
 declare type AMapLngLat = {
   getLng: Function,
   getLat: Function,
 };
+
 declare type PureLngLat = {
   longitude: number,
   latitude: number,
@@ -33,18 +36,49 @@ declare type Pixel = AMapPixel & PurePixel;
 
 declare type MarkerContent = string | HTMLElement;
 
-// TODO 如何区分 & 和 |
-// declare type PolylinePath = PureLngLat[] & AMapLngLat[];
-
 declare type PolylinePath = Array<PureLngLat> & Array<AMapLngLat>;
 
 declare type PolygonPath = PolylinePath & Array<PolylinePath>;
+
+declare type EventMap = {[evName: string]: Function};
+
+declare type MapLang = 'zh_cn' | 'zh_en' | 'en';
+
+declare type MapProps = {
+  amapkey?: string,
+  children: React.Node,
+  events?: EventMap,
+  center?: LngLat,
+  zoom?: number,
+  zooms?: [number, number],
+  plugins?: Object,
+  animateEnable?: boolean,
+  doubleClickZoom?: boolean,
+  dragEnable?: boolean,
+  isHotspot?: boolean,
+  jogEnable?: boolean,
+  keyboardEnable?: boolean,
+  resizeEnable?: boolean,
+  rotateEnable?: boolean,
+  scrollWheel?: boolean,
+  touchZoom?: boolean,
+  zoomEnable?: boolean,
+  showIndoorMap?: boolean,
+  expandZoomRange?: boolean,
+  viewMode?: '2D' | '3D',
+  pitch?: number,
+  mapStyle?: string,
+  labelzIndex?: number,
+  lang?: MapLang,
+  loading: React.Node
+}
 
 declare type MarkerProps = {
   position?: LngLat,
   offset?: Pixel,
   icon?: any,
   content?: MarkerContent,
+  className?: string,
   draggable?: boolean,
   visible?: boolean,
   cursor?: string,
@@ -65,9 +99,9 @@ declare type MarkerProps = {
   events?: Object,
   render?: Function,
   children?: any,
-  useCluster?: boolean,
+  useCluster?: Object | boolean,
   __map__: Object,
-  __ele__: HTMLElement,
+  __ele__: HTMLDivElement,
 };
 
 declare type MapEvent = {

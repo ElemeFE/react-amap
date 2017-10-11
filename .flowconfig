@@ -3,3 +3,6 @@ flow/
 
 [ignore]
 .*/node_modules/.*
+
+[version]
+0.56.0

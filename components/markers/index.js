@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { render } from 'react-dom';
 import isFun from '../utils/isFun';
 import log from '../utils/log';
@@ -96,6 +96,7 @@ const ClusterProps = [
 
 const IdKey = '__react_amap__';
 
+type MarkerDOM = HTMLDivElement & { markerRef: Object };
 /*
  * props
  * {
@@ -103,14 +104,13 @@ const IdKey = '__react_amap__';
  *  markers(array<>)坐标列表
  *  __map__ 父级组件传过来的地图实例
  *  __ele__ 父级组件传过来的地图容器
- *
  * }
  */
 
-class Markers extends Component {
+class Markers extends Component<MarkerProps, {}> {
 
   map: Object;
-  element: HTMLElement | {markerRef: Object};
+  element: HTMLDivElement & {markerRef: Object};
   markersCache: Array<Object>;
   markerIDCache: Array<number>;
   useCluster: ?boolean;
@@ -118,7 +118,7 @@ class Markers extends Component {
   hoverOffset: Object;
   markersWindow: Object;
   mapCluster: Object;
-  markersDOM: HTMLElement;
+  markersDOM: MarkerDOM;
   markerReactChildDOM: any;
 
   constructor(props: MarkerProps) {
@@ -128,7 +128,7 @@ class Markers extends Component {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
         this.map = props.__map__;
-        this.element = props.__ele__;
+        this.element = this.map.getContainer();
         this.markersCache = defaultOpts.markersCache;
         this.useCluster = null;
         this.markerIDCache = defaultOpts.markerIDCache;
@@ -194,8 +194,7 @@ class Markers extends Component {
   }
 
   checkClusterSettings(props: MarkerProps) {
-    const useCluster = !!props.useCluster;
-    if (useCluster) {
+    if (props.useCluster) {
       this.loadClusterPlugin(props.useCluster).then((cluster) => {
         cluster.setMarkers(this.markersCache);
       });
@@ -261,8 +260,10 @@ class Markers extends Component {
     const clusterChanged = ((!!this.props.useCluster) !== (!!nextProps.useCluster));
     if (markerChanged) {
       this.markersCache.length && this.markersCache.forEach((marker) => {
-        marker.setMap(null);
-        marker = null;
+        if (marker) {
+          marker.setMap(null);
+          marker = null;
+        }
       });
       this.markersCache = defaultOpts.markersCache;
       this.createMarkers(nextProps);
@@ -278,7 +279,7 @@ class Markers extends Component {
     }
   }
 
-  loadClusterPlugin(clusterConfig: Object & boolean) {
+  loadClusterPlugin(clusterConfig: Object | boolean): Promise<Object> {
     if (this.mapCluster) {
       return Promise.resolve(this.mapCluster);
     }
@@ -297,13 +298,14 @@ class Markers extends Component {
     //   size: new window.AMap.Size(56, 56),
     //   offset: new window.AMap.Pixel(-28, -28)
     // };
-    const defalutOptions = {
+    const defalutOptions: Object = {
       minClusterSize: 2,
       zoomOnClick: false,
       maxZoom: 18,
       gridSize: 60,
       // styles: [style, style, style],
       averageCenter: true
+      // styles: []
     };
 
     ClusterProps.forEach((key) => {
@@ -342,30 +344,30 @@ class Markers extends Component {
     this.setMarkerHoverOut(e, e.target);
   }
 
-  onWindowMarkerClick(element: HTMLElement) {
+  onWindowMarkerClick(element: MarkerDOM) {
     const marker = element.markerRef;
     this.triggerMarkerClick(null, marker);
   }
 
-  onWindowMarkerHover(element: HTMLElement) {
+  onWindowMarkerHover(element: MarkerDOM) {
     const marker = element.markerRef;
     this.setMarkerHovered(null, marker);
   }
 
-  onWindowMarkerHoverOut(element: HTMLElement) {
+  onWindowMarkerHoverOut(element: MarkerDOM) {
     const marker = element.markerRef;
     this.setMarkerHoverOut(null, marker);
   }
 
-  setMarkerHovered(e: MapEvent, marker: Object) {
+  setMarkerHovered(e: MapEvent | null, marker: Object) {
     this.triggerMarkerHover(e, marker);
   }
 
-  setMarkerHoverOut(e: MapEvent, marker: Object) {
+  setMarkerHoverOut(e: MapEvent | null, marker: Object) {
     this.triggerMarkerHoverOut(e, marker);
   }
 
-  triggerMarkerClick(e: MapEvent, marker: Object) {
+  triggerMarkerClick(e: MapEvent | null, marker: Object) {
     // const raw = marker.getExtData();
     const events = this.props.events || {};
     if (isFun(events.click)) {
@@ -373,7 +375,7 @@ class Markers extends Component {
     }
   }
 
-  triggerMarkerHover(e: MapEvent, marker: Object) {
+  triggerMarkerHover(e: MapEvent | null, marker: Object) {
     // const raw = marker.getExtData();
     const events = this.props.events || {};
     if (isFun(events.mouseover)) {
@@ -381,7 +383,7 @@ class Markers extends Component {
     }
   }
 
-  triggerMarkerHoverOut(e: MapEvent, marker: Object) {
+  triggerMarkerHoverOut(e: MapEvent | null, marker: Object) {
     // const raw = marker.getExtData();
     const events = this.props.events || {};
     if (isFun(events.mouseout)) {
@@ -426,11 +428,10 @@ class Markers extends Component {
       }
       markers.forEach((m) => {
         const contentDOM = m.getContent();
-        const itemDOM = document.createElement('div');
+        const itemDOM: MarkerDOM = document.createElement('div');
         itemDOM.className = 'window_marker_item';
         itemDOM.appendChild(contentDOM);
         itemDOM.markerRef = m;
-
         itemDOM.addEventListener('click', this.onWindowMarkerClick.bind(this, itemDOM), true);
         itemDOM.addEventListener('mouseover', this.onWindowMarkerHover.bind(this, itemDOM), true);
         itemDOM.addEventListener('mouseout', this.onWindowMarkerHoverOut.bind(this, itemDOM), true);

@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import isFun from '../utils/isFun';
 import log from '../utils/log';
 /*
@@ -8,7 +8,6 @@ import log from '../utils/log';
  *  __map__ 父级组件传过来的地图实例
  * }
  */
-const Component = React.Component;
 const defaultOpts = {
   clickable: false,
   opacity: 1,
@@ -35,7 +34,7 @@ type GIProps = {
   events?: Object
 };
 
-class GroundImage extends Component {
+class GroundImage extends React.Component<GIProps, {}> {
 
   map: Object;
   element: HTMLElement;
@@ -48,7 +47,7 @@ class GroundImage extends Component {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
         this.map = props.__map__;
-        this.element = props.__ele__;
+        this.element = this.map.getContainer();
         this.createGroundImage(props);
       }
     }

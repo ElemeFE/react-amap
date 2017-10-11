@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import isFun from '../utils/isFun';
 import log from '../utils/log';
 import toCapitalString from '../utils/toCapitalString';
@@ -42,7 +42,7 @@ type CircleProps = {
   children: any,
 }
 
-class Circle extends Component {
+class Circle extends React.Component<CircleProps, {}> {
 
   props: CircleProps;
   map: Object;
@@ -56,7 +56,7 @@ class Circle extends Component {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
         this.map = props.__map__;
-        this.element = props.__ele__;
+        this.element = this.map.getContainer();
         this.initMapCircle(props);
       }
     }

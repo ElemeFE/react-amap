@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import log from '../utils/log';
 import isFun from '../utils/isFun';
 
@@ -11,7 +11,7 @@ type EditorProps = {
   events?: Object,
 };
 
-class CircleEditor extends React.Component {
+class CircleEditor extends React.Component<EditorProps, {}> {
 
   map: Object;
   element: HTMLElement;
@@ -26,7 +26,7 @@ class CircleEditor extends React.Component {
         log.warning('CIRCLE_INSTANCE_REQUIRED');
       } else {
         this.map = props.__map__;
-        this.element = props.__ele__;
+        this.element = this.map.getContainer();
         this.circle = props.__circle__;
         this.editorActive = false;
         this.onPropsUpdate(props);
@@ -74,7 +74,7 @@ class CircleEditor extends React.Component {
     }
   }
 
-  loadCircleEditor(props: EditorProps) {
+  loadCircleEditor(props: EditorProps): Promise<Object> {
     if (this.circleEditor) {
       return Promise.resolve(this.circleEditor);
     }

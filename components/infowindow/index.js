@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { render } from 'react-dom';
 import isFun from '../utils/isFun';
 import toCapitalString from '../utils/toCapitalString';
@@ -54,7 +54,7 @@ type IWProps = {
   __ele__: HTMLElement,
 };
 
-class InfoWindow extends Component {
+class InfoWindow extends Component<IWProps, {}> {
 
   map: Object;
   element: HTMLElement;
@@ -69,7 +69,7 @@ class InfoWindow extends Component {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
         this.map = props.__map__;
-        this.element = props.__ele__;
+        this.element = this.map.getContainer();
         this.isCustom = true;
         this.createInfoWindow(props);
       }

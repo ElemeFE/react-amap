@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import isFun from '../utils/isFun';
 import log from '../utils/log';
 
@@ -11,7 +11,7 @@ type EditorProps = {
   events?: Object,
 };
 
-class PolyEditor extends React.Component {
+class PolyEditor extends React.Component<EditorProps, {}> {
 
   map: Object;
   element: HTMLElement;
@@ -74,7 +74,7 @@ class PolyEditor extends React.Component {
     }
   }
 
-  loadPolyEditor(props: EditorProps) {
+  loadPolyEditor(props: EditorProps): Promise<Object> {
     if (this.polyEditor) {
       return Promise.resolve(this.polyEditor);
     }

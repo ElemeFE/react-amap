@@ -1,26 +1,47 @@
 const hasWindow = (typeof window !== 'undefined');
 
+/*
+ * [lng, lat]
+ * {lng, lat}
+ * {longitude, latitude}
+ */
 export const getAMapPosition = (pos) => {
   if (!pos) {
     return pos;
   }
-  if ((typeof pos[0] === 'number') && (typeof pos[1] === 'number')) {
-    return hasWindow ? new window.AMap.LngLat(pos[0], pos[1]) : null;
-  }
-  if ('getLng' in pos) {
+  // 高德原生 AMap.LngLat 类
+  if ('getLng' in pos && 'getLat' in pos) {
     return pos;
   }
-  return hasWindow ? new window.AMap.LngLat(pos.longitude, pos.latitude) : null;
+  let lng = 0;
+  let lat = 0;
+  if (({}).toString.call(pos) === '[object Array]') {
+    lng = pos[0];
+    lat = pos[1];
+  } else if ('lng' in pos && 'lat' in pos) {
+    lng = pos.lng;
+    lat = pos.lat;
+  } else if ('longitude' in pos && 'latitude' in pos) {
+    lng = pos.longitude;
+    lat = pos.latitude;
+  }
+  return hasWindow ? new window.AMap.LngLat(lng, lat) : null;
 };
 
 export const getAMapPixel = (ofst) => {
   if (!ofst) {
     return ofst;
   }
-  if ('getX' in ofst) {
+  if ('getX' in ofst && 'getY' in ofst) {
     return ofst;
   }
-  return hasWindow ? new window.AMap.Pixel(ofst[0], ofst[1]) : null;
+  let x = 0;
+  let y = 0;
+  if (({}).toString.call(ofst) === '[object Array]') {
+    x = ofst[0];
+    y = ofst[1];
+  }
+  return hasWindow ? new window.AMap.Pixel(x, y) : null;
 };
 
 export const getAMapSize = (size) => {

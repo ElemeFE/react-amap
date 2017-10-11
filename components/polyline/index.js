@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import isFun from '../utils/isFun';
 import log from '../utils/log';
 import PolyEditor from '../polyeditor';
@@ -35,10 +35,11 @@ type LineProps = {
   showDir?: boolean,
   __ele__: HTMLElement,
   __map__: Object,
-  events: Object
+  events: Object,
+  children: React.Node,
 };
 
-class Polyline extends Component {
+class Polyline extends Component<LineProps, {}> {
 
   map: Object;
   polyline: Object;
@@ -51,7 +52,7 @@ class Polyline extends Component {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
         this.map = props.__map__;
-        this.element = props.__ele__;
+        this.element = this.map.getContainer();
         this.createMapPolyline(props);
       }
     }

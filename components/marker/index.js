@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import { render } from 'react-dom';
 import log from '../utils/log';
 import isFun from '../utils/isFun';
@@ -14,10 +14,10 @@ import {
   getAMapPixel
 } from '../utils/common';
 
-class Marker extends Component {
+class Marker extends React.Component<MarkerProps, {}> {
 
   map: Object;
-  element: HTMLElement;
+  element: HTMLDivElement;
   marker: Object;
   contentWrapper: HTMLElement;
 
@@ -28,7 +28,7 @@ class Marker extends Component {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
         this.map = props.__map__;
-        this.element = props.__ele__;
+        this.element = this.map.getContainer();
         this.createMarker(props);
       }
     }
@@ -81,6 +81,10 @@ class Marker extends Component {
   setMarkerLayout(props: MarkerProps) {
     if (('render' in props) || ('children' in props)) {
       this.createContentWrapper();
+      if ('className' in props && props.className) {
+        // https://github.com/ElemeFE/react-amap/issues/40
+        this.contentWrapper.className = props.className;
+      }
     }
   }
 
@@ -91,6 +95,10 @@ class Marker extends Component {
 
   setChildComponent(props: MarkerProps) {
     if (this.contentWrapper) {
+      if ('className' in props && props.className) {
+        // https://github.com/ElemeFE/react-amap/issues/40
+        this.contentWrapper.className = props.className;
+      }
       if ('render' in props) {
         renderMarkerComponent(props.render, this.marker);
       } else if ('children' in props) {

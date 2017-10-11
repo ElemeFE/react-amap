@@ -36,13 +36,13 @@ type PolyProps = {
   visible?: boolean,
   zIndex?: number,
   bubble?: boolean,
-  events?: boolean,
+  events?: Object,
   children?: any,
   __map__: Object,
   __ele__: HTMLElement,
 }
 
-class Polygon extends Component {
+class Polygon extends Component<PolyProps, {}> {
 
   map: Object;
   element: HTMLElement;
@@ -55,7 +55,7 @@ class Polygon extends Component {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
         this.map = props.__map__;
-        this.element = props.__ele__;
+        this.element = this.map.getContainer();
         this.initMapPolygon(props);
       }
     }

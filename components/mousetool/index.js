@@ -8,7 +8,7 @@ type MTProps = {
   events: Object,
 };
 
-class MouseTool extends React.Component {
+class MouseTool extends React.Component<MTProps, {}> {
 
   map: Object;
   tool: Object;
