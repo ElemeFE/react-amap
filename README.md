@@ -10,6 +10,10 @@
 
 ### 最近更新
 
+高德发布了 JavaScript SDK 的 1.4.0 版本，react-amap 也相应升级到了 1.1.0，并接入了高德最新的 SDK。现在可以下载尝试。文档正在补充中。
+
+### 扩展组件
+
 从版本 [1.0.0](https://www.npmjs.com/package/react-amap) 开始，react-amap 拥有了组件的扩展能力。如果 react-amap 中已有的组件不能满足你的业务需求，你可以使用自己写的地图组件；
 
 在你的组件中，可以通过 props 访问到创建好的高德地图实例，以及地图的 div 容器；拥有访问这两个属性的能力后，你可以根据高德原生 API 做高德允许你做的一切事情。实际上，react-amap 中的其他组件就是这么做的。文档内容请参考[自定义地图组件](https://elemefe.github.io/react-amap/articles/extend)。
