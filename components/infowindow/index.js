@@ -17,7 +17,6 @@ import {
  */
 
 const Component = React.Component;
-const Children = React.Children;
 
 const configurableProps = [
   'content',
