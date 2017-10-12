@@ -1,10 +1,10 @@
 ---
 category: Article
-title: react-amap 2.0 升级
+title: react-amap 1.1.0 升级
 order: 0
 ---
 
-高德官方的地图 JSSDK 升级到了 [1.4.0](http://lbs.amap.com/api/javascript-api/changelog)，react-amap 也相应接入这个最新版本进行适配，同时修复了一些 Bug。
+高德官方的地图 JSSDK 升级到了 [1.4.0](http://lbs.amap.com/api/javascript-api/changelog)，react-amap 接入最新的 SDK 升级到 1.1.0，同时修复了一些 Bug。
 
 主要内容包括：
 1. 大幅重构 Map 组件；支持 `animateEnable`、`doubleClickZoom` 等属性的动态配置。
@@ -12,9 +12,6 @@ order: 0
 3. 支持给 Map 提供 loading 组件以渲染加载效果。
 2. 支持给 Marker 组件添加 `className`。（[#40](https://github.com/ElemeFE/react-amap/issues/40)）
 3. 补充了 TypeScript 模块声明，可以在 TypeScript 项目中使用。（[#47](https://github.com/ElemeFE/react-amap/issues/47)）
-
-
-不兼容的属性
 
 
 升级说明
