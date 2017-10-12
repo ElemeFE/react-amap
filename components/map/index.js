@@ -272,7 +272,7 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
             visible = true;
           } else {
             name = p.name;
-            config = p.options;
+            config = p.options || {};
             visible = (('visible' in config) && (typeof config.visible === 'boolean')) ? config.visible : true;
             delete config.visible;
           }
@@ -341,15 +341,19 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
   }
 
   setControlBar(opts: Object) {
-    const { onCreated, ...restOpts } = opts;
-    const initOpts = {...defaultOpts.ControlBar, ...restOpts};
-    this.map.plugin(['AMap.ControlBar'], () => {
-      this.pluginMap.ControlBar = new window.AMap.ControlBar(initOpts);
-      this.map.addControl(this.pluginMap.ControlBar);
-      if (isFun(onCreated)) {
-        onCreated(this.pluginMap.ControlBar);
-      }
-    });
+    if (this.pluginMap.ControlBar) {
+      // do nothing
+    } else {
+      const { onCreated, ...restOpts } = opts;
+      const initOpts = {...defaultOpts.ControlBar, ...restOpts};
+      this.map.plugin(['AMap.ControlBar'], () => {
+        this.pluginMap.ControlBar = new window.AMap.ControlBar(initOpts);
+        this.map.addControl(this.pluginMap.ControlBar);
+        if (isFun(onCreated)) {
+          onCreated(this.pluginMap.ControlBar);
+        }
+      });
+    }
   }
 
   // 用户可以通过 created 事件获取 map 实例

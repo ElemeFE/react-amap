@@ -138,11 +138,11 @@ class Polygon extends Component<PolyProps, {}> {
 
   buildPathValue(path: PolygonPath) {
     if (path.length) {
-      if (typeof path[0] === 'number') {
+      if (path[0][0] && typeof path[0][0] === 'number') {
         return path.map((p) => (getAMapPosition(p)));
       } else if ('getLng' in path[0]) {
         return path;
-      } else if ('longitude' in path[0]) {
+      } else if ('longitude' in path[0] || 'lng' in path[0]) {
         return path.map((p) => (getAMapPosition(p)));
       } else if (path.length === 2) {
         // Ring

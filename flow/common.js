@@ -38,7 +38,7 @@ declare type MarkerContent = string | HTMLElement;
 
 declare type PolylinePath = Array<PureLngLat> & Array<AMapLngLat>;
 
-declare type PolygonPath = PolylinePath & Array<PolylinePath>;
+declare type PolygonPath = PolylinePath | Array<PolylinePath>;
 
 declare type EventMap = {[evName: string]: Function};
 

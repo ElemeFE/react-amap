@@ -305,7 +305,6 @@ class Markers extends Component<MarkerProps, {}> {
       gridSize: 60,
       // styles: [style, style, style],
       averageCenter: true
-      // styles: []
     };
 
     ClusterProps.forEach((key) => {

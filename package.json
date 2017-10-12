@@ -2,7 +2,9 @@
   "name": "react-amap",
   "version": "1.0.3",
   "description": "AMap Component Based On React",
+  "todo": "记得修改下面 main 的路径",
   "main": "lib/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "lint": "eslint . --quiet",
     "browser-build": "rm -rf dist && webpack && NODE_ENV=production webpack -p",
@@ -20,6 +22,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/react": "^16.0.10",
     "antd": "^2.7.4",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",

@@ -220,11 +220,7 @@ class InfoWindow extends Component<IWProps, {}> {
   setChild(props: IWProps) {
     const child = props.children;
     if (this.infoDOM && child) {
-      if (Children.count(child) === 1) {
-        render(child, this.infoDOM);
-      } else {
-        render(<div>{props.children}</div>, this.infoDOM);
-      }
+      render(<div>{child}</div>, this.infoDOM);
     } else {
       if (props.children) {
         console.warn('因为你设置 isCustom 为 true，InfoWindow 的 Children 被忽略');
