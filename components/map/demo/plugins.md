@@ -11,14 +11,13 @@ order: 2
 
 ```jsx
 import { Map } from 'react-amap';
-console.log('my test');
 class App extends React.Component{
   render(){
     const plugins = [
       'MapType',
       'Scale',
       'OverView',
-      'ControlBar',
+      'ControlBar', // v1.1.0 新增
       {
         name: 'ToolBar',
         options: {

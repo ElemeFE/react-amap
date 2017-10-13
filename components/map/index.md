@@ -17,40 +17,44 @@ Map 组件是其他组件的基础，其他地图组件必须作为 Map 的子�
 
 | 属性 | 类型 | 默认取值 | 说明 |
 |------|-----|------|-----|
+| loading | ReactNode | / | 用于在地图加载成功前渲染 |
 | layers | [TileLayer](http://lbs.amap.com/api/javascript-api/reference/layer#TileLayer)\[\]| / |地图图层数组，数组可以是图层 中的一个或多个，默认为普通二维地图。当叠加多个图层时，普通二维地图需通过实例化一个TileLayer类实现|
 | zoom | `Number` | / | 地图显示的缩放级别，若center与level未赋值，地图初始化默认显示用户所在城市范围|
 | center | `{ longitude, latitude }` 或者 [LngLat](http://lbs.amap.com/api/javascript-api/reference/core#LngLat) | / |地图中心点坐标值|
 | labelzIndex |`Number`|/|地图标注显示顺序，大于110即可将底图上的默认标注显示在覆盖物（圆、折线、面）之上。|
 | lang |`String`|`zh_cn`|地图语言类型,可选值：zh_cn: 中文简体，en: 英文，zh_en：中英文对照,注：由于图面内容限制，中文、英文 、中英文地图POI可能存在不一致的情况|
-| rotateEnable | `Boolean`或者`Number` [说明](#rotate)|`false`|地图是否可旋转|
 | mapStyle | `String` |`normal` | 设置地图显示样式。目前支持normal（默认样式）、dark（深色样式）、light（浅色样式）、fresh(osm清新风格样式)、blue_night|
 | features |`String[]`|/|设置地图上显示的元素种类。支持'bg'（地图背景）、'point'（POI点）、'road'（道路）、'building'（建筑物）| 
 | cursor |`String`|/|地图默认鼠标样式。参数cursor应符合CSS的cursor属性规范|
 | defaultLayer |[TileLayer](http://lbs.amap.com/api/javascript-api/reference/layer#TileLayer)|/|当前地图中默认显示的图层。默认图层可以是TileLayer.Satellite等切片地图，也可以是通过[TileLayer](http://lbs.amap.com/api/javascript-api/reference/layer#TileLayer)自定义的切片图层|
+| animateEnable | `Boolean` |`true`| 地图平移过程中是否使用动画 |
+| doubleClickZoom | `Boolean` |`true`| 地图是否可通过双击鼠标放大地图 |
+| dragEnable | `Boolean` |`true`| 地图是否可通过鼠标拖拽平移 |
+| isHotspot | `Boolean` |`false`| 是否开启地图热点 |
+| jogEnable | `Boolean` |`true`| 地图是否使用缓动效果 |
+| keyboardEnable | `Boolean` |`true`| 地图是否可通过键盘控制 |
+| resizeEnable | `Boolean` |`false`| 是否监控地图容器尺寸变化 |
+| rotateEnable | `Boolean` |`false`| 地图是否可旋转 |
+| scrollWheel | `Boolean` |`true`| 地图是否可通过鼠标滚轮缩放浏览 |
+| touchZoom | `Boolean` |`true`| 地图在移动终端上是否可通过多点触控缩放浏览地图 |
+| zoomEnable | `Boolean` |`true`| 地图是否可缩放 |
+| status | `Object` | / | 以对象方式统一提供上述`animateEnable` 至 `zoomEnable` 等 11 个布尔值 |
 
-<p id="rotate">关于<code>rotateEnable</code>：如果传入的是 Number 类型，启用旋转，传入值定义为旋转角度；</p>
 
 ### 静态属性
 
-Map 的静态属性有如下 17 个，属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/map)
+Map 的静态属性有[如下 10 个](https://github.com/ElemeFE/react-amap/blob/master/components/map/index.js#L60)，属性的作用与取值参考[高德官网](http://lbs.amap.com/api/javascript-api/reference/map)
 
 + `view`
 + `zooms`
 + `crs`
-+ `animateEnable`
-+ `isHotspot`
-+ `resizeEnable`
 + `showIndoorMap`
 + `indoorMap`
 + `expandZoomRange`
-+ `dragEnable`
-+ `zoomEnable`
-+ `doubleClickZoom`
-+ `keyboardEnable`
-+ `jogEnable`
-+ `scrollWheel`
-+ `touchZoom`
 + `showBuildingBlock`
++ `viewMode`
++ `pitchEnable`
++ `skyColor`
 
 ### 扩展属性
 
@@ -77,12 +81,13 @@ const events = {
 
 支持通过配置`plugins`属性给地图增加[控件功能](http://lbs.amap.com/api/javascript-api/reference/map-control)。
 
-目前支持四种控件：
+目前支持五种控件：
 
 + `MapType`
 + `OverView`
 + `Scale`
 + `ToolBar`
++ `ControlBar`
 
 `plugins` 属性取值是一个数组，数组每一项就是每个控件的配置；如果想启用控件的默认配置，直接写出控件名字（字符串）即可，如果需要自定义控件的配置，以对象来定义。如：
 

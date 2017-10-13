@@ -5,6 +5,7 @@ order: 7
 
 Map 组件现在还支持配置 loading 属性，在地图加载完成之前渲染。
 
+[JSFIDDLE 在线示例](https://jsfiddle.net/ioslh/y9cv20cv/3/)
 
 ```jsx
 import { Map } from 'react-amap';

@@ -1,5 +1,27 @@
 # 更新日志
 
+## [2017-10-13] 1.1.0
+
+### 更新
+
+1. 大幅重构 Map 组件；支持 `animateEnable`、`doubleClickZoom` 等属性的动态配置。
+2. 支持 3D 模式。
+3. 新增控件 ControlBar。
+4. 删除了地图内层一个多余的 div。（[#48](https://github.com/ElemeFE/react-amap/issues/48)）
+3. 支持给 Map 提供 loading 组件以渲染加载效果。
+2. 支持给 Marker 组件添加 `className`。（[#40](https://github.com/ElemeFE/react-amap/issues/40)）
+3. 补充了 TypeScript 模块声明，可以在 TypeScript 项目中使用。（[#47](https://github.com/ElemeFE/react-amap/issues/47)）
+
+---
+
+## [2017-08-14] 1.0.3
+
+### 修复
+
+* 修复部分组件在 unmount 后并没有从地图消失的问题。
+
+---
+
 ## [2017-06-14] 1.0.0
 
 ### 重大更新

@@ -64,7 +64,7 @@ class MapApp extends React.Component {
 }
 ```
 
-每次组件有任何一个属性更新时， render 方法重新执行，由于 center 是一个字面量对象，每一次跟之前的 center 属性都是不同的引用；如果你用鼠标移动了地图，其他属性的更新也会造成地图强行移回 center 定义的中心点。
+每次组件有任何一个属性更新时， render 方法重新执行，由于 center 是一个字面量对象，每一次跟之前的 center 属性都是不同的引用；如果你用鼠标移动了地图，其他属性的更新也会造成地图强行移回 center 定义的中心点。请参考这个 JSFIDDLE 示例的效果：https://jsfiddle.net/ioslh/y9cv20cv/4/
 
 因此，**最好在 `constructor` 和 `componentWillMount` 方法中定义 react-amap 组件的引用类型属性**。只有当你明确需要改变地图的中心点时，才可以去修改 `center` 属性的引用。如下：
 
