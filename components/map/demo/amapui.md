@@ -9,6 +9,9 @@ order: 13
 其实 react-amap 本身以另一种更便捷的方式实现了 AMapUI 组件库的大部分 UI 强化功能，包括增强的标注、增强的信息窗体。如一个展现高度可定制化的 Marker，在 react-amap 中可以这么写：`<Marker><img src="..."/></Marker>`。
 详情参考[Marker 组件](/components/marker)的 **自定义 Marker 的外观** 部分和 **render 方法渲染标记的外观** 部分，以及[InfoWindow 组件](/components/infowindow)的 **如何写信息窗体内容** 部分。
 
+
+[JSFIDDLE 在线示例](https://jsfiddle.net/y9cv20cv/8/)
+
 ```jsx
 import { Map } from 'react-amap';
 
