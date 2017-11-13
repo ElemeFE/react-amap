@@ -9,7 +9,7 @@ order: 1
 
 ### 最近更新
 
-高德发布了 JavaScript SDK 的 1.4.0 版本，react-amap 也相应升级到了 1.1.0，并接入了高德最新的 SDK。现在可以下载尝试。文档正在补充中。（2017-10-12）
+react-amap 升级到 1.1.1，支持加载 [AMapUI 组件库](http://lbs.amap.com/api/javascript-api/guide/amap-ui/intro)。（2017-11-13）
 
 ### 扩展组件
 
