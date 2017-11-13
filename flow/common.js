@@ -46,6 +46,7 @@ declare type MapLang = 'zh_cn' | 'zh_en' | 'en';
 
 declare type MapProps = {
   amapkey?: string,
+  useAMapUI?: boolean,
   children: React.Node,
   events?: EventMap,
   center?: LngLat,

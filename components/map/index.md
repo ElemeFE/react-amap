@@ -60,7 +60,11 @@ Map 的静态属性有[如下 10 个](https://github.com/ElemeFE/react-amap/blob
 
 有一些属性是高德本身没有直接提供的，但是根据高德的实例方法可以实现。我们把它封装了一层，可以更方便的使用；
 
-#### events 配置
+#### 一、 useAMapUI 属性（静态属性）
+
+指定为 `true` 之后，会额外加载 [AMapUI 组件库](http://lbs.amap.com/api/javascript-api/guide/amap-ui/intro)，可以轻松接入。
+
+#### 二、 events 配置（静态属性）
 
 支持通过配置`events`属性给地图绑定事件；除了[高德原生提供的事件](http://lbs.amap.com/api/javascript-api/reference/map)外，我们扩展了`created`事件。
 
@@ -77,7 +81,7 @@ const events = {
 ```
 
 
-#### plugins 配置
+#### 三、 plugins 配置（动态属性）
 
 支持通过配置`plugins`属性给地图增加[控件功能](http://lbs.amap.com/api/javascript-api/reference/map-control)。
 

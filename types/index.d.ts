@@ -59,6 +59,7 @@ export type Size = ObjSize | AMapSize;
 
 export interface MapProps {
   amapkey?: string;
+  useAMapUI?: boolean;
   children?: any;
   plugins?: Array<PluginList|PluginConfig>;
   viewMode?: '2D'|'3D';
