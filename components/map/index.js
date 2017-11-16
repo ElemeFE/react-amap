@@ -379,6 +379,10 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
       <div>{ this.state.mapLoaded ? this.renderChildren() : null }</div>
     </div>);
   }
+
+  componentWillUnmount() {
+    this.map.destroy();
+  }
 }
 
 export default Map;
