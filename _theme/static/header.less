@@ -13,6 +13,7 @@
         background-repeat: no-repeat;
         width: 90%;
         margin:auto;
+        max-width: 1300px;
 
         display: flex;
         justify-content: space-between;
@@ -49,6 +50,16 @@
                 transition: all .9s;
             }
         }
+        &.searchForm {
+          input {
+            outline: none;
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid #ccc;
+            width: 200px;
+            height: 30px;
+          }
+        }
     }
 }
 @media(max-width: 800px){
@@ -74,6 +85,9 @@
                 span{
                     display: none;
                 }
+            }
+            &.searchForm {
+              display: none;
             }
         }
     }
