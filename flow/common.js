@@ -44,15 +44,18 @@ declare type EventMap = {[evName: string]: Function};
 
 declare type MapLang = 'zh_cn' | 'zh_en' | 'en';
 
+declare type MapFeature = 'bg' | 'point' | 'road' | 'building';
+
 declare type MapProps = {
   amapkey?: string,
   useAMapUI?: boolean,
   children: React.Node,
   events?: EventMap,
+  plugins?: Object,
+  loading: React.Node,
   center?: LngLat,
   zoom?: number,
   zooms?: [number, number],
-  plugins?: Object,
   animateEnable?: boolean,
   doubleClickZoom?: boolean,
   dragEnable?: boolean,
@@ -67,11 +70,24 @@ declare type MapProps = {
   showIndoorMap?: boolean,
   expandZoomRange?: boolean,
   viewMode?: '2D' | '3D',
+  features?: Array<MapFeature>,
   pitch?: number,
   mapStyle?: string,
   labelzIndex?: number,
-  lang?: MapLang,
-  loading: React.Node
+  skyColor?: string,
+  buildingAnimation?: boolean,
+  pitchEnable?: boolean,
+  showBuildingBlock?: boolean,
+  indoorMap?: any,
+  cursor?: string,
+  layers?: Array<any>,
+  view?: any,
+  city?: string,
+  bounds?: any,
+  limitBounds?: any,
+  status?: any,
+  rotation?: number
+  // lang?: MapLang,
 }
 
 declare type MarkerProps = {

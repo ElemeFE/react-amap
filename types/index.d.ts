@@ -57,13 +57,16 @@ export interface AMapSize {
 
 export type Size = ObjSize | AMapSize;
 
+export type MapFeature = 'bg' | 'point' | 'road' | 'building';
+
 export interface MapProps {
   amapkey?: string;
   useAMapUI?: boolean;
   children?: any;
   plugins?: Array<PluginList|PluginConfig>;
-  viewMode?: '2D'|'3D';
   events?: EventMap;
+  loading?: any;
+  viewMode?: '2D'|'3D';
   center?: LngLat;
   zoom?: number;
   zooms?: [number, number];
@@ -83,7 +86,20 @@ export interface MapProps {
   pitch?: number;
   mapStyle?: string;
   labelzIndex?: number;
-  loading?: any;
+  skyColor?: string;
+  buildingAnimation?: boolean;
+  pitchEnable?: boolean;
+  showBuildingBlock?: boolean;
+  features?: Array<MapFeature>;
+  indoorMap?: any;
+  cursor?: string;
+  layers?: Array<any>;
+  view?: any;
+  city?: string;
+  bounds?: any;
+  limitBounds?: any;
+  status?: any;
+  rotation?: number;
 }
 
 export interface MarkerProps {
