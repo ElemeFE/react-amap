@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as React from 'react';
+import React from 'react';
 
 declare type AMapLngLat = {
   getLng: Function,
