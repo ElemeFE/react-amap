@@ -15,9 +15,8 @@ let amapuiPromise = null;
 let amapuiInited = false;
 // const queuedLoader = [];
 export default class APILoader {
-  constructor(key, useAMapUI = false) {
-    this.config = DEFAULT_CONFIG;
-    this.config.useAMapUI = useAMapUI;
+  constructor({ key, useAMapUI, version }) {
+    this.config = { ...DEFAULT_CONFIG, ...{ key, useAMapUI, v: version }};
     if (typeof window !== 'undefined') {
       if (key) {
         this.config.key = key;
