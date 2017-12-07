@@ -103,7 +103,11 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
     };
     if (typeof window !== 'undefined') {
       this.pluginMap = {};
-      this.loader = new APILoader(props.amapkey, props.useAMapUI).load();
+      this.loader = new APILoader({
+        key: props.amapkey,
+        useAMapUI: props.useAMapUI,
+        version: props.version
+      }).load();
     }
   }
 
