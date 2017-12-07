@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import APILoader from '../utils/APILoader';
 import isFun from '../utils/isFun';
 import log from '../utils/log';
