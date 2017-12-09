@@ -58,10 +58,13 @@ import ReactDOM from 'react-dom';
 import { Map } from 'react-amap';
 
 ReactDOM.render(
-  <Map amapkey={YOUR_AMAP_KEY} />,
+  <Map amapkey={YOUR_AMAP_KEY} version={VERSION} />,
   document.querySelector('#app')
 )
 ```
+
+amapkey 说明见下文
+version 指定高德地图版本 不填则使用默认值: 1.4.0
 
 也可以手工引入你需要的组件：
 
