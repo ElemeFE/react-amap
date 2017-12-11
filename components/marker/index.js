@@ -1,18 +1,19 @@
 // @flow
-import React from 'react';
-import { render } from 'react-dom';
-import log from '../utils/log';
-import isFun from '../utils/isFun';
-import toCapitalString from '../utils/toCapitalString';
+import React from 'react'
+import { render } from 'react-dom'
+import log from '../utils/log'
+import isFun from '../utils/isFun'
+import withPropsReactive from '../utils/withPropsReactive'
+import toCapitalString from '../utils/toCapitalString'
 import {
   MarkerConfigurableProps,
   MarkerAllProps,
   renderMarkerComponent
-} from '../utils/markerUtils';
+} from '../utils/markerUtils'
 import {
-  getAMapPosition,
-  getAMapPixel
-} from '../utils/common';
+  toLnglat,
+  toPixel
+} from '../utils/common'
 
 class Marker extends React.Component<MarkerProps, {}> {
 
@@ -20,6 +21,8 @@ class Marker extends React.Component<MarkerProps, {}> {
   element: HTMLDivElement;
   marker: Object;
   contentWrapper: HTMLElement;
+  setterMap: Object;
+  converterMap: Object;
 
   constructor(props: MarkerProps) {
     super(props);
@@ -27,11 +30,33 @@ class Marker extends React.Component<MarkerProps, {}> {
       if (!props.__map__) {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
+        this.setterMap = {
+          visible(val) {
+            if (val) {
+              this.marker && this.marker.show()
+            } else {
+              this.marker && this.marker.hide()
+            }
+          },
+          zIndex(val) {
+            this.marker && this.marker.setzIndex(val)
+          }
+        }
+        this.converterMap = {
+          position: toLnglat,
+          offset: toPixel
+        }
         this.map = props.__map__;
         this.element = this.map.getContainer();
-        this.createMarker(props);
+        setTimeout(() => {
+          this.createMarker(props)
+        }, 13)
       }
     }
+  }
+
+  get instance() {
+    return this.marker
   }
 
   shouldComponentUpdate() {
@@ -53,15 +78,13 @@ class Marker extends React.Component<MarkerProps, {}> {
   createMarker(props: MarkerProps) {
     const options = this.buildCreateOptions(props);
     this.marker = new window.AMap.Marker(options);
-    const events = this.exposeMarkerInstance(props);
-    events && this.bindMarkerEvents(events);
 
     this.marker.render = (function(marker) {
       return function(component) {
         renderMarkerComponent(component, marker);
       };
     })(this.marker);
-
+    this.props.onInstanceCreated && this.props.onInstanceCreated();
     this.setMarkerLayout(props);
   }
 
@@ -112,74 +135,19 @@ class Marker extends React.Component<MarkerProps, {}> {
   }
 
   refreshMarkerLayout(nextProps: MarkerProps) {
-    MarkerConfigurableProps.forEach((key) => {
-      // 必须确定属性改变才进行刷新
-      if (this.props[key] !== nextProps[key]) {
-        if (key === 'visible') {
-          if (nextProps[key]) {
-            this.marker.show();
-          } else {
-            this.marker.hide();
-          }
-        } else {
-          const setterName = this.getSetterName(key);
-          const param = this.getSetterParam(key, nextProps[key]);
-          this.marker[setterName](param);
-        }
-      }
-    });
     this.setChildComponent(nextProps);
   }
 
   getSetterParam(key: string, val: any) {
-    if (key === 'position') {
-      return getAMapPosition(val);
-    } else if (key === 'offset') {
-      return getAMapPixel(val);
+    if (key in this.converterMap) {
+      return this.converterMap[key](val)
     }
-    return val;
-  }
-
-  // 获取设置属性的方法
-  getSetterName(key: string) {
-    switch (key) {
-      case 'zIndex':
-        return 'setzIndex';
-      default:
-        return `set${toCapitalString(key)}`;
-    }
-  }
-
-  exposeMarkerInstance(props: MarkerProps) {
-    if ('events' in props && props.events) {
-      const events = props.events;
-      if (isFun(events.created)) {
-        events.created(this.marker);
-      }
-      delete events.created;
-      return events;
-    }
-    return false;
-  }
-
-  bindMarkerEvents(events: Object) {
-    const list = Object.keys(events);
-    list.length && list.forEach((evName) => {
-      this.marker.on(evName, (e)=>{
-        events[evName](e, e.target);
-      });
-    });
+    return val
   }
 
   render() {
     return null;
   }
-
-  componentWillUnmount() {
-    this.marker.hide();
-    this.marker.setMap(null);
-    delete this.marker;
-  }
 }
 
-export default Marker;
+export default withPropsReactive(Marker)

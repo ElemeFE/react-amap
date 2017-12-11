@@ -48,7 +48,9 @@ declare type MapFeature = 'bg' | 'point' | 'road' | 'building';
 
 declare type MapProps = {
   amapkey?: string,
+  version?: string,
   useAMapUI?: boolean,
+  onInstanceCreated?: Function,
   children: React.Node,
   events?: EventMap,
   plugins?: Object,
@@ -93,6 +95,7 @@ declare type MapProps = {
 declare type MarkerProps = {
   position?: LngLat,
   offset?: Pixel,
+  onInstanceCreated?: Function,
   icon?: any,
   content?: MarkerContent,
   className?: string,

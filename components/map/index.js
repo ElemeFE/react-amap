@@ -4,7 +4,8 @@ import APILoader from '../utils/APILoader';
 import isFun from '../utils/isFun';
 import log from '../utils/log';
 import toCapitalString from '../utils/toCapitalString';
-import { getAMapPosition } from '../utils/common';
+import { toLnglat } from '../utils/common';
+import withPropsReactive from '../utils/withPropsReactive'
 
 const Component = React.Component;
 const Children = React.Children;
@@ -72,6 +73,16 @@ const StaticProps: Array<string> = [
 
 const CreateProps = NativeDynamicProps.concat(StatusDynamicProps, StaticProps);
 
+// const reservedPropName = [
+//   'amapkey',
+//   'version',
+//   'useAMapUI',
+//   'onInstanceCreated',
+//   'events',
+//   'loading',
+//   'plugins'
+// ]
+
 const defaultOpts = {
   MapType: {
     showRoad: false,
@@ -89,18 +100,35 @@ const defaultOpts = {
   ControlBar: {}
 };
 
-class Map extends Component<MapProps, {mapLoaded: boolean}> {
+class BaseMap extends Component<MapProps, {mapLoaded: boolean}> {
 
   pluginMap: Object;
   loader: Object;
   map: Object;
   mapWrapper: ?HTMLDivElement;
+  setterMap: Object;
+  converterMap: Object;
 
   constructor(props: MapProps) {
     super(props);
     this.state = {
       mapLoaded: false
     };
+    const self = this
+    this.setterMap = {
+      zoom(val) {
+        self.map.setZoom(val);
+      },
+      cursor(val) {
+        self.map.setDefaultCursor(val);
+      },
+      labelzIndex(val) {
+        self.map.setlabelzIndex(val);
+      }
+    }
+    this.converterMap = {
+      center: toLnglat
+    }
     if (typeof window !== 'undefined') {
       this.pluginMap = {};
       this.loader = new APILoader({
@@ -111,13 +139,8 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
     }
   }
 
-  componentWillReceiveProps(nextProps: MapProps) {
-    const prevProps = this.props;
-    this.loader.then(() => {
-      if (this.map) {
-        this.updateMapProps(prevProps, nextProps);
-      }
-    });
+  get instance() {
+    return this.map
   }
 
   componentDidMount() {
@@ -164,18 +187,9 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
     if (!this.map) {
       const options = this.buildCreateOptions();
       this.map = new window.AMap.Map(this.mapWrapper, options);
-      // event binding
-      const events = this.exposeMapInstance();
-      events && this.bindAMapEvents(events);
       // install map plugins
       this.setPlugins(this.props);
-      // binding extended props
-      ExtendedDynamicProps.forEach((key) => {
-        if (key in this.props) {
-          const setterParam = this.getSetterValue(key, this.props);
-          this.runMapSetter(key, setterParam);
-        }
-      });
+      this.props.onInstanceCreated && this.props.onInstanceCreated();
     }
   }
 
@@ -188,13 +202,6 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
       }
     });
     return options;
-  }
-
-  bindAMapEvents(events: EventMap) {
-    const list = Object.keys(events);
-    list.length && list.forEach((evName) => {
-      this.map.on(evName, events[evName]);
-    });
   }
 
   updateMapProps(prevProps: MapProps, nextProps: MapProps) {
@@ -214,14 +221,6 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
     if (statusPropExist && 'status' in nextProps) {
       log.warning(`以下这些属性可以单独提供进行配置，也可以统一作为‘status’属性配置；但是请不要同时使用这两种方式。\n（${StatusDynamicProps.join(', ')}）`);
     }
-    NativeDynamicProps.concat(ExtendedDynamicProps).forEach((key) => {
-      if (key in nextProps) {
-        if (this.detectPropChanged(key, prevProps, nextProps)) {
-          const setterParam = this.getSetterValue(key, nextProps);
-          this.runMapSetter(key, setterParam);
-        }
-      }
-    });
     StaticProps.forEach((key) => {
       if (key in nextProps) {
         if (this.detectPropChanged(key, prevProps, nextProps)) {
@@ -232,31 +231,11 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
     this.setPlugins(nextProps);
   }
 
-  runMapSetter(key: string, setterParam: any) {
-    if (key === 'limitBounds' && !setterParam) {
-      this.map.clearLimitBounds();
-    } else {
-      const setterName = this.getSetterName(key);
-      this.map[setterName](setterParam);
-    }
-  }
-
   getSetterValue(key: string, props: MapProps) {
-    if (key === 'center') {
-      return getAMapPosition(props.center);
+    if (key in this.converterMap) {
+      return this.converterMap[key](props[key])
     }
     return props[key];
-  }
-
-  getSetterName(key: string) {
-    switch (key) {
-      case 'labelzIndex':
-        return 'setlabelzIndex';
-      case 'cursor':
-        return 'setDefaultCursor';
-      default:
-        return `set${toCapitalString(key)}`;
-    }
   }
 
   detectPropChanged(key: string, prevProps: MapProps, nextProps: MapProps) {
@@ -360,19 +339,6 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
     }
   }
 
-  // 用户可以通过 created 事件获取 map 实例
-  exposeMapInstance() {
-    if ('events' in this.props) {
-      const events = this.props.events || {};
-      if (isFun(events.created)) {
-        events.created(this.map);
-        delete events.created;
-      }
-      return events;
-    }
-    return false;
-  }
-
   render() {
     return (<div style={wrapperStyle}>
       <div ref={(div)=>{ this.mapWrapper = div; }} style={containerStyle}>
@@ -383,10 +349,6 @@ class Map extends Component<MapProps, {mapLoaded: boolean}> {
       <div>{ this.state.mapLoaded ? this.renderChildren() : null }</div>
     </div>);
   }
-
-  componentWillUnmount() {
-    this.map.destroy();
-  }
 }
 
-export default Map;
+export default withPropsReactive(BaseMap);

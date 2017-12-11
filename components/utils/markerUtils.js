@@ -1,4 +1,4 @@
-import { getAMapPosition, getAMapPixel } from './common';
+import { toLnglat, toPixel } from './common';
 import React from 'react';
 import { render } from 'react-dom';
 import isFun from './isFun';
@@ -34,9 +34,9 @@ export const getPropValue = (key, value) => {
     return null;
   }
   if (key === 'position') {
-    return getAMapPosition(value);
+    return toLnglat(value);
   } else if (key === 'offset') {
-    return getAMapPixel(value);
+    return toPixel(value);
   }
   return value;
 };

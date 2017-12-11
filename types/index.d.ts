@@ -61,8 +61,10 @@ export type MapFeature = 'bg' | 'point' | 'road' | 'building';
 
 export interface MapProps {
   amapkey?: string;
+  version?: string;
   useAMapUI?: boolean;
   children?: any;
+  onInstanceCreated?: Function;
   plugins?: Array<PluginList|PluginConfig>;
   events?: EventMap;
   loading?: any;
@@ -106,6 +108,7 @@ export interface MarkerProps {
   position?: LngLat;
   offset?: Pixel;
   icon?: any;
+  onInstanceCreated?: Function;
   className?: string;
   content?: string | HTMLElement;
   draggable?: boolean;

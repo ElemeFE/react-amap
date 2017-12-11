@@ -5,8 +5,8 @@ import isFun from '../utils/isFun';
 import toCapitalString from '../utils/toCapitalString';
 import log from '../utils/log';
 import {
-  getAMapPosition,
-  getAMapPixel,
+  toLnglat,
+  toPixel,
   getAMapSize
 } from '../utils/common';
 /*
@@ -189,10 +189,10 @@ class InfoWindow extends Component<IWProps, {}> {
       return getAMapSize(value);
     }
     if (key === 'offset') {
-      return getAMapPixel(value);
+      return toPixel(value);
     }
     if (key === 'position') {
-      return getAMapPosition(value);
+      return toLnglat(value);
     }
     return value;
   }

@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
 import isFun from '../utils/isFun';
+import withPropsReactive from '../utils/withPropsReactive'
 import log from '../utils/log';
 import PolyEditor from '../polyeditor';
 import toCapitalString from '../utils/toCapitalString';
-import { getAMapPosition } from '../utils/common';
+import { toLnglat } from '../utils/common';
 
 const Component = React.Component;
 
@@ -28,6 +29,7 @@ type LineProps = {
   path: PolylinePath,
   extData?: any,
   draggable?: boolean,
+  onInstanceCreated?: Function,
   visible?: boolean,
   style?: Object,
   zIndex?: number,
@@ -44,6 +46,8 @@ class Polyline extends Component<LineProps, {}> {
   map: Object;
   polyline: Object;
   element: HTMLElement;
+  setterMap: Object;
+  converterMap: Object;
 
   constructor(props: LineProps) {
     super(props);
@@ -51,34 +55,42 @@ class Polyline extends Component<LineProps, {}> {
       if (!props.__map__) {
         log.warning('MAP_INSTANCE_REQUIRED');
       } else {
+        const self = this
+        this.setterMap = {
+          visible(val) {
+            if (val) {
+              self.polyline && self.polyline.show()
+            } else {
+              self.polyline && self.polyline.hide()
+            }
+          },
+          style(val) {
+            self.polyline.setOptions(val)
+          }
+        }
+        this.converterMap = {
+          path(val) {
+            return self.buildPathValue(val)
+          }
+        }
         this.map = props.__map__;
         this.element = this.map.getContainer();
-        this.createMapPolyline(props);
+        setTimeout(() => {
+          this.createMapPolyline(props)
+        }, 13)
       }
     }
   }
 
-  componentWillReceiveProps(nextProps: LineProps) {
-    if (this.map) {
-      this.refreshPolylineLayout(nextProps);
-    }
+  get instance() {
+    return this.polyline
   }
 
   createMapPolyline(props: LineProps) {
     const options = this.buildCreateOptions(props);
     options.map = this.map;
     this.polyline = new window.AMap.Polyline(options);
-
-    const events = this.exposeLineInstance(props);
-    events && this.bingLineEvents(events);
-
-    if ('visible' in props) {
-      if (props.visible) {
-        this.polyline.show();
-      } else {
-        this.polyline.hide();
-      }
-    }
+    this.props.onInstanceCreated && this.props.onInstanceCreated()
   }
 
   buildCreateOptions(props: LineProps) {
@@ -100,37 +112,15 @@ class Polyline extends Component<LineProps, {}> {
     return options;
   }
 
-  refreshPolylineLayout(nextProps: LineProps) {
-    configurableProps.forEach((key) => {
-      if (key in nextProps) {
-        if (this.detectPropChanged(key, nextProps)) {
-          if (key === 'visible') {
-            if (nextProps.visible) {
-              this.polyline.show();
-            } else {
-              this.polyline.hide();
-            }
-          } else if (key === 'style') {
-            this.polyline.setOptions(nextProps.style);
-          } else {
-            const setterName = `set${toCapitalString(key)}`;
-            const setterValue = this.getSetterValue(key, nextProps[key]);
-            this.polyline[setterName](setterValue);
-          }
-        }
-      }
-    });
-  }
-
   detectPropChanged(key: string, nextProps: LineProps) {
     return this.props[key] !== nextProps[key];
   }
 
   getSetterValue(key: string, value: any) {
-    if (key === 'path') {
-      return this.buildPathValue(value);
+    if (key in this.converterMap) {
+      return this.converterMap[key](value)
     }
-    return value;
+    return value
   }
 
   buildPathValue(path: PolylinePath) {
@@ -138,28 +128,9 @@ class Polyline extends Component<LineProps, {}> {
       if ('getLng' in path[0]) {
         return path;
       }
-      return path.map((p) => (getAMapPosition(p)));
+      return path.map((p) => (toLnglat(p)));
     }
     return path;
-  }
-
-  exposeLineInstance(props: LineProps) {
-    if ('events' in props) {
-      const events = props.events;
-      if (isFun(events.created)) {
-        events.created(this.polyline);
-      }
-      delete events.created;
-      return events;
-    }
-    return false;
-  }
-
-  bingLineEvents(events: Object) {
-    const list = Object.keys(events);
-    list.length && list.forEach((evName) => {
-      this.polyline.on(evName, events[evName]);
-    });
   }
 
   renderEditor(children: any) {
@@ -191,4 +162,4 @@ class Polyline extends Component<LineProps, {}> {
   }
 }
 
-export default Polyline;
+export default withPropsReactive(Polyline)

@@ -3,7 +3,7 @@ import React from 'react';
 import isFun from '../utils/isFun';
 import log from '../utils/log';
 import toCapitalString from '../utils/toCapitalString';
-import { getAMapPosition } from '../utils/common';
+import { toLnglat } from '../utils/common';
 /*
  * props
  * {
@@ -130,7 +130,7 @@ class Circle extends React.Component<CircleProps, {}> {
 
   getSetterValue(key: string, props: CircleProps) {
     if (key === 'center') {
-      return getAMapPosition(props.center);
+      return toLnglat(props.center);
     }
     return props[key];
   }
