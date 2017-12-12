@@ -11,6 +11,20 @@ title: 自定义 Marker 的外观
 import { Map, Marker } from 'react-amap';
 
 class App extends React.Component{
+  constructor() {
+    super()
+    this.state = {
+      value: 1
+    }
+    this.toggle = this.toggle.bind(this)
+  }
+
+  toggle() {
+    this.setState({
+      value: this.state.value + 1
+    })
+  }
+
   render(){   
     const styleB = {
       background: '#000',
@@ -29,7 +43,7 @@ class App extends React.Component{
       lineHeight: '40px'
     }
     return <div>
-      <div style={{width: '100%', height: 400}}>
+      <div style={{width: '100%', height: 372}}>
         <Map 
           plugins={['ToolBar']} 
           center={{longitude: 121, latitude: 34}} 
@@ -37,21 +51,22 @@ class App extends React.Component{
         >
           <Marker position={{longitude: 120, latitude: 35 }} />
           <Marker position={{longitude: 121, latitude: 35 }} >
-            A
+            A{this.state.value}
           </Marker>
           <Marker position={{longitude: 122, latitude: 35 }} >
-            <div style={styleB}>B</div>
+            <div style={styleB}>B{this.state.value}</div>
           </Marker>
           <Marker position={{longitude: 120, latitude: 34 }} >
-            <div style={styleC}></div>
+            <div style={styleC}>{this.state.value}</div>
           </Marker>
           <Marker position={{longitude: 121, latitude: 34 }} >
-            <div>A MARKER</div>
+            <div>{this.state.value} MARKER</div>
             <div>WITH A LOT OF TEXT IN</div>
             <div>OBVIOUSLY NOT LIKE A MARKER</div>
           </Marker>
         </Map>
       </div>
+      <button onClick={this.toggle}>Toggle</button>
     </div>
   }
 }

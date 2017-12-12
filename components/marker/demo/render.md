@@ -32,10 +32,12 @@ class App extends React.Component{
     this.mapCenter = {longitude: 121, latitude: 34};
     this.markerExtData = { myLabel: 'A'}
     this.markerEvents = {
-      mouseover:(e, marker) => {
+      mouseover:(e) => {
+        const marker = e.target;
         marker.render(this.renderMarkerHover);
       },
-      mouseout:(e, marker) => {
+      mouseout:(e) => {
+        const marker = e.target;
         marker.render(this.renderMarker);
       }
     }

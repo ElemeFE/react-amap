@@ -1,57 +1,53 @@
 // @flow
-import React from 'react';
-import isFun from '../utils/isFun';
-import log from '../utils/log';
+import React from 'react'
+import withPropsReactive from '../utils/withPropsReactive'
+import log from '../utils/log'
 
 type MTProps = {
   __map__: Object,
-  events: Object,
-};
+  events?: Object,
+  onInstanceCreated?: Function
+}
 
 class MouseTool extends React.Component<MTProps, {}> {
 
-  map: Object;
-  tool: Object;
+  map: Object
+  tool: Object
 
   constructor(props: MTProps) {
-    super(props);
+    super(props)
     if (typeof window !== 'undefined') {
       if (!props.__map__) {
-        log.warning('MAP_INSTANCE_REQUIRED');
+        log.warning('MAP_INSTANCE_REQUIRED')
       } else {
-        this.map = props.__map__;
-        this.loadToolInstance(props);
+        this.map = props.__map__
+        this.loadToolInstance().then(() => {
+          this.props.onInstanceCreated && this.props.onInstanceCreated()
+        })
       }
     }
   }
 
+  get instance() {
+    return this.tool
+  }
+
   shouldComponentUpdate() {
-    return false;
+    return false
   }
 
-  loadToolInstance(props: MTProps) {
-    this.map.plugin(['AMap.MouseTool'], () => {
-      this.createToolInstance(props);
-    });
-  }
-
-  createToolInstance(props: MTProps) {
-    this.tool = new window.AMap.MouseTool(this.map);
-    const events = props.events || {};
-    if (isFun(events.created)) {
-      events.created(this.tool);
-    }
-    if (isFun(events.draw)) {
-      this.tool.on('draw', (e) => {
-        events.draw(e);
-      });
-    }
-    return this.tool;
+  loadToolInstance() {
+    return new Promise(resolve => {
+      this.map.plugin(['AMap.MouseTool'], () => {
+        this.tool = new window.AMap.MouseTool(this.map)
+        resolve()
+      })
+    })
   }
 
   render() {
-    return (null);
+    return (null)
   }
 }
 
-export default MouseTool;
+export default withPropsReactive(MouseTool)

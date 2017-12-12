@@ -26,6 +26,7 @@ class App extends React.Component{
     };
     this.toolEvents = {
       created: (tool) => {
+        console.log(tool)
         self.tool = tool;
       },
       draw({obj}) {

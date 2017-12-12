@@ -47,7 +47,7 @@ class App extends React.Component{
   
   render(){
     return <div>
-      <div style={{width: '100%', height: 400}}>
+      <div style={{width: '100%', height: 372}}>
         <Map zoom={3} center={this.mapCenter}>
           <Polygon
             events={this.events}

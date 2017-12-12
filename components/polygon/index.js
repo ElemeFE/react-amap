@@ -1,11 +1,9 @@
 // @flow
-import React, { Component } from 'react';
-import isFun from '../utils/isFun';
+import React, { Component } from 'react'
 import withPropsReactive from '../utils/withPropsReactive'
-import log from '../utils/log';
-import PolyEditor from '../polyeditor';
-import toCapitalString from '../utils/toCapitalString';
-import { toLnglat } from '../utils/common';
+import log from '../utils/log'
+import PolyEditor from '../polyeditor'
+import { toLnglat } from '../utils/common'
 /*
  * props
  * {
@@ -22,12 +20,12 @@ const configurableProps = [
   /* 本插件扩展的属性*/
   'style',
   'visible'
-];
+]
 
 const allProps = configurableProps.concat([
   'zIndex',
   'bubble'
-]);
+])
 
 type PolyProps = {
   path: PolygonPath,
@@ -44,24 +42,23 @@ type PolyProps = {
   __ele__: HTMLElement,
 }
 
-class Polygon extends Component<PolyProps, {}> {
+class Polygon extends Component<PolyProps, {loaded: boolean}> {
 
-  map: Object;
-  element: HTMLElement;
-  polygon: Object;
-  setterMap: Object;
-  converterMap: Object;
+  map: Object
+  element: HTMLElement
+  polygon: Object
+  setterMap: Object
+  converterMap: Object
 
   constructor(props: PolyProps) {
-    super(props);
+    super(props)
     if (typeof window !== 'undefined') {
       if (!props.__map__) {
-        log.warning('MAP_INSTANCE_REQUIRED');
+        log.warning('MAP_INSTANCE_REQUIRED')
       } else {
         const self = this
         this.setterMap = {
           visible(val) {
-            console.log(val)
             if (val) {
               self.polygon && self.polygon.show()
             } else {
@@ -77,8 +74,11 @@ class Polygon extends Component<PolyProps, {}> {
             return self.buildPathValue(val)
           }
         }
-        this.map = props.__map__;
-        this.element = this.map.getContainer();
+        this.state = {
+          loaded: false
+        }
+        this.map = props.__map__
+        this.element = this.map.getContainer()
         setTimeout(() => {
           this.initMapPolygon(props)
         }, 13)
@@ -91,86 +91,87 @@ class Polygon extends Component<PolyProps, {}> {
   }
 
   initMapPolygon(props: PolyProps) {
-    const options = this.buildCreateOptions(props);
-    options.map = this.map;
-    this.polygon = new window.AMap.Polygon(options);
-
+    const options = this.buildCreateOptions(props)
+    options.map = this.map
+    this.polygon = new window.AMap.Polygon(options)
+    this.setState({
+      loaded: true
+    })
     this.props.onInstanceCreated && this.props.onInstanceCreated()
   }
 
   buildCreateOptions(props: PolyProps) {
-    const options = {};
+    const options = {}
     allProps.forEach((key) => {
       if (key in props) {
         if ((key === 'style') && props.style) {
-          const styleItem = Object.keys(props.style);
+          const styleItem = Object.keys(props.style)
           styleItem.forEach((item) => {
             // $FlowFixMe
-            options[item] = props.style[item];
-          });
+            options[item] = props.style[item]
+          })
           // visible 做特殊处理
         } else if (key !== 'visible') {
-          options[key] = this.getSetterValue(key, props[key]);
+          options[key] = this.getSetterValue(key, props[key])
         }
       }
-    });
-    return options;
+    })
+    return options
   }
 
   detectPropChanged(key: string, nextProps: PolyProps) {
-    return this.props[key] !== nextProps[key];
+    return this.props[key] !== nextProps[key]
   }
 
   getSetterValue(key: string, value: any) {
     if (key in this.converterMap) {
       return this.converterMap[key](value)
     }
-    return value;
+    return value
   }
 
   buildPathValue(path: PolygonPath) {
     if (path.length) {
       if (path[0][0] && typeof path[0][0] === 'number') {
-        return path.map((p) => (toLnglat(p)));
+        return path.map((p) => (toLnglat(p)))
       } else if ('getLng' in path[0]) {
-        return path;
+        return path
       } else if ('longitude' in path[0] || 'lng' in path[0]) {
-        return path.map((p) => (toLnglat(p)));
+        return path.map((p) => (toLnglat(p)))
       } else if (path.length === 2) {
         // Ring
         // TODO(slh) Awkward Flow Issues
         // $FlowFixMe
-        const out = this.buildPathValue(path[0]);
+        const out = this.buildPathValue(path[0])
         // $FlowFixMe
-        const inner = this.buildPathValue(path[1]);
-        return [out, inner];
+        const inner = this.buildPathValue(path[1])
+        return [out, inner]
       } else {
-        return [];
+        return []
       }
     }
-    return [];
+    return []
   }
 
   renderEditor(children: any) {
     if (!children) {
-      return null;
+      return null
     }
     if (React.Children.count(children) !== 1) {
-      return null;
+      return null
     }
-    const child = React.Children.only(children);
+    const child = React.Children.only(children)
     if (child.type === PolyEditor) {
       return React.cloneElement(child, {
         __poly__: this.polygon,
-        __map__: this.map,
-        __ele__: this.element
-      });
+        __map__: this.map
+      })
     }
-    return null;
+    return null
   }
 
   render() {
-    return (this.renderEditor(this.props.children));
+    return this.state.loaded ? (this.renderEditor(this.props.children)) : null
   }
 }
 

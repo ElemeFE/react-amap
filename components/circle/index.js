@@ -1,9 +1,10 @@
 // @flow
-import React from 'react';
-import isFun from '../utils/isFun';
-import log from '../utils/log';
-import toCapitalString from '../utils/toCapitalString';
-import { toLnglat } from '../utils/common';
+import React from 'react'
+import isFun from '../utils/isFun'
+import withPropsReactive from '../utils/withPropsReactive'
+import log from '../utils/log'
+import toCapitalString from '../utils/toCapitalString'
+import { toLnglat } from '../utils/common'
 /*
  * props
  * {
@@ -20,17 +21,18 @@ const configurableProps = [
   /* 原生的接口中并没有这些对象，这是本组件的扩展 */
   'visible',
   'style'
-];
+]
 
 const allProps = configurableProps.concat([
   'zIndex',
   'bubble'
-]);
+])
 
 type CircleProps = {
   __map__: Object,
   __ele__: HTMLElement,
   center?: LngLat,
+  onInstanceCreated?: Function,
   radius: number,
   draggable?: boolean,
   extData: any,
@@ -42,141 +44,107 @@ type CircleProps = {
   children: any,
 }
 
-class Circle extends React.Component<CircleProps, {}> {
+class Circle extends React.Component<CircleProps, {loaded: boolean}> {
 
-  props: CircleProps;
-  map: Object;
-  element: HTMLElement;
-  mapCircle: Object;
+  props: CircleProps
+  map: Object
+  element: HTMLElement
+  mapCircle: Object
+  setterMap: Object
+  converterMap: Object
 
   constructor(props: CircleProps) {
-    super(props);
+    super(props)
     if (typeof window !== 'undefined') {
       if (!props.__map__) {
-        log.warning('MAP_INSTANCE_REQUIRED');
+        log.warning('MAP_INSTANCE_REQUIRED')
       } else {
-        this.map = props.__map__;
-        this.element = this.map.getContainer();
-        this.initMapCircle(props);
+        const self = this
+        this.setterMap = {
+          visible(val) {
+            if (self.mapCircle) {
+              if (val) {
+                self.mapCircle.show()
+              } else {
+                self.mapCircle.hide()
+              }
+            }
+          },
+          style(val) {
+            self.mapCircle && self.mapCircle.setOptions(val)
+          }
+        }
+        this.converterMap = {
+          center: toLnglat
+        }
+        this.state = {
+          loaded: false
+        }
+        this.map = props.__map__
+        this.element = this.map.getContainer()
+        this.createInstance(props).then(() => {
+          this.setState({
+            loaded: true
+          })
+          this.props.onInstanceCreated && this.props.onInstanceCreated()
+        })
       }
     }
   }
 
-  componentWillReceiveProps(nextProps: CircleProps) {
-    if (this.map) {
-      this.refreshCircleLayout(nextProps);
-    }
+  get instance() {
+    return this.mapCircle
   }
 
-  initMapCircle(props: CircleProps) {
-    const options = this.buildCreateOptions(props);
-    options.map = this.map;
-    this.mapCircle = new window.AMap.Circle(options);
-    const events = this.exposeCircleInstance(props);
-    events && this.bindCircleEvents(events);
-
-    if ('visible' in props) {
-      if (!props.visible) {
-        this.mapCircle.hide();
-      }
-    }
+  createInstance(props: CircleProps) {
+    const options = this.buildCreateOptions(props)
+    options.map = this.map
+    this.mapCircle = new window.AMap.Circle(options)
+    return Promise.resolve(this.mapCircle)
   }
 
   buildCreateOptions(props: CircleProps) {
-    const options = {};
+    const options = {}
     allProps.forEach((key) => {
       if (key in props) {
         if (key === 'style' && (props.style !== undefined)) {
-          const styleItem = Object.keys(props.style);
+          const styleItem = Object.keys(props.style)
           styleItem.forEach((item) => {
             // $FlowFixMe
-            options[item] = props.style[item];
-          });
+            options[item] = props.style[item]
+          })
         } else {
-          if (key !== 'visible') {
-            options[key] = this.getSetterValue(key, props);
-          }
+          options[key] = this.getSetterValue(key, props)
         }
       }
-    });
-    return options;
-  }
-
-  refreshCircleLayout(nextProps: CircleProps) {
-    configurableProps.forEach((key) => {
-      if (key in nextProps) {
-        if (this.checkPropChanged(key, nextProps)) {
-          if (key === 'visible') {
-            if (nextProps.visible) {
-              this.mapCircle.show();
-            } else {
-              this.mapCircle.hide();
-            }
-          } else if (key === 'style') {
-            this.mapCircle.setOptions(nextProps.style);
-          } else {
-            const setterName = `set${toCapitalString(key)}`;
-            const setterParam = this.getSetterValue(key, nextProps);
-            this.mapCircle[setterName](setterParam);
-          }
-        }
-      }
-    });
-  }
-
-  checkPropChanged(key: string, nextProps: CircleProps) {
-    return this.props[key] !== nextProps[key];
+    })
+    return options
   }
 
   getSetterValue(key: string, props: CircleProps) {
-    if (key === 'center') {
-      return toLnglat(props.center);
+    if (key in this.converterMap) {
+      return this.converterMap[key](props[key])
     }
-    return props[key];
-  }
-
-  exposeCircleInstance(props: CircleProps) {
-    if ('events' in props) {
-      const events = props.events || {};
-      if (isFun(events.created)) {
-        events.created(this.mapCircle);
-      }
-      delete events.created;
-      return events;
-    }
-    return false;
-  }
-
-  bindCircleEvents(events: Object) {
-    const list = Object.keys(events);
-    list.length && list.forEach((evName) => {
-      this.mapCircle.on(evName, events[evName]);
-    });
+    return props[key]
   }
 
   renderEditor(children: any) {
     if (!children) {
-      return null;
+      return null
     }
     if (React.Children.count(children) !== 1) {
-      return null;
+      return null
     }
     return React.cloneElement(React.Children.only(children), {
       __circle__: this.mapCircle,
       __map__: this.map,
       __ele__: this.element
-    });
+    })
   }
 
   render() {
-    return (this.renderEditor(this.props.children));
-  }
-
-  componentWillUnmount() {
-    this.mapCircle.hide();
-    this.mapCircle.setMap(null);
-    delete this.mapCircle;
+    return this.state.loaded ? (this.renderEditor(this.props.children)) : null
   }
 }
 
-export default Circle;
+export default withPropsReactive(Circle)

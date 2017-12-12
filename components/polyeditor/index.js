@@ -1,121 +1,94 @@
 // @flow
-import React from 'react';
-import isFun from '../utils/isFun';
-import log from '../utils/log';
+import React from 'react'
+import withPropsReactive from '../utils/withPropsReactive'
+import log from '../utils/log'
 
 type EditorProps = {
   __map__: Object,
-  __ele__: HTMLElement;
+  __ele__: HTMLElement,
   __poly__: Object,
   active: boolean,
   events?: Object,
-};
+  onInstanceCreated?: Function
+}
 
 class PolyEditor extends React.Component<EditorProps, {}> {
 
-  map: Object;
-  element: HTMLElement;
-  poly: Object;
-  editorActive: boolean;
-  polyEditor: Object;
+  map: Object
+  poly: Object
+  editorActive: boolean
+  polyEditor: Object
+  setterMap: Object
 
   constructor(props: EditorProps) {
-    super(props);
+    super(props)
     if (typeof window !== 'undefined') {
       if (!(props.__map__ && props.__poly__)) {
-        log.warning('MAP_INSTANCE_REQUIRED');
+        log.warning('MAP_INSTANCE_REQUIRED')
       } else {
-        this.map = props.__map__;
-        this.element = props.__ele__;
-        this.poly = props.__poly__;
-        this.editorActive = false;
-        this.onPropsUpdate(props);
+        const self = this
+        this.setterMap = {
+          active(val) {
+            self.toggleActive(val)
+          }
+        }
+        this.map = props.__map__
+        this.poly = props.__poly__
+        this.editorActive = false
+        this.createEditorInstance().then(() => {
+          this.props.onInstanceCreated && this.props.onInstanceCreated()
+        })
       }
     }
   }
 
-  componentWillReceiveProps(nextProps: EditorProps) {
-    if (this.map) {
-      this.onPropsUpdate(nextProps);
-    }
+  get instance() {
+    return this.polyEditor
   }
 
-  onPropsUpdate(props: EditorProps) {
-    if ('active' in props && props.active === false) {
-      this.toggleActive(false, props);
-    } else {
-      this.toggleActive(true, props);
-    }
-  }
-
-  toggleActive(active: boolean, props: EditorProps) {
+  toggleActive(active: boolean) {
     if (active) {
       if (!this.editorActive) {
-        this.activeEditor(props);
+        this.activeEditor()
       }
     } else {
       if (this.editorActive) {
-        this.inactiveEditor();
+        this.inactiveEditor()
       }
     }
   }
 
-  activeEditor(props: EditorProps) {
-    this.loadPolyEditor(props).then((editor) => {
-      this.editorActive = true;
-      editor.open();
-    });
+  activeEditor() {
+    if (this.polyEditor) {
+      this.editorActive = true
+      this.polyEditor.open()
+    }
   }
 
   inactiveEditor() {
-    this.editorActive = false;
+    this.editorActive = false
     if (this.polyEditor) {
-      this.polyEditor.close();
+      this.polyEditor.close()
     }
   }
 
-  loadPolyEditor(props: EditorProps): Promise<Object> {
+  createEditorInstance() {
     if (this.polyEditor) {
-      return Promise.resolve(this.polyEditor);
+      return Promise.resolve(this.polyEditor)
     }
     return new Promise((resolve) => {
       this.map.plugin(['AMap.PolyEditor'], () => {
-        resolve(this.createEditorInstance(props));
-      });
-    });
-  }
-
-  createEditorInstance(props: EditorProps) {
-    this.polyEditor = new window.AMap.PolyEditor(
-      this.map, this.poly
-    );
-    const events = this.exposeEditorInstance(props);
-    events && this.bindEditorEvents(events);
-    return this.polyEditor;
-  }
-
-  exposeEditorInstance(props: EditorProps) {
-    if ('events' in props) {
-      const events = props.events || {};
-      if (isFun(events.created)) {
-        events.created(this.polyEditor);
-      }
-      delete events.created;
-      return events;
-    }
-    return false;
-  }
-
-  bindEditorEvents(events: Object) {
-    const list = Object.keys(events);
-    list.length && list.forEach((evName) => {
-      this.polyEditor.on(evName, events[evName]);
-    });
+        this.polyEditor = new window.AMap.PolyEditor(
+          this.map, this.poly
+        )
+        resolve(this.polyEditor)
+      })
+    })
   }
 
   render() {
-    return null;
+    return null
   }
-};
+}
 
-export default PolyEditor;
+export default withPropsReactive(PolyEditor)

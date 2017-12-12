@@ -17,10 +17,11 @@ class App extends React.Component{
   constructor(){
     super();
     const self = this
-    this.plugins = ['Scale', 'ControlBar']
+    this.plugins = ['Scale', 'ToolBar']
     this.state = {
       center: randomPosition(),
       zoom: 4,
+      viewMode: '3D',
       mapEvents: {
         click() {
           console.log('You clicked')
@@ -45,6 +46,13 @@ class App extends React.Component{
     this.randomZoom = this.randomZoom.bind(this)
     this.mapStyle = this.mapStyle.bind(this)
     this.changeCity = this.changeCity.bind(this)
+    this.toggleViewMode = this.toggleViewMode.bind(this)
+  }
+
+  toggleViewMode() {
+    this.setState({
+      viewMode: '2D'
+    })
   }
 
   randomCenter() {
@@ -75,21 +83,22 @@ class App extends React.Component{
     return <div>
       <div style={{width: '100%', height: '370px'}}>
         <Map
-          viewMode="3D"
+          viewMode={this.state.viewMode}
           amapkey="f97efc35164149d0c0f299e7a8adb3d2"
           events={this.state.mapEvents}
           center={this.state.center}
           zoom={this.state.zoom}
           plugins={this.plugins}
+          city={this.state.city}
         >
           <Marker events={this.state.markerEvents} position={this.state.center}/>
-          <div>hello world</div>
         </Map>
       </div>
       <button onClick={this.randomCenter}>Random Center</button>
       <button onClick={this.randomZoom}>Random Zoom</button>
       <button onClick={this.mapStyle}>Change MapStyle</button>
       <button onClick={this.changeCity}>Change City</button>
+      <button onClick={this.toggleViewMode}>View Mode</button>
     </div>
   }
 }

@@ -14,14 +14,12 @@ function withPropsReactive(MapComponent) {
     onInstanceCreated() {
       this.instanceCreated = true
       if ('events' in this.props) {
-        console.log(this.myMapComponent)
         const { instance } = this.myMapComponent
-        window.myMap = instance
         if (this.props.events.created) {
           this.props.events.created(instance)
         }
-        this.reactivePropChange(this.props, false)
       }
+      this.reactivePropChange(this.props, false)
     }
 
     createEventsProxy(props) {
@@ -32,10 +30,9 @@ function withPropsReactive(MapComponent) {
         if (self.registeredEvents.indexOf(ev) === -1) {
           self.registeredEvents.push(ev)
           instance.on(ev, (function(ev) {
-            return function() {
-              console.log(ev)
+            return function(...args) {
               if (self.props.events && ev in self.props.events) {
-                self.props.events[ev]()
+                self.props.events[ev].apply(null, args)
               }
             }
           })(ev))
@@ -51,7 +48,7 @@ function withPropsReactive(MapComponent) {
       if (!this.instanceCreated) {
         return false
       }
-      const { setterMap, converterMap, instance } = this.myMapComponent
+      const { setterMap = {}, converterMap = {}, instance = {} } = this.myMapComponent
       const list = Object.keys(nextProps)
       list.length && list.forEach(key => {
         if (key === 'events') {
@@ -100,7 +97,7 @@ function withPropsReactive(MapComponent) {
       if ('hide' in instance) {
         instance.hide()
       }
-      if ('__map__' in this.props) {
+      if ('__map__' in this.props && 'setMap' in instance) {
         instance.setMap(null)
       }
     }

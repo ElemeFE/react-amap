@@ -1,13 +1,11 @@
 // @flow
-import React from 'react';
-import isFun from '../utils/isFun';
+import React from 'react'
 import withPropsReactive from '../utils/withPropsReactive'
-import log from '../utils/log';
-import PolyEditor from '../polyeditor';
-import toCapitalString from '../utils/toCapitalString';
-import { toLnglat } from '../utils/common';
+import log from '../utils/log'
+import PolyEditor from '../polyeditor'
+import { toLnglat } from '../utils/common'
 
-const Component = React.Component;
+const Component = React.Component
 
 const configurableProps = [
   'path',
@@ -17,13 +15,13 @@ const configurableProps = [
   /* 扩展属性*/
   'visible',
   'style'
-];
+]
 
 const allProps = configurableProps.concat([
   'zIndex',
   'bubble',
   'showDir'
-]);
+])
 
 type LineProps = {
   path: PolylinePath,
@@ -39,21 +37,21 @@ type LineProps = {
   __map__: Object,
   events: Object,
   children: React.Node,
-};
+}
 
-class Polyline extends Component<LineProps, {}> {
+class Polyline extends Component<LineProps, {loaded: boolean}> {
 
-  map: Object;
-  polyline: Object;
-  element: HTMLElement;
-  setterMap: Object;
-  converterMap: Object;
+  map: Object
+  polyline: Object
+  element: HTMLElement
+  setterMap: Object
+  converterMap: Object
 
   constructor(props: LineProps) {
-    super(props);
+    super(props)
     if (typeof window !== 'undefined') {
       if (!props.__map__) {
-        log.warning('MAP_INSTANCE_REQUIRED');
+        log.warning('MAP_INSTANCE_REQUIRED')
       } else {
         const self = this
         this.setterMap = {
@@ -73,8 +71,11 @@ class Polyline extends Component<LineProps, {}> {
             return self.buildPathValue(val)
           }
         }
-        this.map = props.__map__;
-        this.element = this.map.getContainer();
+        this.state = {
+          loaded: false
+        }
+        this.map = props.__map__
+        this.element = this.map.getContainer()
         setTimeout(() => {
           this.createMapPolyline(props)
         }, 13)
@@ -87,33 +88,36 @@ class Polyline extends Component<LineProps, {}> {
   }
 
   createMapPolyline(props: LineProps) {
-    const options = this.buildCreateOptions(props);
-    options.map = this.map;
-    this.polyline = new window.AMap.Polyline(options);
+    const options = this.buildCreateOptions(props)
+    options.map = this.map
+    this.polyline = new window.AMap.Polyline(options)
+    this.setState({
+      loaded: true
+    })
     this.props.onInstanceCreated && this.props.onInstanceCreated()
   }
 
   buildCreateOptions(props: LineProps) {
-    const options = {};
+    const options = {}
     allProps.forEach((key) => {
       if (key in props) {
         if ((key === 'style') && props.style) {
-          const styleItem = Object.keys(props.style);
+          const styleItem = Object.keys(props.style)
           styleItem.forEach((item) => {
             // $FlowFixMe
-            options[item] = props.style[item];
-          });
+            options[item] = props.style[item]
+          })
           // visible 做特殊处理
         } else if (key !== 'visible') {
-          options[key] = this.getSetterValue(key, props[key]);
+          options[key] = this.getSetterValue(key, props[key])
         }
       }
-    });
-    return options;
+    })
+    return options
   }
 
   detectPropChanged(key: string, nextProps: LineProps) {
-    return this.props[key] !== nextProps[key];
+    return this.props[key] !== nextProps[key]
   }
 
   getSetterValue(key: string, value: any) {
@@ -126,39 +130,32 @@ class Polyline extends Component<LineProps, {}> {
   buildPathValue(path: PolylinePath) {
     if (path.length) {
       if ('getLng' in path[0]) {
-        return path;
+        return path
       }
-      return path.map((p) => (toLnglat(p)));
+      return path.map((p) => (toLnglat(p)))
     }
-    return path;
+    return path
   }
 
   renderEditor(children: any) {
     if (!children) {
-      return null;
+      return null
     }
     if (React.Children.count(children) !== 1) {
-      return null;
+      return null
     }
-    const child = React.Children.only(children);
+    const child = React.Children.only(children)
     if (child.type === PolyEditor) {
       return React.cloneElement(child, {
         __poly__: this.polyline,
-        __map__: this.map,
-        __ele__: this.element
-      });
+        __map__: this.map
+      })
     }
-    return null;
+    return null
   }
 
   render() {
-    return (this.renderEditor(this.props.children));
-  }
-
-  componentWillUnmount() {
-    this.polyline.hide();
-    this.polyline.setMap(null);
-    delete this.polyline;
+    return this.state.loaded ? (this.renderEditor(this.props.children)) : null
   }
 }
 
