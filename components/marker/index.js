@@ -94,9 +94,7 @@ class Marker extends React.Component<MarkerProps, {}> {
 
   // 初始化标记的外观
   setMarkerLayout(props: MarkerProps) {
-    if (('render' in props) || ('children' in props)) {
-      console.log('-------------')
-      console.log(props.children)
+    if (('render' in props) || ('children' in props && props.children)) {
       this.createContentWrapper()
       if ('className' in props && props.className) {
         // https://github.com/ElemeFE/react-amap/issues/40

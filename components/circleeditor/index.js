@@ -23,7 +23,6 @@ class CircleEditor extends React.Component<EditorProps, {}> {
     super(props)
     if (typeof window !== 'undefined') {
       if (!(props.__map__ && props.__circle__)) {
-        console.log(props)
         log.warning('CIRCLE_INSTANCE_REQUIRED')
       } else {
         this.map = props.__map__
@@ -64,7 +63,6 @@ class CircleEditor extends React.Component<EditorProps, {}> {
   activeEditor(props: EditorProps) {
     this.loadCircleEditor(props).then((editor) => {
       this.editorActive = true
-      console.log(editor)
       editor.open()
     })
   }

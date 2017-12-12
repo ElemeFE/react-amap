@@ -8,26 +8,41 @@ order: 1
 ```jsx
 import { Map, Markers } from 'react-amap';
 
+const randomPosition = () => ({
+  longitude: 100 + Math.random() * 20,
+  latitude: 30 + Math.random() * 20
+})
 const randomMarker = (len) => (
   Array(len).fill(true).map((e, idx) => ({
-    position: {
-      longitude: 100 + Math.random() * 20,
-      latitude: 30 + Math.random() * 20,
-    }
+    position: randomPosition()
   }))
 );
 class App extends React.Component{
   constructor(){
     super();
-    this.markers = randomMarker(100);
+    this.state = {
+      markers: randomMarker(2),
+      center: randomPosition()
+    }
+    this.randomMarkers = this.randomMarkers.bind(this)
   }
+
+  randomMarkers() {
+    this.setState({
+      markers: randomMarker(2)
+    })
+  }
+
   render(){   
-    return <div style={{width: '100%', height: 400}}>
-      <Map plugins={['ToolBar']} center={{longitude: 110, latitude: 40}} zoom={6}>
-        <Markers 
-          markers={this.markers}
-        />
-      </Map>
+    return <div>
+      <div style={{width: '100%', height: 372}}>
+        <Map plugins={['ToolBar']} center={this.state.center} zoom={6}>
+          <Markers 
+            markers={this.state.markers}
+          />
+        </Map>
+      </div>
+      <button onClick={this.randomMarkers}>Random Markers</button>
     </div>
   }
 }

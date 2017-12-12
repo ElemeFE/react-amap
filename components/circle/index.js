@@ -1,9 +1,7 @@
 // @flow
 import React from 'react'
-import isFun from '../utils/isFun'
 import withPropsReactive from '../utils/withPropsReactive'
 import log from '../utils/log'
-import toCapitalString from '../utils/toCapitalString'
 import { toLnglat } from '../utils/common'
 /*
  * props

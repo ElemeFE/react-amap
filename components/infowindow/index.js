@@ -2,8 +2,6 @@
 import React from 'react'
 import { render } from 'react-dom'
 import withPropsReactive from '../utils/withPropsReactive'
-import isFun from '../utils/isFun'
-import toCapitalString from '../utils/toCapitalString'
 import log from '../utils/log'
 import {
   toLnglat,
