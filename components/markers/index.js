@@ -91,7 +91,8 @@ const ClusterProps = [
   'maxZoom',
   'averageCenter',
   'styles',
-  'zoomOnClick'
+  'zoomOnClick',
+  'renderCluserMarker'
 ];
 
 const IdKey = '__react_amap__';
@@ -406,12 +407,16 @@ class Markers extends Component<MarkerProps, {}> {
 
   bindClusterEvent(events: Object) {
     this.mapCluster.on('click', (e) => {
-      let returnValue = true;
-      if (isFun(events.click)) {
-        returnValue = events.click(e);
-      }
-      if (returnValue !== false) {
-        this.showMarkersInfoWindow(e);
+      if (this.props.useCluster && this.props.useCluster.zoomOnClick) {
+        //
+      } else {
+        let returnValue = true;
+        if (isFun(events.click)) {
+          returnValue = events.click(e);
+        }
+        if (returnValue !== false) {
+          this.showMarkersInfoWindow(e);
+        }
       }
     });
   }
