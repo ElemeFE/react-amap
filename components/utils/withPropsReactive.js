@@ -57,7 +57,7 @@ function withPropsReactive(MapComponent) {
 
         let willReactive = true
         if (shouldDetectChange) {
-          willReactive = this.deletePropChange(key, nextProps, this.props)
+          willReactive = this.detectPropChange(key, nextProps, this.props)
         }
         if (!willReactive) {
           return false
@@ -77,7 +77,7 @@ function withPropsReactive(MapComponent) {
       })
     }
 
-    deletePropChange(key, nextProps, oldProps) {
+    detectPropChange(key, nextProps, oldProps) {
       return nextProps[key] !== oldProps[key]
     }
 
