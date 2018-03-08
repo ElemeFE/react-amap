@@ -21,7 +21,7 @@ class App extends React.Component{
   constructor(){
     super();
     this.state = {
-      markers: randomMarker(2),
+      markers: randomMarker(100),
       center: randomPosition()
     }
     this.randomMarkers = this.randomMarkers.bind(this)
@@ -29,7 +29,7 @@ class App extends React.Component{
 
   randomMarkers() {
     this.setState({
-      markers: randomMarker(2)
+      markers: randomMarker(100)
     })
   }
 
