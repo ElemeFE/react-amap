@@ -23,6 +23,7 @@ react-amap 升级到 1.1.1，支持加载 [AMapUI 组件库](http://lbs.amap.com
 
 1. [react-amap-plugin-heatmap](https://www.npmjs.com/package/react-amap-plugin-heatmap)，热力图组件。
 2. [react-amap-plugin-geolocation](https://www.npmjs.com/package/react-amap-plugin-geolocation)，定位组件。
+3. [react-amapui-wrapper](https://github.com/Croash/react-amapui-wrapper)，可自定义的AMapUI组件。
 
 如果你有写好的组件愿意开源出来的，欢迎提一个 PR 扩展这个列表。
 
