@@ -47,5 +47,7 @@ export const renderMarkerComponent = (component, marker) => {
     const extData = marker.getExtData();
     child = component(extData);
   }
-  render(<div>{child}</div>, marker.getContent());
+  if (child) {
+    render(<div>{child}</div>, marker.getContent());
+  }
 };
