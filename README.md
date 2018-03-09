@@ -10,7 +10,7 @@
 
 ### 最近更新
 
-react-amap 升级到 1.1.1，支持加载 [AMapUI 组件库](http://lbs.amap.com/api/javascript-api/guide/amap-ui/intro)。（2017-11-13）
+react-amap 升级到 1.1.1，支持加载 [AMapUI 组件库](http://lbs.amap.com/api/javascript-api/guide/amap-ui/intro)。加载方式参考 [Map 组件](/components/map) 关于 **加载 AMapUI 组件库** 的说明。（2017-11-13）
 
 
 ### 扩展组件
