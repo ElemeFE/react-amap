@@ -1,6 +1,6 @@
 {
   "name": "react-amap",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "AMap Component Based On React",
   "main": "lib/index.js",
   "types": "types/index.d.ts",
