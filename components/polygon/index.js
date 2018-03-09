@@ -132,22 +132,19 @@ class Polygon extends Component<PolyProps, {loaded: boolean}> {
 
   buildPathValue(path: PolygonPath) {
     if (path.length) {
-      if (path[0][0] && typeof path[0][0] === 'number') {
+      const firstNode = path[0]
+      if (typeof firstNode[0] === 'number') {
         return path.map((p) => (toLnglat(p)))
-      } else if ('getLng' in path[0]) {
+      }
+      if ('getLng' in firstNode) {
         return path
-      } else if ('longitude' in path[0] || 'lng' in path[0]) {
+      }
+      if ('longitude' in firstNode || 'lng' in firstNode) {
         return path.map((p) => (toLnglat(p)))
-      } else if (path.length === 2) {
-        // Ring
-        // TODO(slh) Awkward Flow Issues
+      }
+      if ('length' in firstNode && firstNode.length) {
         // $FlowFixMe
-        const out = this.buildPathValue(path[0])
-        // $FlowFixMe
-        const inner = this.buildPathValue(path[1])
-        return [out, inner]
-      } else {
-        return []
+        return path.map(ring => this.buildPathValue(ring))
       }
     }
     return []

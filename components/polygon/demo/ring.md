@@ -10,20 +10,30 @@ import { Map, Polygon } from 'react-amap';
 class App extends React.Component{
   constructor(){
     super();
+    const outPath = [
+      [100, 40],
+      [123, 40],
+      [123, 28],
+      [100, 28]
+    ]
+    const innerRing1 = [
+      [101, 39],
+      [111, 39],
+      [111, 29],
+      [101, 29]
+    ]
+    const innerRing2 = [
+      [112, 39],
+      [122, 39],
+      [122, 29],
+      [112, 29]
+    ]
     this.path = [
-      [
-        {longitude: 110, latitude: 30},
-        {longitude: 115, latitude: 30},            
-        {longitude: 120, latitude: 20},
-        {longitude: 110, latitude: 20},
-
-      ],[
-        {longitude: 113, latitude: 28},
-        {longitude: 118, latitude: 22},            
-        {longitude: 112, latitude: 22}
-      ]
+      outPath,
+      innerRing1,
+      innerRing2
     ]   
-    this.mapCenter = { longitude: 115, latitude: 25 }
+    this.mapCenter = [112, 34]
   }
 
   render(){
