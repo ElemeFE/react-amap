@@ -177,14 +177,13 @@ class InfoWindow extends Component<IWProps, {}> {
   }
 
   setClassName(props: IWProps) {
-    let baseClsValue = ''
-    if (props.isCustom === true) {
-      baseClsValue = 'amap_markers_pop_window '
-    }
     if (this.infoDOM) {
+      let baseClsValue = ''
       // 刷新 className
       if ('className' in props && props.className) {
         baseClsValue += props.className
+      } else if (props.isCustom === true) {
+        baseClsValue += 'amap_markers_pop_window'
       }
       this.infoDOM.className = baseClsValue
     }
