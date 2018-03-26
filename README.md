@@ -132,6 +132,13 @@ tips: 记得将其中的 `VERSION` 替换为真实版本号，查看历史版本
 
 react-amap 的成长离不开大家的支持，如果你愿意为 react-amap 贡献代码或提供建议，请阅读以下内容。
 
+#### 开发
+
+```shell
+npm install
+npm start # http://localhost:9001
+```
+
 #### Issue 规范
 
 - issue 仅用于提交 Bug 或 Feature，其它内容可能会被直接关闭。

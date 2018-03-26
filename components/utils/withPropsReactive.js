@@ -93,7 +93,9 @@ function withPropsReactive(MapComponent) {
       const { instance } = this.myMapComponent
       if (!instance) return
       if ('destroy' in instance) {
-        instance.destroy()
+        setTimeout(() => {
+          instance.destroy()
+        }, 10)
       }
       if ('hide' in instance) {
         instance.hide()
