@@ -49,7 +49,7 @@ declare type MapFeature = 'bg' | 'point' | 'road' | 'building';
 declare type MapProps = {
   amapkey?: string,
   version?: string,
-  useAMapUI?: boolean,
+  useAMapUI?: boolean | Function,
   onInstanceCreated?: Function,
   children: React.Node,
   events?: EventMap,

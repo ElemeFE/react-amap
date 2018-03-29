@@ -62,7 +62,7 @@ export type MapFeature = 'bg' | 'point' | 'road' | 'building';
 export interface MapProps {
   amapkey?: string;
   version?: string;
-  useAMapUI?: boolean;
+  useAMapUI?: boolean | Function;
   children?: any;
   onInstanceCreated?: Function;
   plugins?: Array<PluginList|PluginConfig>;

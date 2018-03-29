@@ -66,8 +66,12 @@ class UIMarker extends React.Component {
   }
 }
 
+const initCallback = () => {
+  console.log("AMapUI Loaded Done")
+}
+
 const MyApp = (<div style={{width: '100%', height: '400px'}}>
-      <Map zoom={6} center={[120, 30]} useAMapUI >
+      <Map zoom={6} center={[120, 30]} useAMapUI={initCallback} >
         <UIMarker/>
       </Map></div>);
 

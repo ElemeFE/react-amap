@@ -75,6 +75,9 @@ export default class APILoader {
           amapuiPromise.then(() => {
             if (window.initAMapUI && !amapuiInited) {
               window.initAMapUI()
+              if (typeof useAMapUI === 'function') {
+                useAMapUI()
+              }
               amapuiInited = true
             }
             resolve()
