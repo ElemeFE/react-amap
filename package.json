@@ -19,6 +19,14 @@
     "type": "git",
     "url": "git+https://github.com/elemefe/react-amap.git"
   },
+  "keywords": [
+    "map",
+    "react"
+  ],
+  "bugs": {
+    "url": "https://github.com/ElemeFE/react-amap/issues"
+  },
+  "homepage": "https://github.com/ElemeFE/react-amap",
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^16.0.10",
