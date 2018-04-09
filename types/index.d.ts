@@ -60,6 +60,7 @@ export type Size = ObjSize | AMapSize;
 export type MapFeature = 'bg' | 'point' | 'road' | 'building';
 
 export interface MapProps {
+  protocol?: string;
   amapkey?: string;
   version?: string;
   useAMapUI?: boolean | Function;

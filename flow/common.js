@@ -47,6 +47,7 @@ declare type MapLang = 'zh_cn' | 'zh_en' | 'en';
 declare type MapFeature = 'bg' | 'point' | 'road' | 'building';
 
 declare type MapProps = {
+  protocol?: string,
   amapkey?: string,
   version?: string,
   useAMapUI?: boolean | Function,

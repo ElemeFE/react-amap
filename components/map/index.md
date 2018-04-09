@@ -17,6 +17,8 @@ Map 组件是其他组件的基础，其他地图组件必须作为 Map 的子�
 
 | 属性 | 属性类型 | 值类型 | 默认取值 | 说明 |
 |------|-----|-----|------|-----|
+| protocol | 静态属性 | `String` | `window.location.protocol` | 加载高德 API 的协议前缀 |
+| version | 静态属性 | `String` | `1.4.0` | 指定加载高德 API 的版本 |
 | loading | 动态属性 | ReactNode | / | 用于在地图加载成功前渲染 |
 | layers | 动态属性 | [TileLayer](http://lbs.amap.com/api/javascript-api/reference/layer#TileLayer)\[\]| / |地图图层数组，数组可以是图层 中的一个或多个，默认为普通二维地图。当叠加多个图层时，普通二维地图需通过实例化一个TileLayer类实现|
 | zoom | 动态属性 | `Number` | / | 地图显示的缩放级别，若center与level未赋值，地图初始化默认显示用户所在城市范围|

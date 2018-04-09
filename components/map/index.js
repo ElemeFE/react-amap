@@ -125,7 +125,8 @@ class BaseMap extends Component<MapProps, {mapLoaded: boolean}> {
       new APILoader({
         key: props.amapkey,
         useAMapUI: props.useAMapUI,
-        version: props.version
+        version: props.version,
+        protocol: props.protocol
       }).load().then(() => {
         this.createInstance()
         if (!this.state.mapLoaded) {

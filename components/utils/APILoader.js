@@ -10,8 +10,8 @@ let mainPromise = null
 let amapuiPromise = null
 let amapuiInited = false
 export default class APILoader {
-  constructor({ key, useAMapUI, version }) {
-    this.config = { ...DEFAULT_CONFIG, useAMapUI }
+  constructor({ key, useAMapUI, version, protocol }) {
+    this.config = { ...DEFAULT_CONFIG, useAMapUI, protocol }
     if (typeof window !== 'undefined') {
       if (key) {
         this.config.key = key
@@ -25,7 +25,11 @@ export default class APILoader {
   }
 
   getScriptSrc(cfg) {
-    return `${window.location.protocol}//${cfg.hostAndPath}?v=${cfg.v}&key=${cfg.key}&callback=${cfg.callback}`
+    let protocol = cfg.protocol || window.location.protocol
+    if (protocol.indexOf(':') === -1) {
+      protocol += ':'
+    }
+    return `${protocol}//${cfg.hostAndPath}?v=${cfg.v}&key=${cfg.key}&callback=${cfg.callback}`
   }
 
   buildScriptTag(src) {
