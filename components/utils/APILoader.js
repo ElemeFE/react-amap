@@ -22,14 +22,14 @@ export default class APILoader {
     if (version) {
       this.config.v = version
     }
+    this.protocol = protocol || window.location.protocol
+    if (this.protocol.indexOf(':') === -1) {
+      this.protocol += ':'
+    }
   }
 
   getScriptSrc(cfg) {
-    let protocol = cfg.protocol || window.location.protocol
-    if (protocol.indexOf(':') === -1) {
-      protocol += ':'
-    }
-    return `${protocol}//${cfg.hostAndPath}?v=${cfg.v}&key=${cfg.key}&callback=${cfg.callback}`
+    return `${this.protocol}//${cfg.hostAndPath}?v=${cfg.v}&key=${cfg.key}&callback=${cfg.callback}`
   }
 
   buildScriptTag(src) {
@@ -42,7 +42,7 @@ export default class APILoader {
   }
 
   getAmapuiPromise() {
-    const script = this.buildScriptTag(`${window.location.protocol}//webapi.amap.com/ui/1.0/main-async.js`)
+    const script = this.buildScriptTag(`${this.protocol}//webapi.amap.com/ui/1.0/main-async.js`)
     const p = new Promise(resolve => {
       script.onload = () => {
         resolve()
