@@ -27,16 +27,17 @@ class Marker extends React.Component<MarkerProps, {}> {
       if (!props.__map__) {
         log.warning('MAP_INSTANCE_REQUIRED')
       } else {
+        const self = this
         this.setterMap = {
           visible(val) {
             if (val) {
-              this.marker && this.marker.show()
+              self.marker && self.marker.show()
             } else {
-              this.marker && this.marker.hide()
+              self.marker && self.marker.hide()
             }
           },
           zIndex(val) {
-            this.marker && this.marker.setzIndex(val)
+            self.marker && self.marker.setzIndex(val)
           }
         }
         this.converterMap = {
