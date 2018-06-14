@@ -40,6 +40,9 @@ export const toPixel = (ofst) => {
   if (({}).toString.call(ofst) === '[object Array]') {
     x = ofst[0]
     y = ofst[1]
+  } else if ('x' in ofst && 'y' in ofst) {
+    x = ofst.x;
+    y = ofst.y;
   }
   return hasWindow ? new window.AMap.Pixel(x, y) : null
 }
