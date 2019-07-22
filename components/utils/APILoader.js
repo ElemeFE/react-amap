@@ -42,6 +42,9 @@ export default class APILoader {
   }
 
   getAmapuiPromise() {
+    if (window.AMapUI) {
+      return Promise.resolve()
+    }
     const script = this.buildScriptTag(`${this.protocol}//webapi.amap.com/ui/1.0/main-async.js`)
     const p = new Promise(resolve => {
       script.onload = () => {
@@ -53,6 +56,9 @@ export default class APILoader {
   }
 
   getMainPromise() {
+    if (window.AMap) {
+      return Promise.resolve()
+    }
     const script = this.buildScriptTag(this.getScriptSrc(this.config))
     const p = new Promise(resolve => {
       window[this.config.callback] = () => {
