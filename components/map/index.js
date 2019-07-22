@@ -118,7 +118,13 @@ class BaseMap extends Component<MapProps, {mapLoaded: boolean}> {
       }
     }
     this.converterMap = {
-      center: toLnglat
+      center: toLnglat,
+      mapStyle: styleStr => {
+        if (styleStr.indexOf('amap://styles') === 0) {
+          return styleStr
+        }
+        return `amap://styles/${styleStr}`
+      }
     }
     if (typeof window !== 'undefined') {
       this.pluginMap = {}
