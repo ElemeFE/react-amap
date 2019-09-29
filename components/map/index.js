@@ -46,6 +46,7 @@ const StatusDynamicProps: Array<string> = [
   'rotateEnable',
   'scrollWheel',
   'touchZoom',
+  'vectorMapForeign',
   'zoomEnable'
 ]
 
