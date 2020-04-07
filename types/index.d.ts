@@ -103,6 +103,7 @@ export interface MapProps {
   limitBounds?: any;
   status?: any;
   rotation?: number;
+  touchZoomCenter?: number;
 }
 
 export interface MarkerProps {
