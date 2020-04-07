@@ -46,7 +46,8 @@ const StatusDynamicProps: Array<string> = [
   'rotateEnable',
   'scrollWheel',
   'touchZoom',
-  'zoomEnable'
+  'zoomEnable',
+  'touchZoomCenter'
 ]
 
 const StaticProps: Array<string> = [
