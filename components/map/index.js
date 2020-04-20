@@ -47,7 +47,8 @@ const StatusDynamicProps: Array<string> = [
   'scrollWheel',
   'touchZoom',
   'vectorMapForeign',
-  'zoomEnable'
+  'zoomEnable',
+  'touchZoomCenter'
 ]
 
 const StaticProps: Array<string> = [
