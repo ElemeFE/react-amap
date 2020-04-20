@@ -1,5 +1,5 @@
 {
-  "name": "react-amap",
+  "name": "react-gaode-amap",
   "version": "1.2.8",
   "description": "AMap Component Based On React",
   "main": "lib/index.js",
@@ -14,19 +14,20 @@
     "prepublish": "npm run browser-build && npm run npm-build",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
-  "author": "ohislh@gmail.com",
+  "author": "ohislh@gmail.com,mikexfreeze@gmail.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elemefe/react-amap.git"
+    "url": "git@github.com:mikexfreeze/react-gaode-amap.git"
   },
   "keywords": [
     "map",
-    "react"
+    "react",
+    "aboard"
   ],
   "bugs": {
     "url": "https://github.com/ElemeFE/react-amap/issues"
   },
-  "homepage": "https://github.com/ElemeFE/react-amap",
+  "homepage": "https://github.com/mikexfreeze/react-gaode-amap",
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^16.0.10",
