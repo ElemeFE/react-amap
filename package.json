@@ -1,32 +1,33 @@
 {
-  "name": "react-amap",
+  "name": "react-gaode-amap",
   "version": "1.2.8",
   "description": "AMap Component Based On React",
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "scripts": {
     "lint": "eslint . --quiet",
-    "browser-build": "rm -rf dist && webpack && NODE_ENV=production webpack -p",
-    "npm-build": "rm -rf lib && babel components -d lib",
+    "browser-build": "webpack && cross-env NODE_ENV=production webpack -p",
+    "npm-build": "babel components -d lib",
     "site": "npm run npm-build && bisheng build",
     "deploy": "npm run npm-build && bisheng gh-pages",
     "start": "npm run npm-build && bisheng start",
     "prepublish": "npm run browser-build && npm run npm-build",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
-  "author": "ohislh@gmail.com",
+  "author": "ohislh@gmail.com,mikexfreeze@gmail.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elemefe/react-amap.git"
+    "url": "git@github.com:mikexfreeze/react-gaode-amap.git"
   },
   "keywords": [
     "map",
-    "react"
+    "react",
+    "aboard"
   ],
   "bugs": {
     "url": "https://github.com/ElemeFE/react-amap/issues"
   },
-  "homepage": "https://github.com/ElemeFE/react-amap",
+  "homepage": "https://github.com/mikexfreeze/react-gaode-amap",
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^16.0.10",
@@ -41,6 +42,7 @@
     "bisheng": "0.13.3",
     "bisheng-plugin-antd": "0.3.2",
     "bisheng-plugin-react": "0.2.2",
+    "cross-env": "^7.0.2",
     "css-loader": "^0.26.1",
     "dora-plugin-proxy": "^0.8.5",
     "eslint": "^3.17.1",
