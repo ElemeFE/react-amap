@@ -9,9 +9,14 @@ function withPropsReactive(MapComponent) {
       this.myMapComponent = null
       this.registeredEvents = []
       this.onInstanceCreated = this.onInstanceCreated.bind(this)
+      this.needRunInstanceCreatedCallback = false;
     }
 
     onInstanceCreated() {
+      if (!this.myMapComponent) {
+        this.needRunInstanceCreatedCallback;
+      }
+
       this.instanceCreated = true
       if ('events' in this.props) {
         const { instance } = this.myMapComponent
@@ -38,6 +43,12 @@ function withPropsReactive(MapComponent) {
           })(ev))
         }
       })
+    }
+
+    componentDidMount() {
+      if (this.needRunInstanceCreatedCallback) {
+        this.onInstanceCreated()
+      }
     }
 
     componentWillReceiveProps(nextProps) {
