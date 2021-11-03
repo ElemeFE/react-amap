@@ -4,6 +4,7 @@ import * as React from 'react';
 export type EventMap = Object;
 
 export type PluginList = 'Scale' | 'ToolBar' | 'MapType' | 'OverView' | 'ControlBar'
+export type MapLang = 'en'|'zh_cn'|'zh_en'
 
 export interface PluginConfig {
   name: PluginList;
@@ -104,6 +105,7 @@ export interface MapProps {
   status?: any;
   rotation?: number;
   touchZoomCenter?: number;
+  lang?:MapLang
 }
 
 export interface MarkerProps {

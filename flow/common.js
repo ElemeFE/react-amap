@@ -90,7 +90,7 @@ declare type MapProps = {
   limitBounds?: any,
   status?: any,
   rotation?: number
-  // lang?: MapLang,
+  lang?: MapLang,
 }
 
 declare type MarkerProps = {
