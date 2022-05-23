@@ -13,6 +13,9 @@ export default class APILoader {
   constructor({ key, useAMapUI, version, protocol }) {
     this.config = { ...DEFAULT_CONFIG, useAMapUI, protocol }
     if (typeof window !== 'undefined') {
+      if (this.config.key !== key) {
+        mainPromise = null
+      }
       if (key) {
         this.config.key = key
       } else if ('amapkey' in window) {
