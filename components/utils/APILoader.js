@@ -10,13 +10,16 @@ let mainPromise = null
 let amapuiPromise = null
 let amapuiInited = false
 export default class APILoader {
-  constructor({ key, useAMapUI, version, protocol }) {
+  constructor({ key,callback, useAMapUI, version, protocol }) {
     this.config = { ...DEFAULT_CONFIG, useAMapUI, protocol }
     if (typeof window !== 'undefined') {
       if (key) {
         this.config.key = key
       } else if ('amapkey' in window) {
         this.config.key = window.amapkey
+      }
+      if (callback) {
+        this.config.callback = callback
       }
     }
     if (version) {
