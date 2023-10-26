@@ -54,11 +54,51 @@ export const toSize = (size) => {
   if ('getWidth' in size) {
     return size
   }
-  return hasWindow ? new window.AMap.Size(size.width, size.height) : null
+
+  let width = 0;
+  let height = 0;
+
+  if (({}).toString.call(size) === '[object Array]') {
+    width = size[0];
+    height = size[1];
+  } else if ('width' in size && 'height' in size) {
+    width = size.width;
+    height = size.height;
+  }
+
+  return hasWindow ? new window.AMap.Size(width, height) : null
+}
+
+export const toLabel = (label) => {
+  if (!label) {
+    return label
+  }
+
+  label.offset = toPixel(label.offset)
+  return label
+}
+
+export const toIcon = (icon) => {
+  if (!icon) {
+    return icon
+  }
+
+  if (typeof icon === 'string' || 'getImageSize' in icon) {
+    return icon
+  }
+
+  return hasWindow ? new window.AMap.Icon({
+    size: toSize(icon.size),
+    imageOffset: toPixel(icon.imageOffset),
+    image: icon.image,
+    imageSize: toSize(icon.imageSize)
+  }) : null;
 }
 
 export default {
   toLnglat,
   toPixel,
-  toSize
+  toSize,
+  toLabel,
+  toIcon
 }

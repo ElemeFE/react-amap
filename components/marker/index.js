@@ -9,7 +9,9 @@ import {
 } from '../utils/markerUtils'
 import {
   toLnglat,
-  toPixel
+  toPixel,
+  toLabel,
+  toIcon
 } from '../utils/common'
 
 class Marker extends React.Component<MarkerProps, {}> {
@@ -42,7 +44,10 @@ class Marker extends React.Component<MarkerProps, {}> {
         }
         this.converterMap = {
           position: toLnglat,
-          offset: toPixel
+          offset: toPixel,
+          label: toLabel,
+          icon: toIcon,
+          shadow: toIcon
         }
         this.map = props.__map__
         this.element = this.map.getContainer()
