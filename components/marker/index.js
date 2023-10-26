@@ -9,10 +9,10 @@ import {
 } from '../utils/markerUtils'
 import {
   toLnglat,
-  toPixel
+  toPixel,
+  toLabel,
+  toIcon
 } from '../utils/common'
-
-import isObject from '../utils/isObject'
 
 class Marker extends React.Component<MarkerProps, {}> {
 
@@ -44,7 +44,10 @@ class Marker extends React.Component<MarkerProps, {}> {
         }
         this.converterMap = {
           position: toLnglat,
-          offset: toPixel
+          offset: toPixel,
+          label: toLabel,
+          icon: toIcon,
+          shadow: toIcon
         }
         this.map = props.__map__
         this.element = this.map.getContainer()
@@ -136,13 +139,6 @@ class Marker extends React.Component<MarkerProps, {}> {
   getSetterParam(key: string, val: any) {
     if (key in this.converterMap) {
       return this.converterMap[key](val)
-    }
-    if (isObject(val)) {
-      for (let ikey in val) {
-        if (Object.prototype.hasOwnProperty.call(val, ikey)) {
-          val[ikey] = this.getSetterParam(ikey, val[ikey]);
-        }
-      }
     }
     return val
   }
